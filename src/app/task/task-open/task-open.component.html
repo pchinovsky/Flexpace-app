@@ -140,9 +140,8 @@
     <textarea
       id="task-title"
       class="task-title"
-      [value]="task.title"
       [formControl]="titleControl"
-      (blur)="saveTitle()"
+      (blur)="saveContent()"
       [disabled]="!own"
     ></textarea>
     <hr />

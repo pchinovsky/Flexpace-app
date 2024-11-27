@@ -50,6 +50,12 @@ export class TaskOpenComponent implements OnInit {
       console.log('Content changed:', value);
       this.task.content = value;
     });
+
+    // title control changes -
+    this.titleControl.valueChanges.subscribe((value: string) => {
+      console.log('title changed:', value);
+      this.task.title = value;
+    });
   }
 
   // text format -
@@ -108,6 +114,7 @@ export class TaskOpenComponent implements OnInit {
   saveContent(): void {
     const updatedTask = {
       ...this.task,
+      title: this.titleControl.value,
       content: this.contentControl.value,
     };
 
