@@ -1,0 +1,149 @@
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root {
+    --task-color: #ffffff; 
+  }
+
+
+  /* assign modal size here -  */
+.modal {
+    background-color: var(--task-color);
+    border-radius: 2em; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+    /* padding: 20px;  */
+    overflow: hidden; 
+    height: 600px;
+    width: 600px;
+  }
+
+  .custom-modal-class .mat-dialog-container {
+    padding: 0;
+  }
+  
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    box-shadow: none;
+  }
+
+  /* affecting the error modal -  */
+  .mat-mdc-dialog-surface {
+    /* border: 2px solid red; */
+    /* border-radius: 2em; */
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    background-color: var(--task-color);
+  }
+
+  /* scrollbar */
+
+  .mat-mdc-dialog-surface::-webkit-scrollbar {
+    background-color: var(--task-color);
+}
+
+.mat-mdc-dialog-surface::-webkit-scrollbar-track {
+    background-color: var(--task-color);
+  }
+  
+  .mat-mdc-dialog-surface::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid white;
+  }
+  
+  .mat-mdc-dialog-surface {
+    scrollbar-color: rgba(255, 255, 255, 0.5) var(--task-color);
+    scrollbar-width: thin;
+    
+  }
+
+/* app-modal {
+    background-color: red;
+} */
+
+.mat-dialog-container {
+    border-radius: 2em;
+    backdrop-filter: blur(10px);
+  }
+
+.cdk-overlay-backdrop {
+    backdrop-filter: blur(5px); 
+    background: rgba(0, 0, 0, 0.4) !important;
+  }
+  
+  .mat-mdc-dialog-surface {
+    border-radius: 2em;
+  }
+
+  /* Add a red border to the most likely dialog container classes */
+
+/* .mat-dialog-container {
+    border-radius: 2em;
+
+    border: 2px solid red !important;
+  } */
+  
+  /* .cdk-overlay-pane {
+    border: 2px solid red !important;
+  } */
+  
+  /* .cdk-overlay-backdrop {
+    border: 2px solid red !important;
+  } */
+  
+  /* .mat-dialog-title {
+    border: 2px solid red !important;
+  } */
+  
+  /* .mat-dialog-content {
+    border-radius: 2em;
+    border: 2px solid red !important;
+  } */
+  
+  /* .mat-dialog-actions {
+    border-radius: 2em;
+
+    border: 2px solid red !important;
+  } */
+  
+  /* .cdk-global-overlay-wrapper {
+    border: 2px solid red !important;
+  } */
+  
+  /* .mat-dialog-content-container {
+    border-radius: 2em;
+
+    border: 2px solid red !important;
+  } */
+  
+ 
+  
+  /* .cdk-overlay-container {
+    border: 2px solid red !important;
+  } */
+
+
+
+/* :host ::ng-deep .error-modal .mat-mdc-dialog-container {
+    --mdc-dialog-container-shape: 16px;
+    border-radius: 16px !important;
+    box-shadow: none !important;
+  } */
+  
+
+
+
+  /* only actually affecting err mod -  */
+  .mdc-dialog__container {
+    border-radius: 2em;
+    --mdc-dialog-container-shape: 16px; 
+    --mdc-dialog-container-fill-color: #994848; 
+    background-color: var(--mdc-dialog-container-fill-color) !important; 
+
+}
+
+:host ::ng-deep .mdc-dialog__container {
+    border-radius: 2em;
+    background-color: #994848 !important; 
+    color: #ffffff; 
+}

@@ -1,0 +1,46 @@
+<!-- <p>board-universal works!</p> -->
+<div *ngIf="toastService.showToast" class="toast">
+  {{ toastService.toastMessage }}
+</div>
+
+<div class="handle"></div>
+<div class="handle-wrap"></div>
+
+<div class="filter-menu">
+  <div class="toggle-filter" *ngFor="let rule of getToggleRules()">
+    <label>
+      <input
+        type="checkbox"
+        [checked]="toggleFilters[rule]"
+        (change)="onToggleFilter(rule)"
+      />
+      {{ rule | titlecase }}
+    </label>
+  </div>
+</div>
+
+<div class="color-filter-menu">
+  <div
+    *ngFor="let color of colors"
+    [style.background]="color"
+    class="color-filter"
+    [class.selected]="color === selectedColor"
+    (click)="onColorFilterChange(color)"
+  ></div>
+</div>
+
+<app-task-open *ngIf="showTaskOpen" (closeModalEvent)="onCloseNewTask()">
+</app-task-open>
+
+<div class="task-grid">
+  <app-task
+    *ngFor="let task of filteredTasks"
+    [task]="task"
+    [tasks]="filteredTasks"
+    [fixedLayout]="true"
+    [draggable]="false"
+    [style.width.px]="200"
+    [style.height.px]="200"
+    (click)="onTaskClick($event)"
+  ></app-task>
+</div>

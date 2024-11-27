@@ -1,0 +1,85 @@
+<form [formGroup]="profileForm" class="container">
+  <section class="user">
+    <h1>{{ (userData$ | async)?.displayName }}'s Profile</h1>
+
+    <div class="profile-picture-wrapper">
+      <div
+        class="profile-placeholder"
+        *ngIf="isEditing || !(userData$ | async)?.profilePicture"
+      ></div>
+      <img
+        *ngIf="!isEditing && (userData$ | async)?.profilePicture"
+        [src]="(userData$ | async)?.profilePicture"
+        alt="Profile Picture"
+      />
+    </div>
+
+    <input
+      *ngIf="isEditing"
+      id="profilePicture"
+      formControlName="profilePicture"
+      type="text"
+      placeholder="Enter image URL"
+    />
+
+    <label for="bio"><strong>Bio:</strong></label>
+    <div *ngIf="!isEditing">{{ (userData$ | async)?.bio }}</div>
+    <input *ngIf="isEditing" id="bio" formControlName="bio" type="text" />
+
+    <label for="address"><strong>Address:</strong></label>
+    <div *ngIf="!isEditing">{{ (userData$ | async)?.address }}</div>
+    <input
+      *ngIf="isEditing"
+      id="address"
+      formControlName="address"
+      type="text"
+    />
+  </section>
+
+  <section class="settings">
+    <section class="one">
+      <div class="stat-row">
+        <label for="numberOfTasks"><strong>Number of Tasks:</strong></label>
+        <div>{{ profileForm.get("numberOfTasks")?.value }}</div>
+      </div>
+
+      <div class="stat-row">
+        <label for="numberOfTasksSaved"
+          ><strong>Number of Saved Tasks:</strong></label
+        >
+        <div>{{ profileForm.get("numberOfTasksSaved")?.value }}</div>
+      </div>
+
+      <div class="stat-row">
+        <label for="numberOfTasksSavedByOthers"
+          ><strong>Number of Tasks Saved by Others:</strong></label
+        >
+        <div>{{ profileForm.get("numberOfTasksSavedByOthers")?.value }}</div>
+      </div>
+
+      <div class="stat-row">
+        <label for="numberOfPublishedTasks"
+          ><strong>Number of Published Tasks:</strong></label
+        >
+        <div>{{ profileForm.get("numberOfPublishedTasks")?.value }}</div>
+      </div>
+    </section>
+
+    <section class="two"></section>
+  </section>
+
+  <div class="actions">
+    <button *ngIf="!isEditing" (click)="toggleEdit()">Edit</button>
+    <button
+      *ngIf="isEditing"
+      type="submit"
+      (click)="saveProfile()"
+      [disabled]="profileForm.invalid"
+    >
+      Save
+    </button>
+    <button *ngIf="isEditing" type="button" (click)="toggleEdit()">
+      Cancel
+    </button>
+  </div>
+</form>

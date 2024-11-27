@@ -1,0 +1,32 @@
+<div class="modal-backdrop" (click)="closeBoardModal()"></div>
+
+<form
+  [formGroup]="newBoard"
+  (ngSubmit)="newBoardSubmit(); $event.stopPropagation()"
+>
+  <h2>Create Board</h2>
+  <label for="title">Title<span></span></label>
+  <input
+    type="text"
+    name="title"
+    id="title"
+    placeholder="Laundry"
+    required
+    formControlName="title"
+  />
+
+  <!-- color -->
+  <label>Select a Color:</label>
+  <div class="color-options">
+    <label *ngFor="let color of colors">
+      <input type="radio" [value]="color" formControlName="color" />
+      <span
+        class="color-swatch"
+        [style.backgroundColor]="color"
+        [class.selected]="newBoard.get('color')?.value === color"
+      ></span>
+    </label>
+  </div>
+
+  <button type="submit" [disabled]="newBoard.invalid">Create</button>
+</form>

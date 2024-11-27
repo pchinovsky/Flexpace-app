@@ -1,0 +1,63 @@
+.mat-mdc-dialog-surface {
+    border-radius: 2em;
+  }
+
+.btn {
+    border-radius: 1em;
+    border: none;
+    color: rgb(82, 79, 79);
+    background-color: lightgray;
+    padding: 0.7em;
+    margin: 0.7em;
+}
+
+.error-modal {
+    border-radius: 2em;
+}
+
+.mdc-dialog__container {
+    border-radius: 2em;
+    --mdc-dialog-container-shape: 16px; 
+
+}
+
+/*  */
+
+/* for img ops -  */
+
+.background-options-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .background-option {
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+  
+  .background-option:hover {
+    border-color: #007bff; 
+  }
+
+  .no-background-option {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc; 
+    cursor: pointer;
+  }
+  
+  .no-background-option span {
+    font-size: 14px;
+    color: #555; 
+  } 
+  

@@ -1,0 +1,65 @@
+<!-- <p>board-default works!</p> -->
+<!-- [coordinates]="clickCoordinates" -->
+
+<!-- <div class="container" (click)="newTask()"> -->
+<!-- <div class="container" (click)="onBoardClick($event)"> -->
+
+<!-- <div>{{ boardName }}</div> -->
+<div
+  class="container"
+  (pointerdown)="onBoardPointerDown($event)"
+  (pointerup)="onBoardPointerUp($event)"
+  #boardElement
+>
+  <!-- btn img ops -  -->
+  <!-- <button id="img-modal" (click)="openBackgroundSelectionModal()">
+    Select Background
+  </button> -->
+
+  <!-- img -->
+  <div
+    class="background-image"
+    [style.backgroundImage]="
+      backgroundImage ? 'url(' + backgroundImage + ')' : 'none'
+    "
+  ></div>
+
+  <!-- img btn -->
+  <button id="bgr" class="add-bg-btn" (click)="openBackgroundSelectionModal()">
+    Background
+  </button>
+
+  <!-- <button
+    *ngIf="backgroundImage"
+    class="delete-bg-btn"
+    (click)="deleteBackgroundImage()"
+  >
+    Delete Background
+  </button> -->
+
+  <app-new-task
+    *ngIf="showNewTaskForm"
+    [board]="boardName"
+    (closeModalEvent)="onCloseNewTask()"
+  ></app-new-task>
+  <app-task-open *ngIf="showTaskOpen" (closeModalEvent)="onCloseNewTask()">
+  </app-task-open>
+  <app-task
+    *ngFor="let task of tasks"
+    [task]="task"
+    [tasks]="tasks"
+    [boardElement]="boardElement"
+    (resizeEvent)="onTaskResized($event)"
+    (dragEndEvent)="onTaskDragged($event)"
+    (click)="onTaskClick($event)"
+  ></app-task>
+  <div id="grid-container">
+    <div
+      *ngFor="let point of gridPoints"
+      class="grid-point"
+      [style.left.px]="point.x"
+      [style.top.px]="point.y"
+    ></div>
+  </div>
+  <button id="rev">REV</button>
+</div>

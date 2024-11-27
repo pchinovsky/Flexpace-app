@@ -1,0 +1,62 @@
+<!-- <p>new-task works!</p> -->
+<div class="modal-backdrop" (click)="closeModal()"></div>
+
+<form [formGroup]="newTask" (ngSubmit)="newTaskSubmit()">
+  <h2>Create Card</h2>
+  <label for="title">Title<span></span></label>
+  <input
+    type="text"
+    name="title"
+    id="title"
+    placeholder="john.doe@gmail.com"
+    required
+    formControlName="title"
+  />
+
+  <!-- content - matTextareaAutosize -->
+  <div class="textarea-container">
+    <textarea
+      id="adjustable-textarea"
+      placeholder="Enter task details"
+      rows="1"
+      (input)="adjustTextareaHeight($event)"
+      formControlName="content"
+    ></textarea>
+  </div>
+
+  <label class="toggle" for="public"
+    >Public
+    <input type="checkbox" name="public" id="public" formControlName="public" />
+    <span class="slider"></span>
+  </label>
+
+  <label class="toggle" for="note"
+    >Note
+    <input type="checkbox" name="note" id="note" formControlName="note" />
+    <span class="slider"></span>
+  </label>
+
+  <label class="toggle" for="today"
+    >Today
+    <input type="checkbox" name="today" id="today" formControlName="today" />
+    <span class="slider"></span>
+  </label>
+
+  <!-- color -->
+  <label>Select a Color:</label>
+  <div class="color-options">
+    <label *ngFor="let color of colors">
+      <input type="radio" [value]="color" formControlName="color" />
+      <span
+        class="color-swatch"
+        [style.backgroundColor]="color"
+        [class.selected]="newTask.get('color')?.value === color"
+      ></span>
+    </label>
+  </div>
+
+  <label for="due">Set Due Date:</label>
+  <input type="date" id="due" name="due-date" formControlName="dueDate" />
+
+  <button type="submit" [disabled]="newTask.invalid">Create</button>
+</form>

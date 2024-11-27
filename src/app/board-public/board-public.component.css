@@ -1,0 +1,54 @@
+.toast {
+    position: fixed;
+    bottom: 50px;
+    left: 50px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    opacity: 0.9;
+    z-index: 1000;
+  }
+  
+
+.background {
+    /* background-color: rgb(224, 156, 156); */
+    width: 100vh;
+    height: 100vh;
+}
+
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #f0f0f0;
+    overflow: hidden;
+}
+
+#grid-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+.grid-point {
+    width: 5px;
+    height: 5px;
+    background-color: rgb(191, 33, 33);
+    border-radius: 50%;
+    position: absolute;
+    z-index: 2000;
+}
+
+
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .task-grid app-task {
+    position: relative; 
+  }
+  

@@ -1,0 +1,63 @@
+<!-- <a href="#" routerLink="/wall">Wall</a>
+<a href="#" routerLink="/login">Log</a> -->
+
+<!-- <button (click)="openLoginModal()">LoginModal</button> -->
+<!-- <a [routerLink]="[{ outlets: { modal: ['login'] } }]">LoginModal2</a> -->
+
+<!-- <a href="#" routerLink="/register">Reg</a> -->
+
+<!-- <hr /> -->
+<div class="cont">
+  <div *ngIf="isLoggedIn$ | async">
+    <a href="#" *ngIf="isLoggedIn$ | async" routerLink="/profile"
+      >{{ (authService.user$ | async)?.displayName }}'s Flexpace</a
+    >
+  </div>
+  <p *ngIf="!(isLoggedIn$ | async)">Flexpace</p>
+  <div class="btns">
+    <button (click)="openLoginModal()" *ngIf="!(isLoggedIn$ | async)">
+      LoginNEW
+    </button>
+    <button (click)="openRegModal()" *ngIf="!(isLoggedIn$ | async)">
+      RegNEW
+    </button>
+    <button (click)="newBoard()" *ngIf="isLoggedIn$ | async">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="48px"
+        viewBox="0 -960 960 960"
+        width="48px"
+        fill="#FFFFFF"
+      >
+        <path
+          d="M445.93-445.93H228.09q-14.43 0-24.25-9.88-9.82-9.87-9.82-24.37 0-14.49 9.82-24.19 9.82-9.7 24.25-9.7h217.84v-217.84q0-14.4 9.88-24.35 9.87-9.96 24.37-9.96 14.49 0 24.19 9.96 9.7 9.95 9.7 24.35v217.84h217.84q14.4 0 24.35 9.88 9.96 9.87 9.96 24.37 0 14.49-9.96 24.19-9.95 9.7-24.35 9.7H514.07v217.84q0 14.43-9.88 24.25-9.87 9.82-24.37 9.82-14.49 0-24.19-9.82-9.7-9.82-9.7-24.25v-217.84Z"
+        />
+      </svg>
+    </button>
+    <button *ngIf="isLoggedIn$ | async" (click)="onLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- 
+<a href="#" routerLink="/default">Default Board</a>
+<a href="#" routerLink="/wall">Public Board</a> -->
+<!-- <a href="#" *ngIf="isLoggedIn$ | async" routerLink="/profile">PROFILE</a> -->
+
+<app-board-new
+  *ngIf="newBoardForm"
+  (closeBoardModalEvent)="onCloseNewBoard()"
+></app-board-new>
+<app-header-boards-nav *ngIf="isLoggedIn$ | async"></app-header-boards-nav>
+
+<!-- Login Modal Overlay -->
+<!-- <app-login *ngIf="showLoginModal" (close)="closeModal()"></app-login> -->
+
+<!-- <app-login
+  *ngIf="showLoginModal"
+  (logged)="closeModal()"
+  (close)="closeModal()"
+>
+  <p>login modal should be visible</p></app-login
+>
+
+<app-register *ngIf="showRegModal" (close)="closeModal()"></app-register> -->

@@ -1,0 +1,94 @@
+<div class="modal-backdrop" (click)="closeModal()"></div>
+<div class="modal-content">
+  <form class="reg" [formGroup]="regForm" (ngSubmit)="onReg()">
+    <h2>Reg Form</h2>
+
+    <!-- username -->
+    <p class="field field-icon">
+      <label for="name"><span></span></label>
+      <input
+        class="input-error"
+        type="text"
+        name="name"
+        id="name"
+        placeholder="Johny"
+        formControlName="name"
+        required
+      />
+    </p>
+
+    <ng-container *ngIf="regForm.get('name')?.touched">
+      <p class="error" *ngIf="regForm.get('name')?.errors?.['required']">
+        Username is required!
+      </p>
+      <p class="error" *ngIf="regForm.get('name')?.errors?.['minlength']">
+        Username must be at least X characters long!
+      </p>
+    </ng-container>
+
+    <!-- email -->
+    <p class="field field-icon">
+      <label for="email"><span></span></label>
+      <input
+        [ngClass]="{
+          'input-error':
+            regForm.get('email')?.invalid && regForm.get('email')?.touched
+        }"
+        type="email"
+        name="email"
+        id="email"
+        placeholder="john.doe@gmail.com"
+        required
+        formControlName="email"
+      />
+    </p>
+    <ng-container *ngIf="regForm.get('email')?.touched">
+      <p class="error" *ngIf="regForm.get('email')?.errors?.['required']">
+        Email is required!
+      </p>
+      <!-- <p class="error">
+                    Email is not valid!
+                </p> -->
+    </ng-container>
+
+    <p class="field field-icon">
+      <label for="password"><span></span></label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="******"
+        required
+        formControlName="pass"
+      />
+    </p>
+    <!-- <p class="error">
+                    Password is required!
+                </p>
+                <p class="error">
+                    Password must be at least 4 characters!
+                </p> -->
+
+    <!-- repass -->
+    <p class="field field-icon">
+      <label for="rePassword"><span></span></label>
+      <input
+        type="password"
+        name="rePassword"
+        id="rePassword"
+        placeholder="******"
+        formControlName="repass"
+        required
+      />
+    </p>
+    <!-- <p class="error">Repeat Password does not match password!</p> -->
+
+    <button type="submit" [disabled]="regForm.invalid">Register</button>
+
+    <p class="text-center">
+      Already have an account, bro?
+      <a routerLink="/auth/login" href="#">Login</a>
+    </p>
+    <button type="button" (click)="closeModal()">Close</button>
+  </form>
+</div>

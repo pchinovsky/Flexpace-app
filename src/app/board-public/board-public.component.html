@@ -1,0 +1,32 @@
+<!-- <p>Public Board</p> -->
+<div *ngIf="toastService.showToast" class="toast">
+  {{ toastService.toastMessage }}
+</div>
+
+<!-- login/reg modal -->
+<app-login
+  *ngIf="showLoginModal"
+  (close)="closeModal()"
+  (brake)="goWild()"
+></app-login>
+<app-register *ngIf="showRegModal" (close)="closeModal()"></app-register>
+
+<!-- task grid -->
+<app-task-open
+  *ngIf="showTaskOpen"
+  (closeModalEvent)="onCloseNewTask()"
+></app-task-open>
+
+<div class="task-grid">
+  <app-task
+    *ngFor="let task of tasks"
+    [task]="task"
+    [tasks]="tasks"
+    [fixedLayout]="true"
+    [draggable]="false"
+    [owner]="owner"
+    [style.width.px]="200"
+    [style.height.px]="200"
+    (click)="onTaskClick($event)"
+  ></app-task>
+</div>

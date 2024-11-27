@@ -1,0 +1,54 @@
+a {
+    margin: 1em;
+}
+
+div a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+}
+
+.cont {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+}
+
+.btns {
+    display: flex;
+    gap: 1em;
+    justify-content: flex-end;
+}
+
+button {
+    width: 35px;    
+    height: 35px;
+    /* margin-right: 1em; */
+    /* border: 1px solid white; */
+    border-radius: 50%;
+    outline: none;
+    /* opacity: 1; */
+    padding: 0.6em;
+    background-color: #9c8b8b;
+    border: 0px solid blue;
+}
+
+button:hover {
+    background-color: rgb(223, 120, 207);
+}
+
+button svg {
+    background-color: none;
+    border: none;
+    fill: rgb(236, 229, 229);
+    stroke: currentColor;
+    width: 100%;
+    height: 100%;
+}
+
+button svg:hover {
+    background-color: rgb(223, 120, 207);
+    cursor: pointer;
+    opacity: 1;
+}

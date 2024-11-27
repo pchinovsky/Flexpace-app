@@ -1,0 +1,56 @@
+<div class="modal-backdrop" (click)="closeModal()"></div>
+<div class="modal-content">
+  <form class="login" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <h2>Login Form</h2>
+
+    <p class="field field-icon">
+      <label for="email"><span></span></label>
+      <input
+        [ngClass]="{
+          'input-error':
+            loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+        }"
+        type="email"
+        name="email"
+        id="email"
+        placeholder="john.doe@gmail.com"
+        required
+        formControlName="email"
+      />
+    </p>
+    <ng-container *ngIf="loginForm.get('email')?.touched">
+      <p class="error" *ngIf="loginForm.get('email')?.errors?.['required']">
+        Email is required!
+      </p>
+      <!-- <p class="error">
+                Email is not valid!
+            </p> -->
+    </ng-container>
+
+    <p class="field field-icon">
+      <label for="password"><span></span></label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="******"
+        required
+        formControlName="pass"
+      />
+    </p>
+    <!-- <p class="error">
+                Password is required!
+            </p>
+            <p class="error">
+                Password must be at least 4 characters!
+            </p> -->
+
+    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+
+    <p class="text-center">
+      Have no bro an account, bro?
+      <a routerLink="/auth/register" href="#">Register</a>
+    </p>
+    <button type="button" (click)="closeModal()">Close</button>
+  </form>
+</div>

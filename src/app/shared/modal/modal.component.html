@@ -1,0 +1,56 @@
+<!-- <h2 mat-dialog-title>Error</h2>
+<div mat-dialog-content>
+  <p>{{ data.message }}</p>
+</div>
+<div mat-dialog-actions>
+  <button class="btn" (click)="close()">Close</button>
+</div>
+
+
+<h2 mat-dialog-title>Select Background</h2>
+<div mat-dialog-content class="background-options-container">
+  <div
+    *ngFor="let background of data.predefinedImages"
+    class="background-option"
+    [ngStyle]="{ 'background-image': 'url(' + background + ')' }"
+    (click)="selectBackground(background)"
+  ></div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+</div> -->
+
+<!-- error eodal -->
+<div *ngIf="data.type === 'error'">
+  <h2 mat-dialog-title>Error</h2>
+  <div mat-dialog-content>
+    <p>{{ data.message }}</p>
+  </div>
+  <div mat-dialog-actions>
+    <button class="btn" (click)="close()">Close</button>
+  </div>
+</div>
+
+<!-- background modal -->
+<div *ngIf="data.type === 'backgroundSelection'">
+  <h2 mat-dialog-title>Select Background</h2>
+  <div mat-dialog-content class="background-options-container">
+    <div
+      class="background-option no-background-option"
+      (click)="selectBackground('')"
+    >
+      <span>No Background</span>
+    </div>
+    <div
+      *ngFor="let background of data.predefinedImages"
+      class="background-option"
+      [ngStyle]="{
+        'background-image': background ? 'url(' + background + ')' : 'none'
+      }"
+      (click)="selectBackground(background)"
+    ></div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="close()">Cancel</button>
+  </div>
+</div>
