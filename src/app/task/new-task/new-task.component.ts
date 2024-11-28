@@ -29,6 +29,8 @@ export class NewTaskComponent {
 
   colors: string[] = ['#FF5733', '#33FF57', '#3357FF', '#FF33A5', '#FFCC33'];
   selectedColor: string = this.colors[0];
+  defaultHeight = 235;
+  defaultWidth = 185;
 
   newTask = this.fb.group({
     title: ['', Validators.required],
@@ -54,8 +56,11 @@ export class NewTaskComponent {
     // this.board = segments.pop() || null;
     // console.log('Board Name:', this.board);
 
+    this.type = this.newTask.get('note')?.value ? 'task' : 'note';
+
     this.newTask.get('note')?.valueChanges.subscribe((value) => {
-      this.type = value ? 'note' : 'task';
+      this.type = value ? 'task' : 'note';
+      this.defaultHeight = value ? 135 : 235;
       // console.log('Is Note:', this.isNote ? 'Yes' : 'No');
     });
 
@@ -68,14 +73,6 @@ export class NewTaskComponent {
 
     this.point.clearCoordinates();
   }
-
-  // updateCoordinates(x: number, y: number) {
-  //   this.newTask.patchValue({ x, y });
-  // }
-
-  // updateSize(width: number, height: number) {
-  //   this.newTask.patchValue({ width, height });
-  // }
 
   newTaskSubmit() {
     if (!this.coordinates) {
@@ -115,7 +112,7 @@ export class NewTaskComponent {
                 draggable: true,
                 editable: true,
                 coordinates: this.coordinates!,
-                size: { width: 185, height: 235 },
+                size: { width: this.defaultWidth, height: this.defaultHeight },
                 savedBy: [],
                 selectable: false,
                 selected: false,

@@ -144,8 +144,9 @@
       (blur)="saveContent()"
       [disabled]="!own"
     ></textarea>
-    <hr />
+    <hr *ngIf="task.type === 'note'" />
     <textarea
+      *ngIf="task.type === 'note'"
       id="task-open"
       class="task-text"
       [formControl]="contentControl"

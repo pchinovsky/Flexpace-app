@@ -58,6 +58,8 @@ export class TaskComponent implements AfterViewInit {
   private offsetY = 0;
   private initialLeft = 0;
   private initialTop = 0;
+  private openHeight = '400px';
+  private openWidth = '400px';
 
   isSubContainerOpen = false;
   isControlsOpen = false;
@@ -100,6 +102,11 @@ export class TaskComponent implements AfterViewInit {
       });
     } else {
       this.isOwn = false;
+    }
+
+    if (this.task.type === 'task') {
+      this.openHeight = '300px';
+      this.openWidth = '300px';
     }
 
     // this.isOwn = this.task.owner === this.userId ? true : false;
@@ -200,7 +207,8 @@ export class TaskComponent implements AfterViewInit {
         task: structuredClone(this.task),
         own: this.isOwn,
       },
-      width: '400px',
+      width: this.openWidth,
+      height: this.openHeight,
       panelClass: 'modal',
     });
   }

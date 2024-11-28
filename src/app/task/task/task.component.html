@@ -61,10 +61,10 @@
 
   <div class="text">
     <h1>{{ task.title }}</h1>
-    <hr />
-    <div>
-      <!-- <p>{{ task.content }}</p> -->
-      <p [innerHTML]="task.content"></p>
+    <hr *ngIf="task.type === 'note'" />
+    <div *ngIf="task.type === 'note'">
+      <p>{{ task.content }}</p>
+      <!-- <p [innerHTML]="task.content"></p> -->
     </div>
   </div>
 
