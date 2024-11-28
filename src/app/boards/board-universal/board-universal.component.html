@@ -37,6 +37,7 @@
     *ngFor="let task of filteredTasks"
     [task]="task"
     [tasks]="filteredTasks"
+    [board]="boardName"
     [fixedLayout]="true"
     [draggable]="false"
     [style.width.px]="200"

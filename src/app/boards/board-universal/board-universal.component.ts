@@ -15,6 +15,7 @@ export class BoardUniversalComponent implements OnInit {
 
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
+  boardName = 'filter';
 
   toggleFilters: { [key: string]: boolean } = {
     public: false,

@@ -477,6 +477,12 @@ p {
     color: black;
 }
 
+.board-name {
+    font-size: 0.8em;
+    color: grey;
+    align-self: flex-start;
+}
+
 
 
 

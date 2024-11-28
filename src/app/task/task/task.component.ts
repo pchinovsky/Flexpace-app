@@ -40,6 +40,7 @@ export class TaskComponent implements AfterViewInit {
   @Input() draggable: boolean = true;
   // @Input() resizable: boolean = true;
   @Input() fixedLayout: boolean = false;
+  @Input() board: string = '';
 
   @Output() resizeEvent = new EventEmitter<any>();
   @Output() dragEndEvent = new EventEmitter<any>();
