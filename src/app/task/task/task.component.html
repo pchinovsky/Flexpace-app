@@ -207,6 +207,16 @@
         />
       </svg>
     </button>
+    <!-- due date -->
+    <p class="date">{{ task.dueDate | timestampToDate }}</p>
+    <label class="date" for="due-date">Due Date:</label>
+    <input
+      type="date"
+      id="due-date"
+      [value]="task.dueDate"
+      (change)="onDueDateChange($event)"
+      [disabled]="!isOwn"
+    />
   </div>
 
   <button id="hid" *ngIf="isOwn" (click)="toggleControls($event)">

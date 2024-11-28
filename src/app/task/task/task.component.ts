@@ -623,4 +623,27 @@ export class TaskComponent implements AfterViewInit {
       }
     }
   }
+
+  onDueDateChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const selectedDate = new Date(input.value);
+    this.task.dueDate = selectedDate;
+
+    const currentDate = new Date();
+    const isToday =
+      selectedDate.getFullYear() === currentDate.getFullYear() &&
+      selectedDate.getMonth() === currentDate.getMonth() &&
+      selectedDate.getDate() === currentDate.getDate();
+
+    this.task.today = isToday;
+
+    console.log(
+      'due date updated -',
+      this.task.dueDate,
+      'is today -',
+      this.task.today
+    );
+
+    this.taskService.updateTask(this.task);
+  }
 }

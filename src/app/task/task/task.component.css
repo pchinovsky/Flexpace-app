@@ -472,6 +472,13 @@ p {
     background-color: #5a47d3; 
 }
 
+.date {
+    z-index: 5;
+    color: black;
+}
+
+
+
 
 
   
