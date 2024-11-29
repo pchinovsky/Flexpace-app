@@ -4,6 +4,8 @@ import { TaskService } from 'src/app/task/task.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ToastService } from 'src/app/toast.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-board-universal',
@@ -12,6 +14,9 @@ import { ToastService } from 'src/app/toast.service';
 })
 export class BoardUniversalComponent implements OnInit {
   showTaskOpen = false;
+
+  searchControl: FormControl = new FormControl('');
+  searchTerm: string = '';
 
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
@@ -36,13 +41,33 @@ export class BoardUniversalComponent implements OnInit {
     public toastService: ToastService
   ) {}
 
-  ngOnInit(): void {
-    // this.taskService.getAllTasks().subscribe((tasks: Task[]) => {
-    //   // Set draggable to false for all tasks on this board
-    //   this.tasks = tasks.map((task) => ({ ...task, draggable: false }));
-    //   this.filteredTasks = [...this.tasks];
-    // });
+  // ngOnInit(): void {
+  //   // this.taskService.getAllTasks().subscribe((tasks: Task[]) => {
+  //   //   // draggable to false for tasks in uni board -
+  //   //   this.tasks = tasks.map((task) => ({ ...task, draggable: false }));
+  //   //   this.filteredTasks = [...this.tasks];
+  //   // });
 
+  //   this.currentUserId = this.auth.getCurrentUserId();
+
+  //   this.taskService.getAllTasks().subscribe((tasks: Task[]) => {
+  //     this.tasks = tasks
+  //       .filter((task) => {
+  //         if (!this.currentUserId) {
+  //           return false;
+  //         }
+  //         return (
+  //           task.owner === this.currentUserId ||
+  //           (task.savedBy && task.savedBy.includes(this.currentUserId))
+  //         );
+  //       })
+  //       .map((task) => ({ ...task, draggable: false }));
+
+  //     this.filteredTasks = [...this.tasks];
+  //   });
+  // }
+
+  ngOnInit(): void {
     this.currentUserId = this.auth.getCurrentUserId();
 
     this.taskService.getAllTasks().subscribe((tasks: Task[]) => {
@@ -60,6 +85,26 @@ export class BoardUniversalComponent implements OnInit {
 
       this.filteredTasks = [...this.tasks];
     });
+
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((value: string) => {
+        this.searchTerm = value.toLowerCase();
+        this.filterTasks();
+      });
+  }
+
+  filterTasks(): void {
+    if (!this.searchTerm) {
+      this.filteredTasks = [...this.tasks];
+    } else {
+      this.filteredTasks = this.tasks.filter((task) => {
+        return (
+          task.title.toLowerCase().includes(this.searchTerm) ||
+          (task.content && task.content.toLowerCase().includes(this.searchTerm))
+        );
+      });
+    }
   }
 
   getToggleRules(): string[] {

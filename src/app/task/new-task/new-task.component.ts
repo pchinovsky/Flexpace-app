@@ -61,7 +61,12 @@ export class NewTaskComponent {
     this.newTask.get('note')?.valueChanges.subscribe((value) => {
       this.type = value ? 'task' : 'note';
       this.defaultHeight = value ? 135 : 235;
-      // console.log('Is Note:', this.isNote ? 'Yes' : 'No');
+
+      if (value) {
+        this.newTask.get('content')?.disable();
+      } else {
+        this.newTask.get('content')?.enable();
+      }
     });
 
     // if (!this.coordinates) {
@@ -94,7 +99,7 @@ export class NewTaskComponent {
               const task: Task = {
                 id: this.firestore.createId(),
                 title: this.newTask.value.title!,
-                content: this.newTask.value.content!,
+                content: this.newTask.value.content! || '',
                 subtasks: [],
                 createdAt: new Date(),
                 dueDate: dueDate,

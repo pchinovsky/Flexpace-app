@@ -109,5 +109,14 @@ app-task {
   .color-filter.selected {
     border: 2px solid #000;
   }
+
+  /*  */
+
+  .filter-menu input[type="text"] {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
   
   
