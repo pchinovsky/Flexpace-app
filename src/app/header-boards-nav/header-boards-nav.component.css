@@ -1,10 +1,10 @@
 .board-nav {
     position: absolute;
-    right: 5em;
+    right: 3em;
     top: 10em;
-    width: 100px;
+    width: 140px;
     height: auto;
-    background-color: white;
+    background-color: rgb(236, 229, 229, 0.3);
     border-radius: 1em;
     z-index: 1002;
     display: flex;
@@ -15,7 +15,7 @@
     transform: translateX(100%); 
     transition: transform 0.5s ease, opacity 0.5s ease; 
     opacity: 0;
-
+    backdrop-filter: blur(15px);
 }
 
 .board-nav-btn {
@@ -25,6 +25,11 @@
     padding: 0.3em;
     box-sizing: border-box;
     opacity: 0.5;
+}
+
+/* temporary -  */
+.board-nav-btn:hover {
+    background-color: rgb(128, 128, 128, 0.5);
 }
 
 .board-nav-btn a {
@@ -79,7 +84,7 @@ button:hover {
 }
 
 .selected {
-    background-color: #dfdddd;
+    background-color: rgb(128, 128, 128, 0.4);
     /* border: 2px solid grey; */
     opacity: 1;
     /* border-radius: 2em; */
@@ -102,8 +107,8 @@ div.selected {
 }
 
 .handle {
-    height: 45px;
-    width: 5px;
+    height: 50px;
+    width: 4px;
     border-radius: 1em;
     background-color: grey;
     position: absolute;

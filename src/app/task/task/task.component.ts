@@ -18,6 +18,7 @@ import { TaskOpenComponent } from '../task-open/task-open.component';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ToastService } from 'src/app/toast.service';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-task',
@@ -46,6 +47,18 @@ export class TaskComponent implements AfterViewInit {
   @Output() dragEndEvent = new EventEmitter<any>();
 
   @ViewChild('taskBox', { static: false }) taskBox!: ElementRef;
+  // @ViewChild('dateInput') dateInput!: ElementRef;
+  @ViewChild('picker') datePicker!: any;
+
+  colors: string[] = [
+    '#63cdda',
+    '#f7d794',
+    '#f8a5c2',
+    '#f3a683',
+    '#45aaf2',
+    '#26de81',
+    '#fc5c65',
+  ];
 
   private isResizing = false;
   private isDragging = false;
@@ -71,6 +84,7 @@ export class TaskComponent implements AfterViewInit {
   isPublished = false;
   selectColorOn = false;
   isOwn = false;
+  isDatePickerOpen = false;
 
   constructor(
     private renderer: Renderer2,
@@ -331,6 +345,45 @@ export class TaskComponent implements AfterViewInit {
     // console.log('controls - ', this.isControlsOpen);
   }
 
+  // toggleDatePicker(): void {
+  //   this.isDatePickerOpen = !this.isDatePickerOpen;
+  // }
+
+  // openDatePicker(): void {
+  //   this.dateInput.nativeElement.showPicker();
+  // }
+
+  openDatePicker(): void {
+    setTimeout(() => {
+      const btn = document.querySelector('.due-date-button') as HTMLElement;
+      // const board = document.querySelector('#grid-container') as HTMLElement;
+
+      if (btn) {
+        const btnPos = btn.getBoundingClientRect().top;
+        // const boardPos = board.getBoundingClientRect();
+
+        // const relativeTop = btnPos.top - boardPos.top;
+        const relativeTop = this.task.coordinates.y + btnPos;
+
+        // console.log(btnPos.top);
+        // console.log(boardPos.top);
+        console.log(relativeTop);
+
+        const calendarElement = document.querySelector(
+          '.mat-calendar'
+        ) as HTMLElement;
+        if (calendarElement) {
+          console.log('task is down?', relativeTop);
+          calendarElement.classList.add(
+            relativeTop > 700 ? 'mat-calendar-up' : 'mat-calendar'
+          );
+        }
+      }
+    }, 0);
+
+    this.datePicker.open();
+  }
+
   selectColor(e: MouseEvent): void {
     this.selectColorOn = !this.selectColorOn;
     console.log('colors on!');
@@ -340,8 +393,6 @@ export class TaskComponent implements AfterViewInit {
       this.taskService.updateTask(this.task);
     }
   }
-
-  // selectBorder(): void {}
 
   makeResizable(box: HTMLElement): void {
     if (!this.task.resizable) return;
@@ -633,26 +684,51 @@ export class TaskComponent implements AfterViewInit {
     }
   }
 
-  onDueDateChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const selectedDate = new Date(input.value);
-    this.task.dueDate = selectedDate;
+  onDueDateChange(event: MatDatepickerInputEvent<Date>): void {
+    // const input = event.target as HTMLInputElement;
+    // const selectedDate = new Date(input.value);
+    // this.task.dueDate = selectedDate;
 
-    const currentDate = new Date();
-    const isToday =
-      selectedDate.getFullYear() === currentDate.getFullYear() &&
-      selectedDate.getMonth() === currentDate.getMonth() &&
-      selectedDate.getDate() === currentDate.getDate();
+    // const currentDate = new Date();
+    // const isToday =
+    //   selectedDate.getFullYear() === currentDate.getFullYear() &&
+    //   selectedDate.getMonth() === currentDate.getMonth() &&
+    //   selectedDate.getDate() === currentDate.getDate();
 
-    this.task.today = isToday;
+    // this.task.today = isToday;
 
-    console.log(
-      'due date updated -',
-      this.task.dueDate,
-      'is today -',
-      this.task.today
-    );
+    // console.log(
+    //   'due date updated -',
+    //   this.task.dueDate,
+    //   'is today -',
+    //   this.task.today
+    // );
 
-    this.taskService.updateTask(this.task);
+    // this.taskService.updateTask(this.task);
+    // this.isDatePickerOpen = false;
+
+    const selectedDate = event.value;
+
+    if (selectedDate) {
+      this.task.dueDate = selectedDate;
+
+      const currentDate = new Date();
+      const isToday =
+        selectedDate.getFullYear() === currentDate.getFullYear() &&
+        selectedDate.getMonth() === currentDate.getMonth() &&
+        selectedDate.getDate() === currentDate.getDate();
+
+      this.task.today = isToday;
+
+      console.log(
+        'due date updated -',
+        this.task.dueDate,
+        'is today -',
+        this.task.today
+      );
+
+      this.taskService.updateTask(this.task);
+      this.isDatePickerOpen = false;
+    }
   }
 }

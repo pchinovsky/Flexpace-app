@@ -10,6 +10,11 @@ export class TimestampPipe implements PipeTransform {
     }
 
     const date = new Date(value.seconds * 1000);
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    // 0-based month -
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+
+    return `${year} ${month} ${day}`;
   }
 }

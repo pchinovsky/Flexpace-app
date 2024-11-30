@@ -1,4 +1,4 @@
-<div [ngStyle]="{ 'background-color': taskColor }">
+<div class="container" [ngStyle]="{ 'background-color': taskColor }">
   <div class="btns" *ngIf="(auth.isLogged$ | async) && own">
     <button id="color" (click)="selectColor($event)">
       <svg
@@ -17,28 +17,9 @@
         [ngClass]="selectColorOn ? 'rev-h' : 'hid-h'"
       >
         <button
-          style="background-color: #ff33a5"
-          data-color="#ff33a5"
-          (click)="selectColor($event)"
-        ></button>
-        <button
-          style="background-color: #3357ff"
-          data-color="#3357ff"
-          (click)="selectColor($event)"
-        ></button>
-        <button
-          style="background-color: #33ff57"
-          data-color="#33ff57"
-          (click)="selectColor($event)"
-        ></button>
-        <button
-          style="background-color: #ff5733"
-          data-color="#ff5733"
-          (click)="selectColor($event)"
-        ></button>
-        <button
-          style="background-color: #9be02b"
-          data-color="#9be02b"
+          *ngFor="let color of colors"
+          [ngStyle]="{ 'background-color': color }"
+          [attr.data-color]="color"
           (click)="selectColor($event)"
         ></button>
       </div>
@@ -144,7 +125,7 @@
       (blur)="saveContent()"
       [disabled]="!own"
     ></textarea>
-    <hr *ngIf="task.type === 'note'" />
+    <div class="hr" *ngIf="task.type === 'note'"></div>
     <textarea
       *ngIf="task.type === 'note'"
       id="task-open"

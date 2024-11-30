@@ -2,12 +2,14 @@
     box-sizing: border-box;
     /* needed for @container responsiveness */
     container-type: inline-size;
-    min-width: 90px;
-    min-height: 90px;
+    min-width: 190px;
+    min-height: 140px;
+    max-width: 390px;
+    max-height: 390px;
     padding: 1em;
-    background-color: #6c5ce7;
+    /* background-color: #6c5ce7; */
     border-radius: 1.5em;
-    color: white;
+    color: rgb(45, 45, 107);
     display: flex; 
     flex-direction: column;
     align-items: center;
@@ -15,11 +17,13 @@
     font-family: Arial, sans-serif;
     /* position: absolute; */
     cursor: move;   
-    /* opacity: 0.8; */
+    opacity: 0.8;
     /* box-shadow: rgba(18, 6, 6, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px; */
     /* box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px; */
     box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
     transition: background-color 0.2s ease, opacity 0.2s ease;
+    backdrop-filter: blur(15px);
+
 }
 
 .dynamic-layout {
@@ -32,7 +36,7 @@
   }
 
 .box:hover {
-    background-color: rgb(223, 120, 207);
+    /* background-color: rgb(223, 120, 207); */
     cursor: pointer;
     opacity: 1;
 }
@@ -59,15 +63,18 @@
 
 .controls {
     box-sizing: border-box;
-    background-color: white;
-    opacity: 0.6;
+    /* background-color: white; */
+    background-color: rgba(255, 255, 255, 0.6);
+    /* background: rgba(0, 0, 0, 0.5); */
+
+    /* opacity: 0.6; */
     border-radius: 1.3em;
     position: absolute;
-    bottom: 5px;
+    bottom: 4px;
     right: 5px;
     left: 5px;
     /* width: 90%; */
-    height: 70%;
+    height: 68%;
     /* display: none; */
     display: flex;
     flex-wrap: wrap;
@@ -76,6 +83,7 @@
     padding: 1em;
     /* z-index: 100; */
     overflow: visible;
+    backdrop-filter: blur(15px);
 }
 
 .sub-cont-colors {
@@ -86,7 +94,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 5px;
-    background-color: #9c8b8b;
+    background-color: #c8b7b7;
     /* border: 1px solid #ddd; */
     border-radius: 1.5em;
     /* box-sizing: border-box; */
@@ -112,12 +120,12 @@ button {
     outline: none;
     /* opacity: 1; */
     padding: 0.6em;
-    background-color: #9c8b8b;
+    background-color: rgb(156, 139, 139, 0.5);
     border: 0px solid blue;
 }
 
 button.set {
-    background-color: #995a5a;
+    background-color: rgba(148, 156, 139, 0.8);
     color: blue;
 }
 
@@ -130,14 +138,24 @@ button svg {
     height: 100%;
 }
 
-button svg:hover {
+button.set svg {
+    fill: blue;
+}
+
+/* button svg:hover {
     background-color: rgb(223, 120, 207);
     cursor: pointer;
     opacity: 1;
-}
+} */
 
 button:hover {
-    background-color: rgb(223, 120, 207);
+    background-color: rgb(25, 56, 198, 0.8);
+    transition: background-color 0.7s ease;
+}
+
+button:active {
+    background-color: rgba(96, 44, 186, 0.8);
+    transition: background-color 0.5s ease;
 }
 
 button#static {
@@ -159,6 +177,57 @@ button#color {
     position: relative;
 }
 
+.due-date-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 32px);
+    background-color: rgba(255, 255, 255, 0.6);
+    border: none;
+    padding: 0.5em;
+    padding-inline: 1em;
+    border-radius: 1.2em;
+    cursor: pointer;
+    color: rgb(93, 90, 90);
+    font-size: 0.8em;
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+}
+  
+.due-date-button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+::ng-deep .mat-calendar {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    /* right: 5px; */
+    width: 200px !important;
+    height: 250px !important;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 1em;
+    /* backdrop-filter: blur(15px); */
+}
+
+::ng-deep .mat-calendar-up {
+    position: absolute;
+    top: -400px;
+    left: 0;
+    /* right: 5px; */
+    width: 200px !important;
+    height: 250px !important;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 1em;
+    /* backdrop-filter: blur(15px); */
+}
+
+::ng-deep .mat-calendar-controls {
+    width: 100% !important;
+}
+
 .material-symbols-outlined {
     /* border: 1px solid black; */
     /* background-color: green; */
@@ -176,16 +245,17 @@ button#color {
     gap: 0.5em;
 }
 
-hr {
+.hr {
     width: 100%;
-    height: 0.2px;
-    background-color: #ddd;
+    height: 0.3px;
+    background-color: rgb(45, 45, 107);
     margin-bottom: 1em;
 }
 
 .text {
     padding: 1em;
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -201,12 +271,38 @@ p {
     margin: 0;
 }
 
-@container (max-width: 160px) {
+@container (max-width: 200px) {
     button {
         width: 30px;
         height: 30px;
     }
+
+    .controls {
+        gap: 0.5em;
+        padding: 0.6em;
+    }
+
+    .controls button:not(button.due-date-button) {
+        width: 25px;
+        height: 25px;
+        padding: 0.2em;
+    }
+
+    .due-date-button {
+        width: calc(100% - 19.2px);
+        bottom: 9.6px;
+        left: 9.6px;
+        right: 9.6px;
+    }
 }
+
+/* @container (max-height: 200px) {
+    .controls {
+        overflow-y: auto;
+    }
+} */
+
+/*  */
 
 @keyframes revealLine {
     from {
@@ -255,6 +351,27 @@ p {
     }
   }
 
+  @keyframes revealDiagonal {
+    from {
+        clip-path: inset(100% 0 0 100%); 
+
+    }
+    to {
+        clip-path: inset(0 0 0 0); 
+    }
+}
+
+@keyframes hideDiagonal {
+    from {
+        clip-path: inset(0 0 0 0); 
+    }
+    to {
+        clip-path: inset(100% 0 0 100%); 
+    }
+}
+
+
+
   .sub-cont {
     position: absolute;
     top: 101%; 
@@ -263,8 +380,7 @@ p {
     flex-direction: column;
     gap: 0.2em;
     background-color: inherit; 
-    border: 1px solid #ddd;
-    border-radius: 1em;
+    border-radius: 1.5em;
     box-sizing: border-box;
     padding: 10px;
     padding-left: 17px;
@@ -277,7 +393,8 @@ p {
     overflow-x: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* overflow: hidden; */
-    clip-path: inset(0 round 1em); 
+    clip-path: inset(0 round 1.5em); 
+    mask-image: radial-gradient(circle, black 99%, transparent 100%);
 }
 
   .hid {
@@ -291,6 +408,23 @@ p {
   .rev {
     opacity: 0.8;
     animation: revealVertical 0.5s ease forwards; 
+    visibility: visible;
+    /* display: flex; */
+    /* background-color: lightblue;  */
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+
+  .hid-c {
+    opacity: 0;
+    animation: hideDiagonal 0.5s ease forwards; 
+    visibility: hidden;
+    /* display: none; */
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+
+  .rev-c {
+    opacity: 0.8;
+    animation: revealDiagonal 0.5s ease forwards; 
     visibility: visible;
     /* display: flex; */
     /* background-color: lightblue;  */
@@ -377,13 +511,12 @@ p {
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* overflow: hidden; */
-    /* clip-path: inset(0 round 1em);  */
 }
   
-  .sub-task p[contentEditable="true"] {
+  /* .sub-task p[contentEditable="true"] {
     outline: 1px solid #ccc;
     padding: 2px;
-  }
+  } */
   
 
 /* .sub-cont:hover {
@@ -391,19 +524,30 @@ p {
 } */
 
 .sub-task:hover {
-    background-color: #c5c0e9; 
+    background-color:rgba(223, 155, 140, 0.2); 
+    /* opacity: 0.4; */
+}
+
+.sub-cont button {
+    background-color:rgba(223, 155, 140, 0.2); 
+    padding: 0.5em;
+}
+
+.sub-cont button:hover {
+    background-color:rgba(223, 155, 140, 0.6); 
 }
 
 .sub-cont div svg {
-    fill: rgb(63, 58, 58);
-    stroke: black;
-    padding: 0;
+    fill: white;
+    background-color:none; 
+
+    /* stroke: rgb(5, 5, 5); */
+    /* padding: 0; */
 }
 
 .sub-cont div svg:hover {
-    /* fill: #7469c9; */
-    background-color: #a198ea;
-    border-radius: 50%;
+    /* stroke: rgb(5, 5, 5); */
+    /* padding: 0; */
 }
 
 .sub-cont div p {
@@ -449,27 +593,29 @@ p {
 }
 
 .sub-cont::-webkit-scrollbar {
-    width: 15px; 
+    width: 6px; 
 }
 
 .sub-cont::-webkit-scrollbar-track {
     background: inherit; 
-    /* border-radius: 10px; */
-    border-radius: 0 1em 1em 0;
+    border-radius: 0 1.5em 1.5em 0;
+    padding-top: 50px;  
+    padding-bottom: 50px; 
 }
 
 .sub-cont::-webkit-scrollbar-track:hover {
-    background-color: #995a5a;
+    background-color: inherit;
 }
 
 .sub-cont::-webkit-scrollbar-thumb {
-    background-color: #6c5ce7; 
+    background-color: rgba(234, 224, 224, 0.5); ;
+    /* opacity: 0.5; */
     border-radius: 10px;
-    border: 2px solid #f1f1f1; 
+    /* border: 2px solid inherit;  */
 }
 
 .sub-cont::-webkit-scrollbar-thumb:hover {
-    background-color: #5a47d3; 
+    background-color: rgba(234, 224, 224, 0.8); ;
 }
 
 .date {
@@ -478,9 +624,13 @@ p {
 }
 
 .board-name {
-    font-size: 0.8em;
+    font-size: 0.7em;
     color: grey;
     align-self: flex-start;
+    border: 1px solid grey;
+    border-radius: 1em;
+    padding: 0.4em 0.7em;
+    
 }
 
 

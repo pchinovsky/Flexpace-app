@@ -27,10 +27,18 @@ export class NewTaskComponent {
 
   type = '';
 
-  colors: string[] = ['#FF5733', '#33FF57', '#3357FF', '#FF33A5', '#FFCC33'];
+  colors: string[] = [
+    '#63cdda',
+    '#f7d794',
+    '#f8a5c2',
+    '#f3a683',
+    '#45aaf2',
+    '#26de81',
+    '#fc5c65',
+  ];
   selectedColor: string = this.colors[0];
-  defaultHeight = 235;
-  defaultWidth = 185;
+  defaultHeight = 240;
+  defaultWidth = 190;
 
   newTask = this.fb.group({
     title: ['', Validators.required],
@@ -60,7 +68,7 @@ export class NewTaskComponent {
 
     this.newTask.get('note')?.valueChanges.subscribe((value) => {
       this.type = value ? 'task' : 'note';
-      this.defaultHeight = value ? 135 : 235;
+      this.defaultHeight = value ? 140 : 240;
 
       if (value) {
         this.newTask.get('content')?.disable();

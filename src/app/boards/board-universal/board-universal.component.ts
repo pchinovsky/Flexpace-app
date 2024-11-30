@@ -30,7 +30,15 @@ export class BoardUniversalComponent implements OnInit {
     saved: false,
   };
 
-  colors: string[] = ['#FF5733', '#33FF57', '#3357FF', '#FF33A5', '#FFCC33'];
+  colors: string[] = [
+    '#63cdda',
+    '#f7d794',
+    '#f8a5c2',
+    '#f3a683',
+    '#45aaf2',
+    '#26de81',
+    '#fc5c65',
+  ];
   selectedColor: string | null = null;
   currentUserId: string | null = '' as string;
 

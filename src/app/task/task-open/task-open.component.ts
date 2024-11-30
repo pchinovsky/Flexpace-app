@@ -21,6 +21,16 @@ export class TaskOpenComponent implements OnInit {
   selectColorOn = false;
   // contentControl: FormControl;
 
+  colors: string[] = [
+    '#63cdda',
+    '#f7d794',
+    '#f8a5c2',
+    '#f3a683',
+    '#45aaf2',
+    '#26de81',
+    '#fc5c65',
+  ];
+
   titleControl: FormControl;
   contentControl: FormControl;
 
@@ -38,6 +48,12 @@ export class TaskOpenComponent implements OnInit {
 
     this.titleControl = new FormControl(data.task.title);
     this.contentControl = new FormControl(data.task.content);
+
+    // for reactive forms and form control [disable] wasn't enough
+    if (!this.own) {
+      this.titleControl.disable();
+      this.contentControl.disable();
+    }
   }
 
   ngOnInit(): void {
@@ -56,6 +72,8 @@ export class TaskOpenComponent implements OnInit {
       console.log('title changed:', value);
       this.task.title = value;
     });
+
+    console.log('own?', this.own);
   }
 
   // text format -

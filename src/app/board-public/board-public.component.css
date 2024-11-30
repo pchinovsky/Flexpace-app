@@ -1,14 +1,15 @@
 .toast {
-    position: fixed;
-    bottom: 50px;
-    left: 50px;
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    opacity: 0.9;
-    z-index: 1000;
-  }
+  position: fixed;
+  bottom: 50px;
+  left: 50px;
+  background-color: #595858;
+  color: #fff;
+  padding: 0.7em 1.2em;
+  border-radius: 1.5em;
+  opacity: 0.6;
+  z-index: 1000;
+  font-size: 0.8em;
+}
   
 
 .background {

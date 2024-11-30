@@ -9,6 +9,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TaskOpenComponent } from './task-open/task-open.component';
 import { TimestampPipe } from '../shared/timestamp.pipe';
 import { SharedModule } from '../shared/shared.module';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [TaskComponent, NewTaskComponent, TaskOpenComponent],
@@ -16,6 +18,8 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     DragDropModule,
     ReactiveFormsModule,
     FormsModule,

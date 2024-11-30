@@ -8,23 +8,31 @@
 
 <!-- <hr /> -->
 <div class="cont">
-  <div *ngIf="isLoggedIn$ | async">
+  <div class="logo" *ngIf="isLoggedIn$ | async">
     <a href="#" *ngIf="isLoggedIn$ | async" routerLink="/profile"
       >{{ (authService.user$ | async)?.displayName }}'s Flexpace</a
     >
   </div>
   <p *ngIf="!(isLoggedIn$ | async)">Flexpace</p>
   <div class="btns">
-    <button (click)="openLoginModal()" *ngIf="!(isLoggedIn$ | async)">
+    <button
+      class="auth"
+      (click)="openLoginModal()"
+      *ngIf="!(isLoggedIn$ | async)"
+    >
       LoginNEW
     </button>
-    <button (click)="openRegModal()" *ngIf="!(isLoggedIn$ | async)">
+    <button
+      class="auth"
+      (click)="openRegModal()"
+      *ngIf="!(isLoggedIn$ | async)"
+    >
       RegNEW
     </button>
     <button (click)="newBoard()" *ngIf="isLoggedIn$ | async">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height="48px"
+        height="28px"
         viewBox="0 -960 960 960"
         width="48px"
         fill="#FFFFFF"
@@ -34,7 +42,9 @@
         />
       </svg>
     </button>
-    <button *ngIf="isLoggedIn$ | async" (click)="onLogout()">Logout</button>
+    <button class="auth" *ngIf="isLoggedIn$ | async" (click)="onLogout()">
+      Logout
+    </button>
   </div>
 </div>
 

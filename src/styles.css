@@ -6,17 +6,26 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --task-color: #ffffff; 
   }
 
-
   /* assign modal size here -  */
 .modal {
     background-color: var(--task-color);
-    border-radius: 2em; 
+    border-radius: 1.5em; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
     /* padding: 20px;  */
     overflow: hidden; 
-    height: 600px;
-    width: 600px;
+    /* height: 100%; */
+    /* height: 600px;
+    width: 600px; */
   }
+
+  /* works when applied in browser, not here -  */
+  .mdc-dialog__surface {
+    background-color: red;
+  }
+
+  /* .background-selection-modal {
+    background-color: red;
+  } */
 
   .custom-modal-class .mat-dialog-container {
     padding: 0;
@@ -30,9 +39,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .mat-mdc-dialog-surface {
     /* border: 2px solid red; */
     /* border-radius: 2em; */
-    overflow: auto;
-    height: 100%;
-    width: 100%;
+    /* overflow: auto; */
+    /* height: 100%;
+    width: 100%; */
     background-color: var(--task-color);
   }
 
@@ -54,7 +63,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .mat-mdc-dialog-surface {
     scrollbar-color: rgba(255, 255, 255, 0.5) var(--task-color);
     scrollbar-width: thin;
-    
+    /* border: 4px solid red; */
+    /* height: 300px; */
   }
 
 /* app-modal {
@@ -62,7 +72,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 } */
 
 .mat-dialog-container {
-    border-radius: 2em;
+    /* border-radius: 2em; */
     backdrop-filter: blur(10px);
   }
 
@@ -72,7 +82,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
   
   .mat-mdc-dialog-surface {
-    border-radius: 2em;
+    /* border-radius: 2em; */
   }
 
   /* Add a red border to the most likely dialog container classes */
@@ -142,8 +152,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 }
 
-:host ::ng-deep .mdc-dialog__container {
+/* :host ::ng-deep .mdc-dialog__container {
     border-radius: 2em;
     background-color: #994848 !important; 
     color: #ffffff; 
-}
+} */
