@@ -7,6 +7,7 @@
 <div
   class="box"
   id="box1"
+  [class.readonly]="readonly"
   [attr.data-task-id]="task.id"
   [ngStyle]="{
     top: !fixedLayout ? task.coordinates.y + 'px' : null,
@@ -17,13 +18,12 @@
   [ngClass]="{ 'fixed-layout': fixedLayout, 'dynamic-layout': !fixedLayout }"
   [style.backgroundColor]="task.color"
   [draggable]="task.draggable"
-  (click)="onTaskClick($event)"
-  (pointerup)="onPointerUp($event)"
+  (click)="!readonly && onTaskClick($event)"
   #taskBox
 >
   <!-- <div>{{ isOwn }}</div> -->
   <!-- <div>{{ task.draggable }}</div> -->
-  <div *ngIf="!isOwn">{{ task.ownerName }}</div>
+  <div class="owner-name" *ngIf="!isOwn">{{ task.ownerName }}</div>
   <div class="board-name" *ngIf="isOwn && board === 'filter'">
     {{ task.board }}
   </div>
@@ -65,7 +65,7 @@
   <div class="text">
     <h1>{{ task.title }}</h1>
     <div class="hr" *ngIf="task.type === 'note'"></div>
-    <div *ngIf="task.type === 'note'">
+    <div class="task-content" *ngIf="task.type === 'note'">
       <p>{{ task.content }}</p>
       <!-- <p [innerHTML]="task.content"></p> -->
     </div>
@@ -244,7 +244,7 @@
     </svg>
   </button>
 
-  <div class="resize-handle" #resizeHandle></div>
+  <div *ngIf="canResize" class="resize-handle" #resizeHandle></div>
 
   <div class="sub-cont" [ngClass]="isSubContainerOpen ? 'rev' : 'hid'">
     <div class="add-sub">
@@ -289,9 +289,9 @@
         (click)="$event.stopPropagation()"
       >
         <input
+          class="sub-input"
           type="text"
-          placeholder="add it"
-          id="sub-input"
+          placeholder="subtask content"
           [(ngModel)]="newSubtaskContent"
         />
       </div>

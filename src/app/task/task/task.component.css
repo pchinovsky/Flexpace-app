@@ -8,6 +8,8 @@
     max-height: 390px;
     padding: 1em;
     /* background-color: #6c5ce7; */
+    background: rgba(191, 180, 180, 0.2);
+
     border-radius: 1.5em;
     color: rgb(45, 45, 107);
     display: flex; 
@@ -125,7 +127,7 @@ button {
 }
 
 button.set {
-    background-color: rgba(148, 156, 139, 0.8);
+    /* background-color: rgba(148, 156, 139, 0.8); */
     color: blue;
 }
 
@@ -149,7 +151,7 @@ button.set svg {
 } */
 
 button:hover {
-    background-color: rgb(25, 56, 198, 0.8);
+    background-color: rgb(25, 56, 198, 0.1);
     transition: background-color 0.7s ease;
 }
 
@@ -162,6 +164,11 @@ button#static {
     position: absolute;
     right: 5px;
     top: 5px;
+}
+
+button#static:hover {
+    background-color: rgb(41, 41, 178);
+    transition: background-color 0.6s ease;
 }
 
 button#hid {
@@ -243,28 +250,61 @@ button#color {
     display: flex;
     justify-content: flex-end;
     gap: 0.5em;
+    z-index: 3;
 }
 
 .hr {
     width: 100%;
-    height: 0.3px;
+    height: 0.5px;
     background-color: rgb(45, 45, 107);
-    margin-bottom: 1em;
+    margin-bottom: 0;
+    /* z-index: 3; */
+    flex-shrink: 0;
 }
 
-.text {
-    padding: 1em;
+/* .text {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    overflow: hidden;
+    background-color: inherit;
+    margin-bottom: 1em;
+} */
+
+.text {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: flex-start;
+    overflow: hidden;
+    background-color: inherit;
+    margin-bottom: 1em;
+    position: relative; 
+    /* padding: 1em; */
+    gap: 0.5em; 
+}
+
+.task-content {
+    width: 100%;
+    flex-grow: 1; 
+    /* overflow-y: auto;  */
+    padding-top: 0.5em; 
 }
 
 h1 {
     text-align: left;
     font-size: 30px;
-    margin-bottom: 0.2em;
+    margin-bottom: 0;
+    margin-top: 1em;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    position: relative;
 }
 
 p {
@@ -482,13 +522,15 @@ p {
     position: relative;
   } */
   
-  #sub-input {
+  .sub-input {
     /* background-color: red; */
     /* position: relative; */
     /* z-index: 1000; */
-    width: 100px;
+    width: 100%;
     outline: none;
     border-radius: 0.5em;
+    background-color: rgb(247, 247, 247, 0.7);
+    padding: 0.5em 0.7em;
   }
   
 
@@ -497,7 +539,7 @@ p {
     top: 0; 
     left: 20%;
     display: flex;
-    background-color: #f7f7f7;
+    background-color: rgb(247, 247, 247, 0.4);
     /* border: 1px solid #ddd; */
     border-radius: 1.5em;
     /* box-sizing: border-box; */
@@ -506,7 +548,7 @@ p {
     padding-right: 11px; */
     /* z-index: 2000;  */
     /* min-height: 100px; */
-    width: 120px;
+    width: 100%;
     height: 20px;    
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -524,7 +566,7 @@ p {
 } */
 
 .sub-task:hover {
-    background-color:rgba(223, 155, 140, 0.2); 
+    background-color:rgba(220, 217, 217, 0.3); 
     /* opacity: 0.4; */
 }
 
@@ -568,7 +610,9 @@ p {
     transition: transform 0.3s ease;
     margin: 0;
     color: grey;
-    
+    background-color: inherit;
+    border-radius: 50%;
+    z-index: 100;
 }
 
 .found {
@@ -578,6 +622,7 @@ p {
 
 #rev:hover {
     color: rgb(182, 179, 179);
+    /* background-color: blue; */
 }
 
 /* .rev-btn {
@@ -623,15 +668,20 @@ p {
     color: black;
 }
 
-.board-name {
+.board-name, .owner-name {
     font-size: 0.7em;
     color: grey;
     align-self: flex-start;
     border: 1px solid grey;
     border-radius: 1em;
     padding: 0.4em 0.7em;
-    
 }
+
+.task.readonly {
+    pointer-events: none; 
+    opacity: 1; 
+    cursor: default; 
+  }
 
 
 

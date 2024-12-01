@@ -20,10 +20,10 @@
   <button mat-button (click)="close()">Cancel</button>
 </div> -->
 
-<!-- error eodal -->
-<div *ngIf="data.type === 'error'">
-  <h2 mat-dialog-title>Error</h2>
-  <div mat-dialog-content>
+<!-- error modal -->
+<div class="error" *ngIf="data.type === 'error'">
+  <h2 id="text" mat-dialog-title>Error</h2>
+  <div id="msg" mat-dialog-content>
     <p>{{ data.message }}</p>
   </div>
   <div mat-dialog-actions>
@@ -32,15 +32,9 @@
 </div>
 
 <!-- background modal -->
-<div *ngIf="data.type === 'backgroundSelection'">
-  <h2 mat-dialog-title>Select Background</h2>
+<div class="container" *ngIf="data.type === 'backgroundSelection'">
+  <h2 id="title" mat-dialog-title>Select background</h2>
   <div mat-dialog-content class="background-options-container">
-    <div
-      class="background-option no-background-option"
-      (click)="selectBackground('')"
-    >
-      <span>No Background</span>
-    </div>
     <div
       *ngFor="let background of data.predefinedImages"
       class="background-option"
@@ -49,8 +43,14 @@
       }"
       (click)="selectBackground(background)"
     ></div>
+    <div
+      class="background-option no-background-option"
+      (click)="selectBackground('')"
+    >
+      <span>None</span>
+    </div>
   </div>
-  <div mat-dialog-actions>
+  <div class="close" mat-dialog-actions>
     <button mat-button (click)="close()">Cancel</button>
   </div>
 </div>

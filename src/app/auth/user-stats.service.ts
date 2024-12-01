@@ -3,6 +3,8 @@ import { TaskService } from '../task/task.service';
 import { AuthService } from '../auth/auth.service';
 import { Observable, map } from 'rxjs';
 import { Task } from '../types/task';
+import { Board } from '../types/board';
+import { BoardService } from '../boards/board.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +12,8 @@ import { Task } from '../types/task';
 export class UserStatsService {
   constructor(
     private taskService: TaskService,
-    private authService: AuthService
+    private authService: AuthService,
+    private boardService: BoardService
   ) {}
 
   getUserOwnedTasks(): Observable<Task[]> {
@@ -83,5 +86,19 @@ export class UserStatsService {
 
   getUserPublishedTasksCount(): Observable<number> {
     return this.getUserPublishedTasks().pipe(map((tasks) => tasks.length));
+  }
+
+  //
+
+  getUserCreatedBoards(): Observable<Board[]> {
+    const userId = this.authService.getCurrentUserId();
+
+    return this.boardService
+      .getBoards()
+      .pipe(map((boards) => boards.filter((board) => board.owner === userId)));
+  }
+
+  getUserCreatedBoardCount(): Observable<number> {
+    return this.getUserCreatedBoards().pipe(map((boards) => boards.length));
   }
 }

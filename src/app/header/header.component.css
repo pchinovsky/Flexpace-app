@@ -31,7 +31,7 @@ button {
     /* opacity: 1; */
     /* background-color: rgb(156, 139, 139, 0.3); */
     background-color: white;
-    border: 2px solid rgb(0, 0, 255, 0.8);
+    border: 1px solid rgb(0, 0, 255, 0.8);
     padding: 0.2em;
     padding: 0;
     display: flex;
@@ -41,8 +41,16 @@ button {
 
 button.auth {
     width: auto;
-    height: auto;
+    height: 30px;
     padding: 0.2em 0.9em;
+    color: rgb(0, 0, 255, 0.8);
+
+}
+
+button.add-board {
+    height: 30px;
+    width: 30px;
+
 }
 
 button:hover {
@@ -54,7 +62,8 @@ button:hover {
 button svg {
     background-color: none;
     border: none;
-    fill: rgb(64, 61, 61);
+    /* fill: rgb(64, 61, 61); */
+    fill: rgb(0, 0, 255, 0.8);
     stroke: currentColor;
     width: 20px;
     height: 20px;
@@ -70,4 +79,15 @@ button svg:hover {
     display: flex;
     align-items: center;
     margin-left: 7px;
+
+}
+
+.logo p, .logo a {
+    font-weight: bold;
+    color: rgb(0, 0, 255, 0.8);
+}
+
+.logo a:hover, .logo p:hover {
+    color: rgba(161, 117, 249, 0.8);
+    transition: color 0.4s ease-in-out;
 }

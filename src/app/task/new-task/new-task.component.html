@@ -8,7 +8,7 @@
     type="text"
     name="title"
     id="title"
-    placeholder="john.doe@gmail.com"
+    placeholder="task title"
     required
     formControlName="title"
   />
@@ -17,7 +17,7 @@
   <div class="textarea-container">
     <textarea
       id="adjustable-textarea"
-      placeholder="Enter task details"
+      placeholder="task content"
       rows="1"
       (input)="adjustTextareaHeight($event)"
       formControlName="content"
@@ -43,10 +43,15 @@
   </label>
 
   <!-- color -->
-  <label>Select a Color:</label>
+  <label>Select task color</label>
   <div class="color-options">
     <label *ngFor="let color of colors">
-      <input type="radio" [value]="color" formControlName="color" />
+      <input
+        class="color"
+        type="radio"
+        [value]="color"
+        formControlName="color"
+      />
       <span
         class="color-swatch"
         [style.backgroundColor]="color"
@@ -55,8 +60,14 @@
     </label>
   </div>
 
-  <label for="due">Set Due Date:</label>
+  <label for="due">Set due date</label>
   <input type="date" id="due" name="due-date" formControlName="dueDate" />
 
-  <button type="submit" [disabled]="newTask.invalid">Create</button>
+  <button
+    type="submit"
+    [ngClass]="{ disabled: newTask.invalid }"
+    [disabled]="newTask.invalid"
+  >
+    Create
+  </button>
 </form>

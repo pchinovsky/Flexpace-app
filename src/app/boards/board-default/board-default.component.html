@@ -11,6 +11,19 @@
   (pointerup)="onBoardPointerUp($event)"
   #boardElement
 >
+  <!-- img -->
+  <div
+    class="background-image"
+    [style.backgroundImage]="
+      backgroundImage ? 'url(' + backgroundImage + ')' : 'none'
+    "
+  ></div>
+
+  <!-- img btn -->
+  <button id="bgr" class="add-bg-btn" (click)="openBackgroundSelectionModal()">
+    Background
+  </button>
+
   <app-new-task
     *ngIf="showNewTaskForm"
     [board]="boardName"

@@ -10,6 +10,8 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { UserStatsService } from '../user-stats.service';
+import { TaskService } from 'src/app/task/task.service';
+import { Task } from 'src/app/types/task';
 
 @Component({
   selector: 'app-profile',
@@ -22,18 +24,21 @@ export class ProfileComponent implements OnInit {
   data: object = {};
   isEditing = false;
   profileForm!: FormGroup;
+  lastEditedTask: Task | null = null;
 
   numOfTasks$!: Observable<number>;
   numOfTasksSaved$!: Observable<number>;
   numOfTasksSavedByOthers$!: Observable<number>;
   numOfPublishedTasks$!: Observable<number>;
+  numberOfBoards$!: Observable<number>;
 
   constructor(
     private firestore: AngularFirestore,
     private auth: AuthService,
     private afAuth: AngularFireAuth,
     private fb: FormBuilder,
-    private userStatsService: UserStatsService
+    private userStatsService: UserStatsService,
+    private taskService: TaskService
   ) {}
 
   ngOnInit() {
@@ -48,6 +53,7 @@ export class ProfileComponent implements OnInit {
       numberOfTasksSaved: [{ value: '', disabled: true }],
       numberOfTasksSavedByOthers: [{ value: '', disabled: true }],
       numberOfPublishedTasks: [{ value: '', disabled: true }],
+      numberOfBoards: [{ value: '', disabled: true }],
     });
 
     this.auth.getUserId().subscribe((userId) => {
@@ -61,6 +67,7 @@ export class ProfileComponent implements OnInit {
           this.userStatsService.getUserTasksSavedByOthersCount();
         this.numOfPublishedTasks$ =
           this.userStatsService.getUserPublishedTasksCount();
+        this.numberOfBoards$ = this.userStatsService.getUserCreatedBoardCount();
 
         this.numOfTasks$.subscribe((count) => {
           this.profileForm.patchValue({ numberOfTasks: count });
@@ -77,7 +84,21 @@ export class ProfileComponent implements OnInit {
         this.numOfPublishedTasks$.subscribe((count) => {
           this.profileForm.patchValue({ numberOfPublishedTasks: count });
         });
+
+        this.numberOfBoards$.subscribe((count) => {
+          this.profileForm.patchValue({ numberOfBoards: count });
+        });
       }
+
+      this.taskService
+        .getLastEditedTask()
+        .then((task) => {
+          this.lastEditedTask = task;
+          console.log('Last edited task:', this.lastEditedTask);
+        })
+        .catch((error) => {
+          console.error('Error fetching last edited task:', error);
+        });
     });
 
     // patch form with user data -

@@ -10,16 +10,22 @@
     type="text"
     name="title"
     id="title"
-    placeholder="Laundry"
+    placeholder="board title"
     required
     formControlName="title"
+    minlength="3"
   />
 
   <!-- color -->
-  <label>Select a Color:</label>
+  <label>Select board color</label>
   <div class="color-options">
     <label *ngFor="let color of colors">
-      <input type="radio" [value]="color" formControlName="color" />
+      <input
+        class="color"
+        type="radio"
+        [value]="color"
+        formControlName="color"
+      />
       <span
         class="color-swatch"
         [style.backgroundColor]="color"
@@ -28,5 +34,12 @@
     </label>
   </div>
 
-  <button type="submit" [disabled]="newBoard.invalid">Create</button>
+  <button
+    class="create"
+    type="submit"
+    [ngClass]="{ disabled: newBoard.invalid }"
+    [disabled]="newBoard.invalid"
+  >
+    Create
+  </button>
 </form>

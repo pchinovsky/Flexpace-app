@@ -21,7 +21,15 @@ export class BoardNewComponent {
   @Output() closeBoardModalEvent = new EventEmitter<void>();
 
   userId = '';
-  colors: string[] = ['#FF5733', '#33FF57', '#3357FF', '#FF33A5', '#FFCC33'];
+  colors: string[] = [
+    '#63cdda',
+    '#f7d794',
+    '#f8a5c2',
+    '#f3a683',
+    '#45aaf2',
+    '#26de81',
+    '#fc5c65',
+  ];
   selectedColor: string = this.colors[0];
 
   isCreatingBoard = false;
@@ -70,6 +78,9 @@ export class BoardNewComponent {
               .createBoard(board as Board)
               .then(() => (this.isCreatingBoard = false))
               .catch(() => (this.isCreatingBoard = false));
+
+            this.router.navigate(['board/board.id']);
+            this.closeBoardModal();
           } else {
             // this.isCreatingBoard = false;
             console.log('No user is logged in.');

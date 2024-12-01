@@ -1,7 +1,9 @@
 <div class="modal-backdrop" (click)="closeModal()"></div>
 <div class="modal-content">
   <form class="reg" [formGroup]="regForm" (ngSubmit)="onReg()">
-    <h2>Reg Form</h2>
+    <h4>Flexpace</h4>
+
+    <h2>Sign up</h2>
 
     <!-- username -->
     <p class="field field-icon">
@@ -11,18 +13,18 @@
         type="text"
         name="name"
         id="name"
-        placeholder="Johny"
+        placeholder="username"
         formControlName="name"
         required
       />
     </p>
 
     <ng-container *ngIf="regForm.get('name')?.touched">
-      <p class="error" *ngIf="regForm.get('name')?.errors?.['required']">
-        Username is required!
+      <p class="form-error" *ngIf="regForm.get('name')?.errors?.['required']">
+        Username is required
       </p>
-      <p class="error" *ngIf="regForm.get('name')?.errors?.['minlength']">
-        Username must be at least X characters long!
+      <p class="form-error" *ngIf="regForm.get('name')?.errors?.['minlength']">
+        Username must be at least 5 characters long
       </p>
     </ng-container>
 
@@ -37,18 +39,24 @@
         type="email"
         name="email"
         id="email"
-        placeholder="john.doe@gmail.com"
+        placeholder="e-mail address"
         required
         formControlName="email"
       />
     </p>
     <ng-container *ngIf="regForm.get('email')?.touched">
-      <p class="error" *ngIf="regForm.get('email')?.errors?.['required']">
-        Email is required!
+      <p class="form-error" *ngIf="regForm.get('email')?.errors?.['required']">
+        Email is required
       </p>
-      <!-- <p class="error">
-                    Email is not valid!
-                </p> -->
+      <p
+        class="form-error"
+        *ngIf="
+          regForm.get('email')?.value &&
+          regForm.get('email')?.errors?.['email']
+        "
+      >
+        Please use a valid e-mail address
+      </p>
     </ng-container>
 
     <p class="field field-icon">
@@ -57,38 +65,65 @@
         type="password"
         name="password"
         id="password"
-        placeholder="******"
+        placeholder="password"
         required
         formControlName="pass"
       />
     </p>
-    <!-- <p class="error">
-                    Password is required!
-                </p>
-                <p class="error">
-                    Password must be at least 4 characters!
-                </p> -->
+    <ng-container *ngIf="regForm.get('pass')?.touched">
+      <p class="form-error" *ngIf="regForm.get('pass')?.errors?.['required']">
+        Password is required
+      </p>
+      <p
+        class="form-error"
+        *ngIf="
+          regForm.get('pass')?.value &&
+          regForm.get('pass')?.errors?.['minlength']
+        "
+      >
+        Password must be at least 6 characters long
+      </p>
+    </ng-container>
 
-    <!-- repass -->
     <p class="field field-icon">
       <label for="rePassword"><span></span></label>
       <input
         type="password"
         name="rePassword"
         id="rePassword"
-        placeholder="******"
+        placeholder="password confirm"
         formControlName="repass"
         required
       />
     </p>
-    <!-- <p class="error">Repeat Password does not match password!</p> -->
+    <ng-container *ngIf="regForm.get('repass')?.touched">
+      <p class="form-error" *ngIf="regForm.get('repass')?.errors?.['required']">
+        Password re-type is required
+      </p>
+      <p
+        class="form-error"
+        *ngIf="
+          regForm.get('repass')?.value &&
+          regForm.get('repass')?.errors?.['passwordMismatch']
+        "
+      >
+        Passwords do not match
+      </p>
+    </ng-container>
 
-    <button type="submit" [disabled]="regForm.invalid">Register</button>
+    <button
+      class="sign"
+      type="submit"
+      [ngClass]="{ disabled: regForm.invalid }"
+      [disabled]="regForm.invalid"
+    >
+      Sign up
+    </button>
 
     <p class="text-center">
-      Already have an account, bro?
-      <a routerLink="/auth/login" href="#">Login</a>
+      Already have an account?
+      <a routerLink="/auth/login" href="#">Sign in</a>
     </p>
-    <button type="button" (click)="closeModal()">Close</button>
+    <!-- <button type="button" (click)="closeModal()">Close</button> -->
   </form>
 </div>

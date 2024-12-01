@@ -13,23 +13,25 @@
       >{{ (authService.user$ | async)?.displayName }}'s Flexpace</a
     >
   </div>
-  <p *ngIf="!(isLoggedIn$ | async)">Flexpace</p>
+  <div class="logo" *ngIf="!(isLoggedIn$ | async)">
+    <p>Flexpace</p>
+  </div>
   <div class="btns">
     <button
       class="auth"
       (click)="openLoginModal()"
       *ngIf="!(isLoggedIn$ | async)"
     >
-      LoginNEW
+      Sign in
     </button>
     <button
       class="auth"
       (click)="openRegModal()"
       *ngIf="!(isLoggedIn$ | async)"
     >
-      RegNEW
+      Sign up
     </button>
-    <button (click)="newBoard()" *ngIf="isLoggedIn$ | async">
+    <button class="add-board" (click)="newBoard()" *ngIf="isLoggedIn$ | async">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="28px"
@@ -43,7 +45,7 @@
       </svg>
     </button>
     <button class="auth" *ngIf="isLoggedIn$ | async" (click)="onLogout()">
-      Logout
+      Sign out
     </button>
   </div>
 </div>

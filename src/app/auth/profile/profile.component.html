@@ -22,11 +22,11 @@
       placeholder="Enter image URL"
     />
 
-    <label for="bio"><strong>Bio:</strong></label>
+    <label for="bio"><strong>Bio</strong></label>
     <div *ngIf="!isEditing">{{ (userData$ | async)?.bio }}</div>
     <input *ngIf="isEditing" id="bio" formControlName="bio" type="text" />
 
-    <label for="address"><strong>Address:</strong></label>
+    <label for="address"><strong>Address</strong></label>
     <div *ngIf="!isEditing">{{ (userData$ | async)?.address }}</div>
     <input
       *ngIf="isEditing"
@@ -39,33 +39,60 @@
   <section class="settings">
     <section class="one">
       <div class="stat-row">
-        <label for="numberOfTasks"><strong>Number of Tasks:</strong></label>
-        <div>{{ profileForm.get("numberOfTasks")?.value }}</div>
+        <label for="numberOfTasks"><div>Tasks</div></label>
+        <div class="num">{{ profileForm.get("numberOfTasks")?.value }}</div>
       </div>
+
+      <hr />
 
       <div class="stat-row">
-        <label for="numberOfTasksSaved"
-          ><strong>Number of Saved Tasks:</strong></label
-        >
-        <div>{{ profileForm.get("numberOfTasksSaved")?.value }}</div>
+        <label for="numberOfPublishedTasks"><div>Published tasks</div></label>
+        <div class="num">
+          {{ profileForm.get("numberOfPublishedTasks")?.value }}
+        </div>
       </div>
 
+      <hr />
+      <div class="stat-row">
+        <label for="numberOfBoards"><div>Boards</div></label>
+        <div class="num">
+          {{ profileForm.get("numberOfBoards")?.value }}
+        </div>
+      </div>
+      <hr />
+      <div class="stat-row">
+        <label for="numberOfTasksSaved"><div>Saved tasks</div></label>
+        <div class="num">
+          {{ profileForm.get("numberOfTasksSaved")?.value }}
+        </div>
+      </div>
+      <hr />
       <div class="stat-row">
         <label for="numberOfTasksSavedByOthers"
-          ><strong>Number of Tasks Saved by Others:</strong></label
+          ><div>Tasks saved by others</div></label
         >
-        <div>{{ profileForm.get("numberOfTasksSavedByOthers")?.value }}</div>
-      </div>
-
-      <div class="stat-row">
-        <label for="numberOfPublishedTasks"
-          ><strong>Number of Published Tasks:</strong></label
-        >
-        <div>{{ profileForm.get("numberOfPublishedTasks")?.value }}</div>
+        <div class="num">
+          {{ profileForm.get("numberOfTasksSavedByOthers")?.value }}
+        </div>
       </div>
     </section>
 
-    <section class="two"></section>
+    <section class="two">
+      <strong>Last Edited Task</strong>
+      <div *ngIf="lastEditedTask" class="task-box">
+        <app-task
+          [task]="lastEditedTask"
+          [fixedLayout]="true"
+          [draggable]="false"
+          [readonly]="true"
+          [style.width.px]="190"
+          [style.height.px]="200"
+        ></app-task>
+      </div>
+      <div *ngIf="!lastEditedTask">
+        <p>No task has been edited recently.</p>
+      </div>
+    </section>
   </section>
 
   <div class="actions">

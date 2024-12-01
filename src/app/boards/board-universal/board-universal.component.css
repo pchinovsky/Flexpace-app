@@ -101,12 +101,13 @@ app-task {
   
   .task-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 15px;
     padding: 20px;
     position: relative; 
-    /* background-color: rgb(224, 156, 156); */
-
+    background-color: rgb(248, 243, 243, 0.5);
+    height: 100vh;
   }
   
   .box {

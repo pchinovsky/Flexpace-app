@@ -34,13 +34,6 @@ export class BoardComponent {
 
   predefinedImages: string[] = [];
 
-  // backgroundOptions: string[] = [
-  //   'assets/images/background1.jpg',
-  //   'assets/images/background2.jpg',
-  //   'assets/images/background3.jpg',
-  //   'assets/images/background4.jpg',
-  // ];
-
   boardName: string | null = '';
   showNewTaskForm = false;
   showTaskOpen = false;
@@ -59,7 +52,7 @@ export class BoardComponent {
 
   clickCoordinates: { x: number; y: number } | null = null;
   // gridPoints: { x: number; y: number }[] = []; // To hold grid points
-  gridPoints = this.point.generateGridPoints(27, 27, 50, 50, 50, 50);
+  gridPoints = this.point.generateGridPoints(12, 25, 50, 50, 50, 50);
   tasks: Task[] = [];
 
   currentUserId: string | null = '' as string;
@@ -591,7 +584,16 @@ export class BoardComponent {
   getPredefinedImages(): string[] {
     const folderPath = 'backgrounds';
     const images: string[] = [];
-    const imageNames = ['B1.jpg', 'B2.jpg', 'B3.jpg'];
+    const imageNames = [
+      'B1.jpg',
+      'B2.jpg',
+      'B3.jpg',
+      'B4.jpg',
+      'B5.jpg',
+      'B6.jpg',
+      'B7.jpg',
+      'B8.jpg',
+    ];
 
     imageNames.forEach((imageName) => {
       const fileRef = this.storage.ref(`${folderPath}/${imageName}`);

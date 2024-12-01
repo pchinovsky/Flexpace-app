@@ -7,60 +7,8 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class TaskService {
-  // mockTasks: Task[] = [
-  //   {
-  //     id: '1',
-  //     title: 'Complete Angular Project',
-  //     content: 'Finish the Angular project for the final assessment.',
-  //     subtasks: [],
-  //     createdAt: new Date('2023-11-10'),
-  //     dueDate: new Date('2023-11-20'),
-  //     owner: 'user123',
-  //     public: true,
-  //     board: 'default',
-  //     today: true,
-  //     type: 'task',
-  //     priority: 1,
-  //     fav: false,
-  //     tags: ['Angular', 'Project'],
-  //     color: '#ff6347',
-  //     resizable: true,
-  //     draggable: true,
-  //     editable: true,
-  //     coordinates: { x: 100, y: 150 },
-  //     size: { width: 150, height: 200 },
-  //     savedBy: ['user456'],
-  //     selectable: true,
-  //     selected: false,
-  //     done: false,
-  //   },
-  //   {
-  //     id: '2',
-  //     title: 'Grocery Shopping',
-  //     content: 'Buy groceries for the week.',
-  //     subtasks: [],
-  //     createdAt: new Date('2023-11-12'),
-  //     dueDate: new Date('2023-11-15'),
-  //     owner: 'user123',
-  //     public: false,
-  //     board: 'default',
-  //     today: false,
-  //     type: 'task',
-  //     priority: 2,
-  //     fav: true,
-  //     tags: ['Shopping', 'Weekly'],
-  //     color: '#87cefa',
-  //     resizable: true,
-  //     draggable: true,
-  //     editable: true,
-  //     coordinates: { x: 400, y: 250 },
-  //     size: { width: 120, height: 200 },
-  //     savedBy: ['user789'],
-  //     selectable: true,
-  //     selected: false,
-  //     done: false,
-  //   },
-  // ];
+  // private lastEditedTask: any;
+  private lastEditedTaskDoc: any = this.firestore.collection('lastEditedTask');
 
   constructor(private firestore: AngularFirestore) {}
 
@@ -83,14 +31,6 @@ export class TaskService {
       .valueChanges() as Observable<Task>;
   }
 
-  // mock fn -
-
-  // getTasks(board: string | null): Observable<Task[]> {
-  //   return of(
-  //     this.mockTasks.filter((task) => task.board === board || board === null)
-  //   );
-  // }
-
   updateTask(task: Partial<Task>) {
     this.firestore
       .collection('tasks')
@@ -98,7 +38,10 @@ export class TaskService {
       // update only the modified -
       // .set() with { merge: true } alternative - when you don't know what should be updated
       .update(task)
-      .then(() => console.log('Task updated successfully'))
+      .then(() => {
+        console.log('Task updated successfully');
+        this.setLastEditedTask(task as Task);
+      })
       .catch((error) => console.error('Error updating task: ', error));
   }
 
@@ -133,5 +76,34 @@ export class TaskService {
   togglePublish(task: Task): void {
     task.public = !task.public;
     this.updateTask(task);
+  }
+
+  //
+
+  setLastEditedTask(task: Task): void {
+    this.lastEditedTaskDoc.doc('current').set(task);
+  }
+
+  getLastEditedTask(): Promise<Task | null> {
+    const docRef = this.firestore.doc('lastEditedTask/current');
+    return (
+      docRef
+        .get()
+        // .get not returning obs, so toPromise needed
+        .toPromise()
+        .then((docSnapshot: any) => {
+          if (docSnapshot.exists) {
+            console.log('Last Edited Task Retrieved:', docSnapshot.data());
+            return docSnapshot.data() as Task;
+          } else {
+            console.warn('No last edited task found in Firestore');
+            return null;
+          }
+        })
+        .catch((error) => {
+          console.error('Error retrieving last edited task:', error);
+          return null;
+        })
+    );
   }
 }

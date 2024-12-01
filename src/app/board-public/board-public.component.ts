@@ -15,6 +15,7 @@ export class BoardPublicComponent implements OnInit {
   showRegModal = false;
   showTaskOpen = false;
   owner: string | null | undefined = '';
+  boardName = 'wall';
 
   tasks: Task[] = [];
   gridPoints: { x: number; y: number }[] = [];

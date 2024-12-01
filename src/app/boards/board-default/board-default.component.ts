@@ -14,6 +14,8 @@ import { QueryList } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { retry } from 'rxjs';
 import { TaskOpenComponent } from 'src/app/task/task-open/task-open.component';
+import { finalize } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Component({
   selector: 'app-board-default',
@@ -23,6 +25,7 @@ import { TaskOpenComponent } from 'src/app/task/task-open/task-open.component';
 export class BoardDefaultComponent implements OnInit {
   @ViewChildren(TaskComponent) taskComponents!: QueryList<TaskComponent>;
 
+  boardId: string | null = null;
   boardName: string | null = '';
   showNewTaskForm = false;
   showTaskOpen = false;
@@ -34,6 +37,9 @@ export class BoardDefaultComponent implements OnInit {
   private startX = 0;
   private startY = 0;
 
+  backgroundImage: string | null = null;
+  predefinedImages: string[] = [];
+
   defaultSize = { width: 185, height: 235 };
   // taskWidth = 185;
   // taskHeight = 235;
@@ -41,7 +47,7 @@ export class BoardDefaultComponent implements OnInit {
 
   clickCoordinates: { x: number; y: number } | null = null;
   // gridPoints: { x: number; y: number }[] = []; // To hold grid points
-  gridPoints = this.point.generateGridPoints(27, 27, 50, 50, 50, 50);
+  gridPoints = this.point.generateGridPoints(12, 25, 50, 50, 50, 50);
   tasks: Task[] = [];
 
   currentUserId: string | null = '' as string;
@@ -54,7 +60,8 @@ export class BoardDefaultComponent implements OnInit {
     private point: PointService,
     private taskService: TaskService,
     private matDialog: MatDialog,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private storage: AngularFireStorage
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +90,16 @@ export class BoardDefaultComponent implements OnInit {
         { once: true }
       );
     });
+
+    this.route.paramMap.subscribe((params) => {
+      this.boardId = params.get('boardId');
+
+      if (this.boardId) {
+        this.loadBackgroundImage();
+      }
+    });
+
+    this.predefinedImages = this.getPredefinedImages();
   }
 
   // FIX - see only own tasks for def board
@@ -324,4 +341,145 @@ export class BoardDefaultComponent implements OnInit {
   //   // event.preventDefault();
   //   // event.stopImmediatePropagation();
   // }
+
+  //
+
+  openBackgroundSelectionModal(): void {
+    this.matDialog
+      .open(ModalComponent, {
+        data: {
+          type: 'backgroundSelection',
+          predefinedImages: this.predefinedImages,
+        },
+        width: '500px',
+        panelClass: 'background-selection-modal',
+      })
+      .afterClosed()
+      .subscribe((selectedBackground: string | null) => {
+        if (this.boardId) {
+          if (selectedBackground === '') {
+            // no-img option
+            this.setBackgroundImage(null);
+          } else if (selectedBackground) {
+            this.setBackgroundImage(selectedBackground);
+          }
+        }
+      });
+  }
+
+  setBackgroundImage(imageUrl: string | null): void {
+    if (this.boardId) {
+      this.firestore
+        .collection('boards')
+        .doc(this.boardId)
+        .update({
+          backgroundImage: imageUrl,
+        })
+        .then(() => {
+          this.backgroundImage = imageUrl;
+          this.cdr.markForCheck();
+          console.log('Background image updated successfully.');
+        })
+        .catch((error) => {
+          console.error('Error updating background image:', error);
+        });
+    }
+  }
+
+  selectBackgroundImage(imageUrl: string): void {
+    if (this.boardId) {
+      this.firestore
+        .collection('boards')
+        .doc(this.boardId)
+        .update({
+          backgroundImage: imageUrl,
+        })
+        .then(() => {
+          this.backgroundImage = imageUrl;
+          this.cdr.markForCheck();
+          console.log('Background image updated successfully.');
+        })
+        .catch((error) => {
+          console.error('Error updating background image:', error);
+        });
+    }
+  }
+
+  getPredefinedImages(): string[] {
+    const folderPath = 'backgrounds';
+    const images: string[] = [];
+    const imageNames = [
+      'B1.jpg',
+      'B2.jpg',
+      'B3.jpg',
+      'B4.jpg',
+      'B5.jpg',
+      'B6.jpg',
+      'B7.jpg',
+      'B8.jpg',
+    ];
+
+    imageNames.forEach((imageName) => {
+      const fileRef = this.storage.ref(`${folderPath}/${imageName}`);
+      fileRef.getDownloadURL().subscribe((url) => {
+        images.push(url);
+      });
+    });
+
+    return images;
+  }
+
+  addBackgroundImage(): void {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = () => {
+      const file = input.files?.[0];
+      if (file && this.boardId) {
+        const filePath = `backgrounds/${this.boardId}/${file.name}`;
+        const fileRef = this.storage.ref(filePath);
+        const task = this.storage.upload(filePath, file);
+
+        task.percentageChanges().subscribe((percentage) => {
+          console.log(`Upload is ${percentage}% done.`);
+        });
+
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              fileRef.getDownloadURL().subscribe((url) => {
+                this.backgroundImage = url;
+                this.cdr.markForCheck();
+
+                if (this.boardId) {
+                  this.firestore.collection('boards').doc(this.boardId).update({
+                    backgroundImage: url,
+                  });
+                }
+              });
+            })
+          )
+          .subscribe();
+      }
+    };
+    input.click();
+  }
+
+  loadBackgroundImage(): void {
+    if (this.boardId) {
+      this.firestore
+        .collection('boards')
+        .doc(this.boardId)
+        .valueChanges()
+        .subscribe((boardData: any) => {
+          if (boardData?.backgroundImage) {
+            this.backgroundImage = boardData.backgroundImage;
+            this.cdr.markForCheck();
+          } else {
+            this.backgroundImage = null;
+          }
+        });
+    }
+  }
 }

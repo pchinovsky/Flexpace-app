@@ -1,6 +1,7 @@
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
+body { margin: 0; font-family: Fira Sans, sans-serif; }
 
 :root {
     --task-color: #ffffff; 
@@ -28,7 +29,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   } */
 
   .custom-modal-class .mat-dialog-container {
-    padding: 0;
+    /* padding: 2em; */
   }
   
   .mat-mdc-dialog-container .mdc-dialog__surface {
@@ -73,7 +74,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .mat-dialog-container {
     /* border-radius: 2em; */
-    backdrop-filter: blur(10px);
+    /* backdrop-filter: blur(10px); */
   }
 
 .cdk-overlay-backdrop {

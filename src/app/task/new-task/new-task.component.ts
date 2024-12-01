@@ -88,6 +88,10 @@ export class NewTaskComponent {
   }
 
   newTaskSubmit() {
+    console.log(this.newTask.get('color')?.value);
+    console.log(this.newTask.get('color')?.valid);
+    console.log(this.newTask.get('color')?.errors);
+
     if (!this.coordinates) {
       return;
     }

@@ -103,10 +103,12 @@
   /*  */
 
 .hr {
+    align-self: flex-start;
     width: 80%;
     height: 0.3px;
     background-color: rgb(45, 45, 107);
     margin-bottom: 1em;
+    padding-left: 2em;
 }
 
   div {
@@ -125,11 +127,13 @@
   }
 
   div.container {
+    box-sizing: border-box;
     display: flex;
     flex-direction: row;
     gap: 1em;
     height: 100%;
-
+    width: 600px;
+    background-color: #000;
   }
 
   div.text {
@@ -137,6 +141,7 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+    padding-right: 4em;
   }
 
   .task-title {
@@ -147,7 +152,7 @@
     resize: none; 
     border: none;
     outline: none;
-    padding: 2em;
+    padding: 1em 0 1em 1.7em;
     padding-bottom: 1em;
   }
 
@@ -278,26 +283,27 @@ textarea.task-text {
 button {
   width: 35px;    
   height: 35px;
-  /* margin-right: 1em; */
-  /* border: 1px solid white; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 50%;
   outline: none;
   /* opacity: 1; */
-  padding: 0.6em;
-  background-color: rgb(156, 139, 139, 0.5);
+  padding: 0.4em;
+  background-color: inherit;
+  /* background-color: rgb(156, 139, 139, 0.5); */
   border: 0px solid blue;
 }
 
 button.set {
-  background-color: rgba(148, 156, 139, 0.8);
+  /* background-color: rgba(148, 156, 139, 0.8); */
   color: blue;
 }
 
 button svg {
   background-color: none;
   border: none;
-  fill: rgb(236, 229, 229);
-  stroke: currentColor;
+  fill: rgb(255, 255, 255);
   width: 100%;
   height: 100%;
 }
@@ -313,7 +319,7 @@ button.set svg {
 } */
 
 button:hover {
-  background-color: rgb(25, 56, 198, 0.8);
+  background-color: rgb(25, 56, 198, 0.1);
   transition: background-color 0.7s ease;
 }
 
@@ -345,7 +351,10 @@ button#color {
     width: auto;
 }
   
-  
+/* ::ng-deep .modal {
+  background-color: red;
+} */
+
 /* .modal {
   animation: modalExpand 3s ease-in-out forwards;
 }

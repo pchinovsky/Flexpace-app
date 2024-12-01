@@ -1,18 +1,37 @@
-.mat-mdc-dialog-surface {
-    border-radius: 2em;
+
+
+  button {
+    text-decoration: none;
+    list-style: none outside;
+    color: rgb(0, 0, 255, 0.8);
+    border: 1px solid rgb(0, 0, 255, 0.8);
+    border-radius: 1.5em;
+    background-color: white;
+    padding: 0.4em 0.8em;
+    align-self: center;
+  }
+  
+  button:hover {
+    background-color: blue;
+    color: white;
+    transition: background-color 0.7s ease;
   }
 
-.btn {
-    border-radius: 1em;
-    border: none;
-    color: rgb(82, 79, 79);
-    background-color: lightgray;
-    padding: 0.7em;
-    margin: 0.7em;
+#text {
+  font-size: 1em;
+  color: blue;
+  padding: 0.7em;
+  padding-top: 0;
+  margin-top: 0;
 }
 
-.error-modal {
+#msg {
+  padding: 0.7em;
+}
+
+.error {
     border-radius: 2em;
+    padding: 1em;
 }
 
 .mdc-dialog__container {
@@ -25,13 +44,24 @@
 
 /* for img ops -  */
 
+.container {
+  padding: 1em;
+}
+
+#title {
+  font-size: 1em;
+  color: blue;
+  margin-bottom: 1em;
+  padding-left: 0.8em;
+}
+
 .background-options-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
   }
-  
+
   .background-option {
     width: 100px;
     height: 100px;
@@ -39,11 +69,13 @@
     background-position: center;
     cursor: pointer;
     border: 2px solid transparent;
+    border-radius: 1em;
     transition: border-color 0.2s;
+    opacity: 0.5;
   }
   
   .background-option:hover {
-    border-color: #007bff; 
+    opacity: 1;
   }
 
   .no-background-option {
@@ -57,8 +89,9 @@
   }
   
   .no-background-option span {
-    font-size: 14px;
+    font-size: 1em;
     color: #555; 
+    text-align: center;
   } 
   
 

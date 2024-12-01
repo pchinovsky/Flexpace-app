@@ -41,6 +41,7 @@ export class TaskComponent implements AfterViewInit {
   @Input() draggable: boolean = true;
   // @Input() resizable: boolean = true;
   @Input() fixedLayout: boolean = false;
+  @Input() readonly: boolean = false;
   @Input() board: string = '';
 
   @Output() resizeEvent = new EventEmitter<any>();
@@ -85,6 +86,7 @@ export class TaskComponent implements AfterViewInit {
   selectColorOn = false;
   isOwn = false;
   isDatePickerOpen = false;
+  canResize = true;
 
   constructor(
     private renderer: Renderer2,
@@ -124,6 +126,9 @@ export class TaskComponent implements AfterViewInit {
       this.openWidth = '300px';
     }
 
+    if (this.board === 'filter' || this.board === 'wall')
+      this.canResize = false;
+
     // this.isOwn = this.task.owner === this.userId ? true : false;
     // console.log(this.isOwn);
     this.cdr.detectChanges();
@@ -158,19 +163,6 @@ export class TaskComponent implements AfterViewInit {
   }
 
   // private updateDraggable(): void {}
-
-  onPointerUp(event: PointerEvent): void {
-    // const distanceMoved = Math.sqrt(
-    //   Math.pow(event.clientX - this.startX, 2) +
-    //     Math.pow(event.clientY - this.startY, 2)
-    // );
-    // if (distanceMoved < 5) {
-    //   // this.newTask();
-    //   this.onTaskClick(event);
-    // }
-    // this.startX = 0;
-    // this.startY = 0;
-  }
 
   onTaskClick(e: MouseEvent): void {
     // this.isClicked = true;
@@ -222,7 +214,7 @@ export class TaskComponent implements AfterViewInit {
         task: structuredClone(this.task),
         own: this.isOwn,
       },
-      width: this.openWidth,
+      minWidth: this.openWidth,
       height: this.openHeight,
       panelClass: 'modal',
     });

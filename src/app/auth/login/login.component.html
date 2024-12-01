@@ -1,56 +1,81 @@
 <div class="modal-backdrop" (click)="closeModal()"></div>
 <div class="modal-content">
   <form class="login" [formGroup]="loginForm" (ngSubmit)="onLogin()">
-    <h2>Login Form</h2>
+    <h4>Flexpace</h4>
+    <div class="inputs">
+      <h2>Sign in</h2>
 
-    <p class="field field-icon">
-      <label for="email"><span></span></label>
-      <input
-        [ngClass]="{
-          'input-error':
-            loginForm.get('email')?.invalid && loginForm.get('email')?.touched
-        }"
-        type="email"
-        name="email"
-        id="email"
-        placeholder="john.doe@gmail.com"
-        required
-        formControlName="email"
-      />
-    </p>
-    <ng-container *ngIf="loginForm.get('email')?.touched">
-      <p class="error" *ngIf="loginForm.get('email')?.errors?.['required']">
-        Email is required!
+      <p class="field">
+        <label for="email"><span></span></label>
+        <input
+          [ngClass]="{
+            'input-error':
+              loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+          }"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="e-mail address"
+          required
+          formControlName="email"
+        />
       </p>
-      <!-- <p class="error">
+      <ng-container *ngIf="loginForm.get('email')?.touched">
+        <p
+          class="form-error"
+          *ngIf="loginForm.get('email')?.errors?.['required']"
+        >
+          Email is required
+        </p>
+        <!-- <p class="error">
                 Email is not valid!
             </p> -->
-    </ng-container>
+      </ng-container>
 
-    <p class="field field-icon">
-      <label for="password"><span></span></label>
-      <input
-        type="password"
-        name="password"
-        id="password"
-        placeholder="******"
-        required
-        formControlName="pass"
-      />
-    </p>
-    <!-- <p class="error">
-                Password is required!
-            </p>
-            <p class="error">
-                Password must be at least 4 characters!
-            </p> -->
+      <p class="field">
+        <label for="password"><span></span></label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="password"
+          required
+          formControlName="pass"
+        />
+      </p>
+      <ng-container *ngIf="loginForm.get('pass')?.touched">
+        <p
+          class="form-error"
+          *ngIf="loginForm.get('pass')?.errors?.['required']"
+        >
+          Password is required
+        </p>
+        <p
+          class="form-error"
+          *ngIf="
+            loginForm.get('pass')?.value &&
+            loginForm.get('pass')?.errors?.['minlength']
+          "
+        >
+          Password must be at least 6 characters
+        </p>
+      </ng-container>
+    </div>
 
-    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+    <div class="btns">
+      <button
+        type="submit"
+        [ngClass]="{ disabled: loginForm.invalid }"
+        [disabled]="loginForm.invalid"
+      >
+        Login
+      </button>
 
-    <p class="text-center">
-      Have no bro an account, bro?
-      <a routerLink="/auth/register" href="#">Register</a>
-    </p>
-    <button type="button" (click)="closeModal()">Close</button>
+      <p class="text-center">
+        No account yet?
+        <a routerLink="/auth/register" href="#">Sign up</a>
+      </p>
+      <!-- <button class="close" type="button" (click)="closeModal()">Close</button> -->
+    </div>
   </form>
 </div>
