@@ -62,9 +62,11 @@ export class AuthService {
         uid: userCredential.user.uid,
         email: userCredential.user.email!,
         displayName: username,
-        bio: '',
+        firstName: '',
+        lastName: '',
         address: '',
         profilePicture: '',
+        defBoardBckgr: '',
       };
 
       await this.firestore.collection('users').doc(newUser.uid).set(newUser);
@@ -120,5 +122,28 @@ export class AuthService {
   isAuthenticated(): Observable<boolean> {
     // return this.afAuth.authState.pipe(map((user) => !!user));
     return this.isLogged$;
+  }
+
+  //
+
+  updateDefaultBoardImage(
+    userId: string,
+    imageUrl: string | null
+  ): Promise<void> {
+    return this.firestore
+      .collection('users')
+      .doc(userId)
+      .update({ defBoardBckgr: imageUrl })
+      .catch((error) => {
+        console.error('error updating default board image:', error);
+      });
+  }
+
+  getDefaultBoardImage(userId: string): Observable<string | null> {
+    return this.firestore
+      .collection('users')
+      .doc(userId)
+      .valueChanges()
+      .pipe(map((userData: any) => userData?.defBoardBckgr || null));
   }
 }

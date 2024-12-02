@@ -28,7 +28,8 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 })
 export class TaskComponent implements AfterViewInit {
   newSubtaskContent: string = '';
-  userId: string | null = '';
+  // userId: string | null = '';
+  userId: string = '';
   // owner: string | null | undefined = '';
   // userId: string = '';
 
@@ -110,7 +111,8 @@ export class TaskComponent implements AfterViewInit {
     this.isDueToday = this.task.today;
     this.isPublished = this.task.public;
 
-    this.userId = this.auth.getCurrentUserId();
+    this.userId = this.auth.getCurrentUserId() as string;
+
     if (this.userId) {
       this.isOwn = this.task.owner === this.userId;
       this.auth.getUserDataById(this.userId).subscribe((data) => {
@@ -259,7 +261,7 @@ export class TaskComponent implements AfterViewInit {
     this.task.subtasks = this.task.subtasks || [];
     this.task.subtasks.push(newSubtask);
 
-    this.taskService.updateTask(this.task);
+    this.taskService.updateTask(this.task, this.userId as string);
 
     this.newSubtaskContent = '';
 
@@ -274,7 +276,7 @@ export class TaskComponent implements AfterViewInit {
 
   updateSubtask(subtask: Subtask): void {
     subtask.editable = false;
-    this.taskService.updateTask(this.task);
+    this.taskService.updateTask(this.task, this.userId as string);
   }
 
   deleteSubtask(subtask: Subtask): void {
@@ -282,7 +284,7 @@ export class TaskComponent implements AfterViewInit {
       (t) => t.id !== subtask.id
     );
 
-    this.taskService.updateTask(this.task);
+    this.taskService.updateTask(this.task, this.userId as string);
   }
 
   //
@@ -382,7 +384,7 @@ export class TaskComponent implements AfterViewInit {
     const color = (e.target as HTMLElement).getAttribute('data-color');
     if (color) {
       this.task.color = color;
-      this.taskService.updateTask(this.task);
+      this.taskService.updateTask(this.task, this.userId as string);
     }
   }
 
@@ -664,13 +666,13 @@ export class TaskComponent implements AfterViewInit {
     if (this.userId) {
       if (!this.task.savedBy.includes(this.userId)) {
         this.task.savedBy.push(this.userId);
-        this.taskService.updateTask(this.task);
+        this.taskService.updateTask(this.task, this.userId as string);
         this.toastService.show('Task saved!');
       } else {
         this.task.savedBy = this.task.savedBy.filter(
           (id) => id !== this.userId
         );
-        this.taskService.updateTask(this.task);
+        this.taskService.updateTask(this.task, this.userId as string);
         this.toastService.show('Task unsaved!');
       }
     }
@@ -719,7 +721,7 @@ export class TaskComponent implements AfterViewInit {
         this.task.today
       );
 
-      this.taskService.updateTask(this.task);
+      this.taskService.updateTask(this.task, this.userId as string);
       this.isDatePickerOpen = false;
     }
   }

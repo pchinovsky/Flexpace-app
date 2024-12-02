@@ -70,7 +70,11 @@ export class BoardDefaultComponent implements OnInit {
     this.boardName = segments.pop() || null;
     console.log('Board Name:', this.boardName);
 
+    this.predefinedImages = this.getPredefinedImages();
+    console.log('backgrounds - ', this.predefinedImages);
+
     this.currentUserId = this.auth.getCurrentUserId();
+    this.loadBackgroundImage();
     // this.gridPoints = this.generateGridPoints(27, 27, 50, 50, 50, 50);
     this.loadTasks(this.boardName);
 
@@ -90,16 +94,6 @@ export class BoardDefaultComponent implements OnInit {
         { once: true }
       );
     });
-
-    this.route.paramMap.subscribe((params) => {
-      this.boardId = params.get('boardId');
-
-      if (this.boardId) {
-        this.loadBackgroundImage();
-      }
-    });
-
-    this.predefinedImages = this.getPredefinedImages();
   }
 
   // FIX - see only own tasks for def board
@@ -112,7 +106,7 @@ export class BoardDefaultComponent implements OnInit {
         return task.owner === this.currentUserId;
       });
 
-      console.log('Filtered tasks:', this.tasks);
+      console.log('filtered tasks:', this.tasks);
       this.cdr.markForCheck();
     });
   }
@@ -238,7 +232,7 @@ export class BoardDefaultComponent implements OnInit {
     const task = this.tasks.find((t) => t.id === taskId);
     if (task) {
       task.size = { width: finalWidth, height: finalHeight };
-      this.taskService.updateTask(task);
+      this.taskService.updateTask(task, this.currentUserId as string);
     }
   }
 
@@ -261,7 +255,7 @@ export class BoardDefaultComponent implements OnInit {
         y: event.newCoordinates.y,
       };
 
-      this.taskService.updateTask(task);
+      this.taskService.updateTask(task, this.currentUserId as string);
     } else {
       console.warn(`Task with ID ${event.taskId} not found.`);
     }
@@ -356,32 +350,27 @@ export class BoardDefaultComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((selectedBackground: string | null) => {
-        if (this.boardId) {
-          if (selectedBackground === '') {
-            // no-img option
-            this.setBackgroundImage(null);
-          } else if (selectedBackground) {
-            this.setBackgroundImage(selectedBackground);
-          }
+        if (selectedBackground === '') {
+          // No image selected
+          this.setBackgroundImage(null);
+        } else if (selectedBackground) {
+          this.setBackgroundImage(selectedBackground);
         }
       });
   }
 
   setBackgroundImage(imageUrl: string | null): void {
-    if (this.boardId) {
-      this.firestore
-        .collection('boards')
-        .doc(this.boardId)
-        .update({
-          backgroundImage: imageUrl,
-        })
+    if (this.currentUserId) {
+      this.auth
+        .updateDefaultBoardImage(this.currentUserId, imageUrl)
         .then(() => {
           this.backgroundImage = imageUrl;
           this.cdr.markForCheck();
-          console.log('Background image updated successfully.');
+          console.log('default board image saved successfully.');
+          console.log(this.backgroundImage);
         })
         .catch((error) => {
-          console.error('Error updating background image:', error);
+          console.error('error saving default board image:', error);
         });
     }
   }
@@ -397,10 +386,10 @@ export class BoardDefaultComponent implements OnInit {
         .then(() => {
           this.backgroundImage = imageUrl;
           this.cdr.markForCheck();
-          console.log('Background image updated successfully.');
+          console.log('background image updated successfully.');
         })
         .catch((error) => {
-          console.error('Error updating background image:', error);
+          console.error('error updating background image:', error);
         });
     }
   }
@@ -423,6 +412,8 @@ export class BoardDefaultComponent implements OnInit {
       const fileRef = this.storage.ref(`${folderPath}/${imageName}`);
       fileRef.getDownloadURL().subscribe((url) => {
         images.push(url);
+        console.log();
+        console.log('fetched image url:', url);
       });
     });
 
@@ -441,7 +432,7 @@ export class BoardDefaultComponent implements OnInit {
         const task = this.storage.upload(filePath, file);
 
         task.percentageChanges().subscribe((percentage) => {
-          console.log(`Upload is ${percentage}% done.`);
+          console.log(`upload is ${percentage}% done.`);
         });
 
         task
@@ -467,14 +458,12 @@ export class BoardDefaultComponent implements OnInit {
   }
 
   loadBackgroundImage(): void {
-    if (this.boardId) {
-      this.firestore
-        .collection('boards')
-        .doc(this.boardId)
-        .valueChanges()
-        .subscribe((boardData: any) => {
-          if (boardData?.backgroundImage) {
-            this.backgroundImage = boardData.backgroundImage;
+    if (this.currentUserId) {
+      this.auth
+        .getDefaultBoardImage(this.currentUserId)
+        .subscribe((imageUrl) => {
+          if (imageUrl) {
+            this.backgroundImage = imageUrl;
             this.cdr.markForCheck();
           } else {
             this.backgroundImage = null;

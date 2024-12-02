@@ -17,6 +17,8 @@ export class TaskOpenComponent implements OnInit {
   task: Task;
   taskColor: string = '';
   own: boolean = false;
+  userId: string = '';
+  // userId: string | null = '';
 
   selectColorOn = false;
   // contentControl: FormControl;
@@ -54,6 +56,8 @@ export class TaskOpenComponent implements OnInit {
       this.titleControl.disable();
       this.contentControl.disable();
     }
+
+    this.userId = this.auth.getCurrentUserId() as string;
   }
 
   ngOnInit(): void {
@@ -138,7 +142,7 @@ export class TaskOpenComponent implements OnInit {
 
     console.log('before update -', updatedTask);
 
-    this.taskService.updateTask(updatedTask);
+    this.taskService.updateTask(updatedTask, this.userId as string);
   }
 
   // saveContent(): void {
@@ -156,7 +160,7 @@ export class TaskOpenComponent implements OnInit {
   }
 
   saveTitle(): void {
-    this.taskService.updateTask(this.task);
+    this.taskService.updateTask(this.task, this.userId as string);
   }
 
   selectColor(e: MouseEvent): void {
@@ -164,7 +168,7 @@ export class TaskOpenComponent implements OnInit {
     const color = (e.target as HTMLElement).getAttribute('data-color');
     if (color) {
       this.task.color = color;
-      this.taskService.updateTask(this.task);
+      this.taskService.updateTask(this.task, this.userId as string);
     }
   }
 

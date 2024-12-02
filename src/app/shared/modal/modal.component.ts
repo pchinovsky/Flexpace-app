@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Task } from 'src/app/types/task';
 import { TaskService } from 'src/app/task/task.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-modal',
@@ -10,6 +11,7 @@ import { TaskService } from 'src/app/task/task.service';
 })
 export class ModalComponent {
   private initialTask: Task;
+  userId: string | null = '';
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
@@ -20,7 +22,8 @@ export class ModalComponent {
       predefinedImages?: string[];
       type: 'error' | 'backgroundSelection' | 'taskEdit';
     },
-    private taskService: TaskService
+    private taskService: TaskService,
+    private auth: AuthService
   ) {
     this.initialTask = structuredClone(data.task);
 
@@ -28,14 +31,16 @@ export class ModalComponent {
     this.dialogRef.beforeClosed().subscribe(() => {
       this.saveTask();
     });
+
+    this.userId = this.auth.getCurrentUserId();
   }
 
-  private saveTaskIfChanged(): void {
-    if (JSON.stringify(this.initialTask) !== JSON.stringify(this.data.task)) {
-      console.log('Changes detected. Saving task...');
-      this.taskService.updateTask(this.data.task);
-    }
-  }
+  // private saveTaskIfChanged(): void {
+  //   if (JSON.stringify(this.initialTask) !== JSON.stringify(this.data.task)) {
+  //     console.log('Changes detected. Saving task...');
+  //     this.taskService.updateTask(this.data.task);
+  //   }
+  // }
 
   close(): void {
     this.dialogRef.close();
@@ -46,7 +51,7 @@ export class ModalComponent {
 
     if (this.data.task) {
       console.log('Saving task on modal close:', this.data.task);
-      this.taskService.updateTask(this.data.task);
+      this.taskService.updateTask(this.data.task, this.userId as string);
     }
   }
 

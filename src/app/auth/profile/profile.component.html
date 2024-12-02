@@ -22,9 +22,27 @@
       placeholder="Enter image URL"
     />
 
-    <label for="bio"><strong>Bio</strong></label>
-    <div *ngIf="!isEditing">{{ (userData$ | async)?.bio }}</div>
-    <input *ngIf="isEditing" id="bio" formControlName="bio" type="text" />
+    <label for="firstName"><strong>First name</strong></label>
+    <div *ngIf="!isEditing">{{ (userData$ | async)?.firstName }}</div>
+    <input
+      *ngIf="isEditing"
+      id="firstName"
+      formControlName="firstName"
+      type="text"
+    />
+
+    <label for="lastName"><strong>Last name</strong></label>
+    <div *ngIf="!isEditing">{{ (userData$ | async)?.lastName }}</div>
+    <input
+      *ngIf="isEditing"
+      id="lastName"
+      formControlName="lastName"
+      type="text"
+    />
+
+    <label for="email"><strong>E-mail</strong></label>
+    <div *ngIf="!isEditing">{{ (userData$ | async)?.email }}</div>
+    <input *ngIf="isEditing" id="email" formControlName="email" type="text" />
 
     <label for="address"><strong>Address</strong></label>
     <div *ngIf="!isEditing">{{ (userData$ | async)?.address }}</div>

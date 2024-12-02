@@ -16,7 +16,9 @@ export interface UserProfile {
   uid: string;
   email: string | null;
   displayName?: string | null;
-  bio?: string;
+  firstName?: string;
+  lastName?: string;
   address?: string;
   profilePicture?: string;
+  defBoardBckgr?: string;
 }

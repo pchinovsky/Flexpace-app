@@ -394,7 +394,7 @@ export class BoardComponent {
     const task = this.tasks.find((t) => t.id === taskId);
     if (task) {
       task.size = { width: finalWidth, height: finalHeight };
-      this.taskService.updateTask(task);
+      this.taskService.updateTask(task, this.currentUserId as string);
     }
   }
 
@@ -414,7 +414,7 @@ export class BoardComponent {
         y: event.newCoordinates.y,
       };
 
-      this.taskService.updateTask(task);
+      this.taskService.updateTask(task, this.currentUserId as string);
     } else {
       console.warn(`Task with ID ${event.taskId} not found.`);
     }
@@ -554,10 +554,10 @@ export class BoardComponent {
         .then(() => {
           this.backgroundImage = imageUrl;
           this.cdr.markForCheck();
-          console.log('Background image updated successfully.');
+          console.log('background image updated successfully.');
         })
         .catch((error) => {
-          console.error('Error updating background image:', error);
+          console.error('error updating background image:', error);
         });
     }
   }
@@ -573,10 +573,10 @@ export class BoardComponent {
         .then(() => {
           this.backgroundImage = imageUrl;
           this.cdr.markForCheck();
-          console.log('Background image updated successfully.');
+          console.log('background image updated successfully.');
         })
         .catch((error) => {
-          console.error('Error updating background image:', error);
+          console.error('error updating background image:', error);
         });
     }
   }
@@ -663,7 +663,7 @@ export class BoardComponent {
     if (this.boardId && this.backgroundImage) {
       const storageRef = this.storage.refFromURL(this.backgroundImage);
       storageRef.delete().subscribe(() => {
-        console.log('Background image deleted from storage.');
+        console.log('background image deleted from storage.');
 
         if (this.boardId) {
           this.firestore.collection('boards').doc(this.boardId).update({

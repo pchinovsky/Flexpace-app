@@ -46,9 +46,11 @@ export class ProfileComponent implements OnInit {
 
     this.profileForm = this.fb.group({
       displayName: [''],
-      bio: [''],
+      firstName: [''],
+      lastName: [''],
       address: [''],
       profilePicture: [''],
+      defBoardBckgr: [''],
       numberOfTasks: [{ value: '', disabled: true }],
       numberOfTasksSaved: [{ value: '', disabled: true }],
       numberOfTasksSavedByOthers: [{ value: '', disabled: true }],
@@ -91,7 +93,7 @@ export class ProfileComponent implements OnInit {
       }
 
       this.taskService
-        .getLastEditedTask()
+        .getLastEditedTask(userId as string)
         .then((task) => {
           this.lastEditedTask = task;
           console.log('Last edited task:', this.lastEditedTask);
@@ -120,9 +122,11 @@ export class ProfileComponent implements OnInit {
                   console.log('Patching form with user data:', userData);
                   this.profileForm.patchValue({
                     displayName: userData.displayName,
-                    bio: userData.bio,
+                    firstName: userData.firstName,
+                    lastName: userData.lastName,
                     address: userData.address,
                     profilePicture: userData.profilePicture,
+                    defBoardBckgr: userData.defBoardBckgr,
                   });
                 } else {
                   console.warn('No user data found');
@@ -151,9 +155,11 @@ export class ProfileComponent implements OnInit {
         if (user) {
           this.profileForm.patchValue({
             displayName: user.displayName,
-            bio: user.bio,
+            firstName: user.firstName,
+            lastName: user.lastName,
             address: user.address,
             profilePicture: user.profilePicture,
+            defBoardBckgr: user.defBoardBckgr,
           });
         }
       });

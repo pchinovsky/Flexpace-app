@@ -31,18 +31,30 @@ export class TaskService {
       .valueChanges() as Observable<Task>;
   }
 
-  updateTask(task: Partial<Task>) {
+  // updateTask(task: Partial<Task>) {
+  //   this.firestore
+  //     .collection('tasks')
+  //     .doc(task.id)
+  //     // update only the modified -
+  //     // .set() with { merge: true } alternative - when you don't know what should be updated
+  //     .update(task)
+  //     .then(() => {
+  //       console.log('Task updated successfully');
+  //       this.setLastEditedTask(task as Task);
+  //     })
+  //     .catch((error) => console.error('Error updating task: ', error));
+  // }
+
+  updateTask(task: Partial<Task>, userId: string) {
     this.firestore
       .collection('tasks')
       .doc(task.id)
-      // update only the modified -
-      // .set() with { merge: true } alternative - when you don't know what should be updated
       .update(task)
       .then(() => {
         console.log('Task updated successfully');
-        this.setLastEditedTask(task as Task);
+        this.setLastEditedTask(task as Task, userId); // Pass the user ID here
       })
-      .catch((error) => console.error('Error updating task: ', error));
+      .catch((error) => console.error('Error updating task:', error));
   }
 
   deleteTask(taskId: string): Promise<void> {
@@ -58,52 +70,66 @@ export class TaskService {
       });
   }
 
-  toggleFav(task: Task): void {
+  toggleFav(task: Task, userId: string): void {
     task.fav = !task.fav;
-    this.updateTask(task);
+    this.updateTask(task, userId);
   }
 
-  togglePin(task: Task): void {
+  togglePin(task: Task, userId: string): void {
     task.draggable = !task.draggable;
-    this.updateTask(task);
+    this.updateTask(task, userId);
   }
 
-  toggleToday(task: Task): void {
+  toggleToday(task: Task, userId: string): void {
     task.today = !task.today;
-    this.updateTask(task);
+    this.updateTask(task, userId);
   }
 
-  togglePublish(task: Task): void {
+  togglePublish(task: Task, userId: string): void {
     task.public = !task.public;
-    this.updateTask(task);
+    this.updateTask(task, userId);
   }
 
   //
 
-  setLastEditedTask(task: Task): void {
-    this.lastEditedTaskDoc.doc('current').set(task);
+  // setLastEditedTask(task: Task): void {
+  //   this.lastEditedTaskDoc.doc('current').set(task);
+  // }
+
+  setLastEditedTask(task: Task, userId: string): void {
+    this.firestore
+      .doc('lastEditedTask/current')
+      .set({ ...task, userId })
+      .then(() => console.log('last edited task set successfully.'))
+      .catch((error) =>
+        console.error('error setting last edited task:', error)
+      );
   }
 
-  getLastEditedTask(): Promise<Task | null> {
+  getLastEditedTask(userId: string): Promise<Task | null> {
     const docRef = this.firestore.doc('lastEditedTask/current');
-    return (
-      docRef
-        .get()
-        // .get not returning obs, so toPromise needed
-        .toPromise()
-        .then((docSnapshot: any) => {
-          if (docSnapshot.exists) {
-            console.log('Last Edited Task Retrieved:', docSnapshot.data());
-            return docSnapshot.data() as Task;
+
+    return docRef
+      .get()
+      .toPromise()
+      .then((docSnapshot: any) => {
+        if (docSnapshot.exists) {
+          const task = docSnapshot.data();
+          if (task.userId === userId) {
+            console.log('last edited task retrieved for current user:', task);
+            return task as Task;
           } else {
-            console.warn('No last edited task found in Firestore');
+            console.warn('no task edited by the current user.');
             return null;
           }
-        })
-        .catch((error) => {
-          console.error('Error retrieving last edited task:', error);
+        } else {
+          console.warn('no last edited task found in firestore');
           return null;
-        })
-    );
+        }
+      })
+      .catch((error) => {
+        console.error('rrror retrieving last edited task:', error);
+        return null;
+      });
   }
 }

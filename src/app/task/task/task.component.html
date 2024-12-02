@@ -121,7 +121,7 @@
 
     <button
       id="fav"
-      (click)="taskService.toggleFav(task)"
+      (click)="taskService.toggleFav(task, userId)"
       [class.set]="task.fav"
     >
       <svg
@@ -140,7 +140,7 @@
 
     <button
       id="pin"
-      (click)="taskService.togglePin(task)"
+      (click)="taskService.togglePin(task, userId)"
       [class.set]="task.draggable"
     >
       <svg
@@ -158,7 +158,7 @@
 
     <button
       id="today"
-      (click)="taskService.toggleToday(task)"
+      (click)="taskService.toggleToday(task, userId)"
       [class.set]="task.today"
     >
       <svg
@@ -176,7 +176,7 @@
 
     <button
       id="publish"
-      (click)="taskService.togglePublish(task)"
+      (click)="taskService.togglePublish(task, userId)"
       [class.set]="task.public"
     >
       <svg
