@@ -19,6 +19,8 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ToastService } from 'src/app/toast.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { DragDropService } from 'src/app/drag-drop.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-task',
@@ -96,7 +98,8 @@ export class TaskComponent implements AfterViewInit {
     private point: PointService,
     private dialog: MatDialog,
     public auth: AuthService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private dragDrop: DragDropService
   ) {}
 
   ngAfterViewInit() {
@@ -537,7 +540,23 @@ export class TaskComponent implements AfterViewInit {
   }
 
   onDragMove(box: HTMLElement, e: MouseEvent): void {
-    this.isDragging = true;
+    // this.isDragging = true;
+
+    // added for box move to new board ---
+
+    const movementX = Math.abs(e.clientX - this.startX);
+    const movementY = Math.abs(e.clientY - this.startY);
+
+    if (!this.isDragging && (movementX > 5 || movementY > 5)) {
+      this.isDragging = true;
+      this.dragDrop.setDragData(this.task.id);
+      console.log('drag initiated for task:', this.task.id);
+    }
+
+    // this.dragDrop.setDragData(this.task.id);
+
+    // ---
+
     const newLeft = e.clientX - this.offsetX;
     const newTop = e.clientY - this.offsetY;
 
@@ -546,68 +565,236 @@ export class TaskComponent implements AfterViewInit {
   }
 
   // only dragEnd changed from the working state -
+  // onDragEnd(box: HTMLElement, e: MouseEvent): void {
+  //   document.body.style.userSelect = 'auto';
+
+  //   // if ((e.target as HTMLElement).id === 'rev') return;
+
+  //   const movementX = Math.abs(e.clientX - this.startX);
+  //   const movementY = Math.abs(e.clientY - this.startY);
+
+  //   const hasMoved = movementX > 15 || movementY > 15;
+  //   if (!hasMoved) {
+  //     this.isDragging = false;
+  //     document.removeEventListener(
+  //       'mousemove',
+  //       this.onDragMove.bind(this, box)
+  //     );
+  //     document.removeEventListener('mouseup', this.onDragEnd.bind(this, box));
+  //     return;
+  //   }
+
+  //   const newLeft = box.offsetLeft;
+  //   const newTop = box.offsetTop;
+  //   const newWidth = box.offsetWidth;
+  //   const newHeight = box.offsetHeight;
+
+  //   const closestPoint = this.point.findClosestSnapPointDrag(newLeft, newTop);
+
+  //   if (closestPoint) {
+  //     const isPositionAvailable = this.point.checkIfPositionIsAvailableDrag(
+  //       closestPoint,
+  //       newWidth,
+  //       newHeight,
+  //       this.tasks,
+  //       this.task.id
+  //     );
+
+  //     if (isPositionAvailable) {
+  //       box.style.left = `${closestPoint.x}px`;
+  //       box.style.top = `${closestPoint.y}px`;
+  //     } else {
+  //       box.style.left = `${this.initialLeft}px`;
+  //       box.style.top = `${this.initialTop}px`;
+  //     }
+  //   } else {
+  //     box.style.left = `${this.initialLeft}px`;
+  //     box.style.top = `${this.initialTop}px`;
+  //   }
+
+  //   const snappedPosition = {
+  //     x: parseInt(box.style.left, 10),
+  //     y: parseInt(box.style.top, 10),
+  //   };
+  //   this.task.coordinates = snappedPosition;
+
+  //   this.dragEndEvent.emit({
+  //     taskId: this.task.id,
+  //     newCoordinates: snappedPosition,
+  //   });
+
+  //   document.removeEventListener('mousemove', this.onDragMove.bind(this, box));
+  //   document.removeEventListener('mouseup', this.onDragEnd.bind(this, box));
+
+  //   this.dragDrop.clearDragData();
+
+  //   this.cdr.detectChanges();
+  // }
+
+  //
+
+  // adapted to board change -
+  // onDragEnd(box: HTMLElement, e: MouseEvent): void {
+  //   document.body.style.userSelect = 'auto';
+
+  //   const movementX = Math.abs(e.clientX - this.startX);
+  //   const movementY = Math.abs(e.clientY - this.startY);
+
+  //   const hasMoved = movementX > 15 || movementY > 15;
+  //   if (!hasMoved) {
+  //     this.isDragging = false;
+  //     document.removeEventListener(
+  //       'mousemove',
+  //       this.onDragMove.bind(this, box)
+  //     );
+  //     document.removeEventListener('mouseup', this.onDragEnd.bind(this, box));
+  //     return;
+  //   }
+
+  //   // if task dropped on the nav -
+  //   this.dragDrop.isHovered$.pipe(take(1)).subscribe((isHovered) => {
+  //     document.removeEventListener(
+  //       'mousemove',
+  //       this.onDragMove.bind(this, box)
+  //     );
+  //     document.removeEventListener('mouseup', this.onDragEnd.bind(this, box));
+
+  //     if (isHovered) {
+  //       console.log('task dropped on nav, reverting to original position.');
+  //       box.style.left = `${this.initialLeft}px`;
+  //       box.style.top = `${this.initialTop}px`;
+  //       this.task.coordinates = { x: this.initialLeft, y: this.initialTop };
+
+  //       this.dragEndEvent.emit({
+  //         taskId: this.task.id,
+  //         newCoordinates: this.task.coordinates,
+  //         // positionChanged: false, // Indicate position didn't change
+  //       });
+  //     } else {
+  //       const newLeft = box.offsetLeft;
+  //       const newTop = box.offsetTop;
+  //       const newWidth = box.offsetWidth;
+  //       const newHeight = box.offsetHeight;
+
+  //       const closestPoint = this.point.findClosestSnapPointDrag(
+  //         newLeft,
+  //         newTop
+  //       );
+
+  //       if (closestPoint) {
+  //         const isPositionAvailable = this.point.checkIfPositionIsAvailableDrag(
+  //           closestPoint,
+  //           newWidth,
+  //           newHeight,
+  //           this.tasks,
+  //           this.task.id
+  //         );
+
+  //         if (isPositionAvailable) {
+  //           box.style.left = `${closestPoint.x}px`;
+  //           box.style.top = `${closestPoint.y}px`;
+  //           this.task.coordinates = closestPoint;
+  //         } else {
+  //           box.style.left = `${this.initialLeft}px`;
+  //           box.style.top = `${this.initialTop}px`;
+  //           this.task.coordinates = { x: this.initialLeft, y: this.initialTop };
+  //         }
+  //       } else {
+  //         box.style.left = `${this.initialLeft}px`;
+  //         box.style.top = `${this.initialTop}px`;
+  //         this.task.coordinates = { x: this.initialLeft, y: this.initialTop };
+  //       }
+
+  //       this.dragEndEvent.emit({
+  //         taskId: this.task.id,
+  //         newCoordinates: this.task.coordinates,
+  //         // positionChanged: true, // Indicate position changed
+  //       });
+  //     }
+
+  //     this.dragDrop.clearDragData();
+  //     this.cdr.detectChanges();
+  //   });
+  // }
+
+  //
+
+  // 3 - adaptation without detecting drop on nav, if it's dropped on a diff board -
   onDragEnd(box: HTMLElement, e: MouseEvent): void {
     document.body.style.userSelect = 'auto';
 
-    // if ((e.target as HTMLElement).id === 'rev') return;
-
     const movementX = Math.abs(e.clientX - this.startX);
     const movementY = Math.abs(e.clientY - this.startY);
-
     const hasMoved = movementX > 15 || movementY > 15;
-    if (!hasMoved) {
-      this.isDragging = false;
-      document.removeEventListener(
-        'mousemove',
-        this.onDragMove.bind(this, box)
-      );
-      document.removeEventListener('mouseup', this.onDragEnd.bind(this, box));
-      return;
-    }
-
-    const newLeft = box.offsetLeft;
-    const newTop = box.offsetTop;
-    const newWidth = box.offsetWidth;
-    const newHeight = box.offsetHeight;
-
-    const closestPoint = this.point.findClosestSnapPointDrag(newLeft, newTop);
-
-    if (closestPoint) {
-      const isPositionAvailable = this.point.checkIfPositionIsAvailableDrag(
-        closestPoint,
-        newWidth,
-        newHeight,
-        this.tasks,
-        this.task.id
-      );
-
-      if (isPositionAvailable) {
-        box.style.left = `${closestPoint.x}px`;
-        box.style.top = `${closestPoint.y}px`;
-      } else {
-        box.style.left = `${this.initialLeft}px`;
-        box.style.top = `${this.initialTop}px`;
-      }
-    } else {
-      box.style.left = `${this.initialLeft}px`;
-      box.style.top = `${this.initialTop}px`;
-    }
-
-    const snappedPosition = {
-      x: parseInt(box.style.left, 10),
-      y: parseInt(box.style.top, 10),
-    };
-    this.task.coordinates = snappedPosition;
-
-    this.dragEndEvent.emit({
-      taskId: this.task.id,
-      newCoordinates: snappedPosition,
-    });
 
     document.removeEventListener('mousemove', this.onDragMove.bind(this, box));
     document.removeEventListener('mouseup', this.onDragEnd.bind(this, box));
 
-    this.cdr.detectChanges();
+    if (!hasMoved) {
+      console.log('Drag ended without movement');
+      this.dragEndEvent.emit({
+        taskId: this.task.id,
+        newCoordinates: this.task.coordinates,
+      });
+      return;
+    }
+
+    this.dragDrop.isHovered$.pipe(take(1)).subscribe((isHovered) => {
+      this.dragDrop.hoveredBoardId$
+        .pipe(take(1))
+        .subscribe((hoveredBoardId) => {
+          if (isHovered && hoveredBoardId) {
+            if (this.task.board === hoveredBoardId) {
+              // task dropped on the same board
+              console.log(
+                'Task dropped on the same board, reverting position.'
+              );
+              box.style.left = `${this.initialLeft}px`;
+              box.style.top = `${this.initialTop}px`;
+              this.task.coordinates = {
+                x: this.initialLeft,
+                y: this.initialTop,
+              };
+            } else {
+              // task dropped different board
+              console.log('task dropped on a different board:', hoveredBoardId);
+              this.task.board = hoveredBoardId;
+            }
+          } else {
+            // drop outside nav
+            console.log(
+              'dropped outside nav, updating position within the board.'
+            );
+            const newLeft = box.offsetLeft;
+            const newTop = box.offsetTop;
+
+            const closestPoint = this.point.findClosestSnapPointDrag(
+              newLeft,
+              newTop
+            );
+            if (closestPoint) {
+              box.style.left = `${closestPoint.x}px`;
+              box.style.top = `${closestPoint.y}px`;
+              this.task.coordinates = closestPoint;
+            } else {
+              box.style.left = `${this.initialLeft}px`;
+              box.style.top = `${this.initialTop}px`;
+              this.task.coordinates = {
+                x: this.initialLeft,
+                y: this.initialTop,
+              };
+            }
+          }
+
+          this.dragEndEvent.emit({
+            taskId: this.task.id,
+            newCoordinates: this.task.coordinates,
+          });
+
+          this.dragDrop.clearDragData();
+          this.cdr.detectChanges();
+        });
+    });
   }
 
   openModal(message: string): void {

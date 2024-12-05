@@ -1,5 +1,13 @@
 <!-- <p>header-boards-nav works!</p> -->
 
+<!-- <div
+[ngClass]="{ selected: selectedBoardId === board.id }"
+ [ngClass]="{
+      selected: selectedBoardId === board.id,
+      hovered: isBoardHovered(board.id)
+    }"
+></div> -->
+
 <div class="handle"></div>
 <div class="handle-wrap"></div>
 
@@ -27,8 +35,14 @@
     *ngFor="let board of boards"
     class="board-nav-btn"
     [style.background-color]="board.color"
-    [ngClass]="{ selected: selectedBoardId === board.id }"
+    [ngClass]="{
+      selected: selectedBoardId === board.id,
+      hovered: isBoardHovered(board.id)
+    }"
     (click)="onSelectBoard(board.id)"
+    (mouseover)="onMouseOver($event, board.title, board.id)"
+    (mouseout)="onMouseOut($event)"
+    (mouseup)="onMouseUp($event, board.title, board.id)"
   >
     <a [routerLink]="['/board', board.id]" [attr.data-board]="board.title">{{
       board.title

@@ -19,6 +19,7 @@ import { BoardService } from '../board.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FieldValue } from '@angular/fire/firestore';
 import firebase from 'firebase/compat/app';
+import { DragDropService } from 'src/app/drag-drop.service';
 
 @Component({
   selector: 'app-board',
@@ -68,7 +69,8 @@ export class BoardComponent {
     private matDialog: MatDialog,
     private firestore: AngularFirestore,
     private storage: AngularFireStorage,
-    private auth: AuthService
+    private auth: AuthService,
+    private dragDrop: DragDropService
   ) {}
 
   ngOnInit(): void {
@@ -109,6 +111,8 @@ export class BoardComponent {
   }
 
   loadBoardData(boardId: string): void {
+    console.log('WAZAAA 0');
+
     this.boardService.getBoardById(boardId).subscribe((data) => {
       this.boardData = data;
 
@@ -132,16 +136,46 @@ export class BoardComponent {
 
   //
 
-  loadTasks(board: string | null) {
-    console.log('load tasks on');
-    console.log('load tasks - ', board);
+  // loadTasks(board: string | null) {
+  //   // console.log('load tasks on');
+  //   console.log('load tasks - ', board);
+
+  //   if (!board) return;
+  //   // if (this.tasks && this.tasks.length > 0) return;
+  //   this.taskService.getTasks(board).subscribe((tasks: Task[]) => {
+  //     this.tasks = tasks;
+  //     // console.log(tasks);
+  //     this.cdr.markForCheck();
+  //   });
+  // }
+
+  loadTasks(board: string | null): void {
+    console.log('WAZAAAA');
+
     console.log('load tasks - ', board);
 
-    if (!board) return;
-    // if (this.tasks && this.tasks.length > 0) return;
+    // fails to prevent reloading when board change -
+    // if (!board || this.dragDrop.dragData.getValue()) {
+    //   console.log('Skipping load tasks due to drag operation');
+    //   return;
+    // }
+
+    // if (!board || board === this.boardName) {
+    //   console.log('no changes in board, skipping task reload.');
+    //   return;
+    // }
+
+    // works! moving board without reload ---
     this.taskService.getTasks(board).subscribe((tasks: Task[]) => {
+      console.log('load tasks - ', board);
+      console.log('load tasks - ', this.boardName);
+
+      if (board !== this.boardName) {
+        console.log(`current board mismatch: ${board} vs ${this.boardName}`);
+        return;
+      }
       this.tasks = tasks;
-      console.log(tasks);
+      console.log('Tasks loaded for board:', board, tasks);
       this.cdr.markForCheck();
     });
   }

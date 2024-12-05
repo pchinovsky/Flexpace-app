@@ -9,7 +9,7 @@ export class PointService {
   private coordinates: { x: number; y: number } | null = null;
   gridPoints = this.generateGridPoints(27, 27, 50, 50, 50, 50);
 
-  // constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService) {}
 
   snapThreshold = 100;
 
@@ -192,5 +192,42 @@ export class PointService {
 
     // console.log(`No overlap detected, position is available.`);
     return true;
+  }
+
+  // // -------------
+
+  // for moving task to new board -
+
+  findAvailableSnapPointForBoard(
+    board: string
+  ): Promise<{ x: number; y: number } | null> {
+    return new Promise((resolve) => {
+      this.taskService.getTasks(board).subscribe((boardTasks) => {
+        const gridPoints = this.generateGridPoints(12, 25, 50, 50, 50, 50);
+
+        for (const point of gridPoints) {
+          if (!this.isPointOverlapping(point, boardTasks)) {
+            resolve(point);
+            return;
+          }
+        }
+
+        resolve(null);
+      });
+    });
+  }
+
+  isPointOverlapping(point: { x: number; y: number }, tasks: Task[]): boolean {
+    for (const task of tasks) {
+      if (
+        point.x < task.coordinates.x + task.size.width &&
+        point.x + task.size.width > task.coordinates.x &&
+        point.y < task.coordinates.y + task.size.height &&
+        point.y + task.size.height > task.coordinates.y
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 }

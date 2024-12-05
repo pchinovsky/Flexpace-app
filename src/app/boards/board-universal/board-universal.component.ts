@@ -26,7 +26,6 @@ export class BoardUniversalComponent implements OnInit {
     public: false,
     today: false,
     fav: false,
-    done: false,
     saved: false,
   };
 
