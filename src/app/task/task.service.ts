@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Task } from '../types/task';
 import { Observable, of } from 'rxjs';
+import { combineLatest } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
+import { Comment } from '../types/task';
 
 @Injectable({
   providedIn: 'root',
@@ -131,5 +134,26 @@ export class TaskService {
         console.error('rrror retrieving last edited task:', error);
         return null;
       });
+  }
+
+  //
+
+  getTaskWithComments(
+    taskId: string
+  ): Observable<{ task: Task; comments: Comment[] }> {
+    const task$ = this.firestore
+      .doc<Task>(`tasks/${taskId}`)
+      .valueChanges()
+      .pipe(filter((task): task is Task => !!task));
+
+    const comments$ = this.firestore
+      .collection<Comment>(`tasks/${taskId}/comments`, (ref) =>
+        ref.orderBy('timestamp', 'asc')
+      )
+      .valueChanges();
+
+    return combineLatest([task$, comments$]).pipe(
+      map(([task, comments]) => ({ task, comments }))
+    );
   }
 }

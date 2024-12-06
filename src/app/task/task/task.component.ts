@@ -501,8 +501,8 @@ export class TaskComponent implements AfterViewInit {
       const target = e.target as HTMLElement;
 
       if ((e.target as HTMLElement).classList.contains('resize-handle')) return;
-      if (target.classList.contains('text')) return;
-      console.log(target.classList.contains('text'));
+      // if (target.classList.contains('text')) return;
+      // console.log(target.classList.contains('text'));
 
       // if ((e.target as HTMLElement).id === 'hid') return;
       e.preventDefault();
@@ -523,7 +523,6 @@ export class TaskComponent implements AfterViewInit {
       // so dragging isn't triggering a click, but a click is still triggering dragging
       if (target.id === 'rev') return;
       if (target.id === 'hid') return;
-      if (target.id === 'task-open') return;
       if (target.id === 'sub-task-cre' || target.closest('#sub-task-cre')) {
         return;
       }

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Board } from '../types/board';
 import { of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +35,7 @@ export class BoardService {
   getBoards() {
     console.log('getting boards');
 
-    return this.firestore.collection<Board>('boards').valueChanges(); // Returns an observable of boards
+    return this.firestore.collection<Board>('boards').valueChanges();
   }
 
   getBoardById(boardId: string) {
@@ -72,5 +74,42 @@ export class BoardService {
       .update(updatedFields)
       .then(() => console.log('Board updated successfully'))
       .catch((error) => console.error('Error updating board:', error));
+  }
+
+  updateBoardName(boardId: string, newName: string): Observable<void> {
+    return from(
+      this.firestore
+        .collection('boards')
+        .doc(boardId)
+        .update({ title: newName })
+    );
+  }
+
+  //
+
+  updateTasksBoardName(
+    oldBoardName: string,
+    newBoardName: string
+  ): Promise<void> {
+    return this.firestore
+      .collection('tasks', (ref) => ref.where('board', '==', oldBoardName))
+      .get()
+      .toPromise()
+      .then((snapshot) => {
+        const promises = snapshot!.docs.map((doc) => {
+          return this.firestore
+            .collection('tasks')
+            .doc(doc.id)
+            .update({ board: newBoardName });
+        });
+
+        return Promise.all(promises);
+      })
+      .then(() => {
+        console.log('all task board prop updated');
+      })
+      .catch((error) => {
+        console.error('error updating tasks -', error);
+      });
   }
 }

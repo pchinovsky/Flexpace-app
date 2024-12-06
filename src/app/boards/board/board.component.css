@@ -80,6 +80,7 @@ app-task {
 
   .add-bg-btn:hover, .delete-bg-btn:hover {
     opacity: 0.8;
+    transition: opacity 0.5s ease;
   }
   
   .container {
@@ -107,12 +108,24 @@ app-task {
     color: rgb(181, 178, 178); 
     z-index: 10;   
     background-color: rgb(255, 255, 255, 0.1);
-    border-radius: 1em 1.5em;
+    border-radius: 1em;
     padding: 0.5em;
+    padding-inline: 0.8em;
+    font-size: 0.8em;
   }
 
   .board-name:hover {
-    background-color: rgb(255, 255, 255, 0.6);
+    background-color: rgb(255, 255, 255, 0.3);
     transition: background-color 0.5s ease;
   }
  
+  .board-name input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    padding: 0.2em;
+    border-bottom: 1px solid #ccc;
+  }
+  

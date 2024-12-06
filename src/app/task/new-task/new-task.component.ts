@@ -124,6 +124,7 @@ export class NewTaskComponent {
                 priority: 1,
                 fav: false,
                 tags: [],
+                comments: [],
                 color: this.newTask.value.color!,
                 resizable: true,
                 draggable: true,

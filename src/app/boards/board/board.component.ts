@@ -36,12 +36,15 @@ export class BoardComponent {
   predefinedImages: string[] = [];
 
   boardName: string | null = '';
+  tempBoardName: string = '';
+
   showNewTaskForm = false;
   showTaskOpen = false;
   showModal = false;
   isDragging = false;
   // disableDrag = true;
   isResizing = false;
+  editMode = false;
   private dragStart = false;
   private startX = 0;
   private startY = 0;
@@ -709,5 +712,52 @@ export class BoardComponent {
         this.cdr.markForCheck();
       });
     }
+  }
+
+  enableEdit(): void {
+    this.editMode = true;
+  }
+
+  // updateBoardName(): void {
+  //   this.editMode = false;
+
+  //   this.boardService
+  //     .updateBoardName(this.boardId as string, this.boardName as string)
+  //     .subscribe(() => {
+  //       console.log('board name updated');
+  //     });
+  // }
+
+  updateBoardName(): void {
+    this.editMode = false;
+
+    if (this.tempBoardName && this.tempBoardName !== this.boardName) {
+      const oldBoardName = this.boardName;
+      const newBoardName = this.tempBoardName;
+
+      // board name -
+      this.boardService
+        .updateBoardName(this.boardId as string, newBoardName)
+        .subscribe(
+          () => {
+            // board tasks board prop -
+            this.boardService
+              .updateTasksBoardName(oldBoardName as string, newBoardName)
+              .then(() => {
+                this.boardName = newBoardName;
+                this.tempBoardName = '';
+              })
+              .catch((error) =>
+                console.error('error updating tasks with new board -', error)
+              );
+          },
+          (error) => console.error('error updating board - ', error)
+        );
+    }
+  }
+
+  onInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.tempBoardName = target.value;
   }
 }

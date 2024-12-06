@@ -14,6 +14,7 @@ export interface Task {
   priority: number;
   fav: boolean;
   tags: string[];
+  comments?: Comment[];
   color: string;
   resizable: boolean;
   draggable: boolean;
@@ -31,4 +32,12 @@ export interface Subtask {
   content: string;
   editable: boolean;
   done: boolean;
+}
+
+export interface Comment {
+  id?: string;
+  owner: string;
+  ownerName: string;
+  content: string;
+  timestamp: number;
 }

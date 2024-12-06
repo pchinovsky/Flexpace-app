@@ -63,7 +63,29 @@
   </div>
   <button id="rev">REV</button>
 
-  <p class="board-name">
+  <!-- <p class="board-name">
     Board <strong>{{ boardName }}</strong>
+  </p> -->
+
+  <p class="board-name">
+    Board
+    <strong *ngIf="!editMode; else editTemplate" (click)="enableEdit()">{{
+      boardName
+    }}</strong>
+    <ng-template #editTemplate>
+      <!-- <input
+        type="text"
+        [(ngModel)]="boardName"
+        (blur)="updateBoardName()"
+        (keyup.enter)="updateBoardName()"
+      /> -->
+      <input
+        type="text"
+        [value]="boardName"
+        (input)="onInput($event)"
+        (blur)="updateBoardName()"
+        (keyup.enter)="updateBoardName()"
+      />
+    </ng-template>
   </p>
 </div>

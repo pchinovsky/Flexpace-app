@@ -106,7 +106,7 @@ export class BoardDefaultComponent implements OnInit {
         return task.owner === this.currentUserId;
       });
 
-      console.log('filtered tasks:', this.tasks);
+      console.log('filtered tasks default:', this.tasks);
       this.cdr.markForCheck();
     });
   }

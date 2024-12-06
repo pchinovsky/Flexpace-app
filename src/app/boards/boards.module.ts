@@ -4,7 +4,7 @@ import { BoardDefaultComponent } from './board-default/board-default.component';
 import { TaskModule } from '../task/task.module';
 import { BoardNewComponent } from './board-new/board-new.component';
 import { SharedModule } from '../shared/shared.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BoardComponent } from './board/board.component';
 import { BoardUniversalComponent } from './board-universal/board-universal.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -24,6 +24,7 @@ import { BoardTodayComponent } from './board-today/board-today.component';
     SharedModule,
     ReactiveFormsModule,
     DragDropModule,
+    FormsModule,
   ],
   exports: [BoardNewComponent, BoardComponent],
 })

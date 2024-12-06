@@ -112,10 +112,10 @@
 }
 
   div {
-    width: 110%;
+    /* width: 110%;
     height: 110%;
     background-color: var(--task-color);
-    display: flex;
+    display: flex; */
     
   }
 
@@ -123,7 +123,8 @@
     display: flex;
     flex-direction: column;
     gap: 1em;
-    height: 100%;
+    box-sizing: border-box;
+    /* height: 100%; */
   }
 
   div.container {
@@ -154,6 +155,7 @@
     outline: none;
     padding: 1em 0 1em 1.7em;
     padding-bottom: 1em;
+    color:rgb(45, 45, 107);
   }
 
   .task-text {
@@ -369,6 +371,104 @@ button#color {
     transform: scale(1);
   }
 } */
+
+
+/* comments -  */
+
+
+.comments {
+  background-color: inherit;
+  box-sizing: border-box;
+  min-width: 280px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* gap: 1em; */
+  overflow: hidden;
+  padding: 1em;
+  padding-right: 0;
+}
+
+.add-comment {
+  display: flex;
+  gap: 10px;
+  height: 50px;
+  align-items: center;
+}
+
+.add-comment input {
+  /* flex: 1; */
+  padding: 1em;
+  box-sizing: border-box;
+  background-color: inherit;
+  outline: none;
+  border: none;
+}
+
+.add-comment input:hover {
+  opacity: 0.9;
+}
+
+.add-comment button {
+  /* padding: 1em 2em; */
+  padding: 0.5em;
+  /* background-color: rgb(249, 251, 249, 0.3); */
+  color: white;
+  border: none;
+  border-radius: 1.5em;
+  width: 4em;
+  cursor: pointer;
+}
+
+.add-comment button:hover {
+  background-color: rgb(249, 251, 249, 0.2);
+}
+
+.comments-list {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.comments-list article {
+  padding: 1em 0;
+  border-bottom: 1px solid rgb(221, 221, 221, 0.6);
+}
+
+.comments-list article p {
+  margin-block: 0.2em;
+}
+
+.loader-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; 
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+} 
+
+
+
 
 
 

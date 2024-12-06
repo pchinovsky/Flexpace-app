@@ -6,6 +6,10 @@ import { TaskService } from '../task.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { CommentsService } from '../comments.service';
+import { take } from 'rxjs';
+import { Comment } from 'src/app/types/task';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-task-open',
@@ -19,6 +23,12 @@ export class TaskOpenComponent implements OnInit {
   own: boolean = false;
   userId: string = '';
   // userId: string | null = '';
+
+  loading: boolean = false;
+
+  newComment: string = '';
+  // comments: { owner: string; ownerName: string; content: string }[] = [];
+  comments: Comment[] = [];
 
   selectColorOn = false;
   // contentControl: FormControl;
@@ -40,7 +50,9 @@ export class TaskOpenComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: { id: string; task: Task; own: boolean },
     public taskService: TaskService,
-    public auth: AuthService
+    public auth: AuthService,
+    private comment: CommentsService,
+    private cdr: ChangeDetectorRef
   ) {
     this.task = data.task;
     this.taskColor = data.task.color;
@@ -78,6 +90,9 @@ export class TaskOpenComponent implements OnInit {
     });
 
     console.log('own?', this.own);
+
+    // this.loadComments();
+    this.loadTaskAndComments();
   }
 
   // text format -
@@ -174,5 +189,78 @@ export class TaskOpenComponent implements OnInit {
 
   formatText(command: string): void {
     document.execCommand(command);
+  }
+
+  //
+
+  loadComments(): void {
+    this.loading = true;
+
+    this.comment.getComments(this.task.id).subscribe((comments) => {
+      this.comments = comments;
+      this.loading = false;
+    });
+  }
+
+  // addComment(): void {
+  //   if (!this.newComment.trim()) return;
+
+  //   const comment: Comment = {
+  //     owner: this.userId,
+  //     content: this.newComment,
+  //     timestamp: Date.now(),
+  //   };
+
+  //   this.comment
+  //     .addComment(this.task.id, comment)
+  //     .then(() => {
+  //       this.newComment = '';
+  //     })
+  //     .catch((error) => console.error('error adding comment:', error));
+  // }
+
+  addComment(): void {
+    if (!this.newComment.trim()) return;
+
+    this.auth
+      .getUser()
+      .pipe(take(1))
+      .subscribe((user) => {
+        if (!user?.displayName) return;
+
+        this.loading = true;
+        const comment: Comment = {
+          owner: this.userId,
+          ownerName: user.displayName,
+          content: this.newComment,
+          timestamp: Date.now(),
+        };
+
+        this.comment
+          .addComment(this.task.id, comment)
+          .then(() => {
+            this.newComment = '';
+            this.loading = false;
+          })
+          .catch((error) => console.error('error adding comment -', error));
+      });
+  }
+
+  //
+
+  loadTaskAndComments(): void {
+    this.taskService.getTaskWithComments(this.task.id).subscribe({
+      next: ({ task, comments }) => {
+        this.task = task;
+        this.comments = comments;
+        console.log('task and comments loaded - ', task, this.comments);
+        this.cdr.detectChanges();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('error loading task and comments - ', error);
+        this.loading = false;
+      },
+    });
   }
 }
