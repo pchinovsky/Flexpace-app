@@ -92,6 +92,12 @@ img {
    justify-content: space-between;
 }
 
+.stat-row:hover, 
+.stat-row label:hover {
+    color: blue;
+    font-weight: bold;
+}
+
 h1 {
     margin-top: 3em;
     color: blue;

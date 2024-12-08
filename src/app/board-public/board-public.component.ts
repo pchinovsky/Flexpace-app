@@ -16,6 +16,7 @@ export class BoardPublicComponent implements OnInit {
   showTaskOpen = false;
   owner: string | null | undefined = '';
   boardName = 'wall';
+  activeTask: string | null = null;
 
   tasks: Task[] = [];
   gridPoints: { x: number; y: number }[] = [];
@@ -51,13 +52,11 @@ export class BoardPublicComponent implements OnInit {
   }
 
   loadTasks() {
-    this.taskService.getAllTasks().subscribe((tasks: Task[]) => {
-      this.tasks = tasks
-        .filter((task) => task.public === true)
-        .map((task) => ({
-          ...task,
-          draggable: false,
-        }));
+    this.taskService.getPublicTasks().subscribe((tasks: Task[]) => {
+      this.tasks = tasks.map((task) => ({
+        ...task,
+        draggable: false,
+      }));
       console.log('board pub - ', this.tasks);
 
       this.cdr.markForCheck();
@@ -77,8 +76,11 @@ export class BoardPublicComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  onTaskClick(e: MouseEvent): void {
+  onTaskClick(eventData: { taskId: string; e: MouseEvent }): void {
+    eventData.e.stopPropagation();
     this.showTaskOpen = true;
+    this.activeTask = eventData.taskId;
+    this.cdr.detectChanges();
   }
 
   onCloseNewTask(): void {

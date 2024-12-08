@@ -171,7 +171,7 @@ export class BoardComponent {
     // }
 
     // works! moving board without reload ---
-    this.taskService.getTasks(board).subscribe((tasks: Task[]) => {
+    this.taskService.getTasks(board as string).subscribe((tasks: Task[]) => {
       // console.log('load tasks - ', board);
       // console.log('load tasks - ', this.boardName);
 

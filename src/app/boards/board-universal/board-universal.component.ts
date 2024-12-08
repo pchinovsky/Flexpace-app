@@ -163,8 +163,10 @@ export class BoardUniversalComponent implements OnInit {
   }
 
   onTaskClick(eventData: { taskId: string; e: MouseEvent }): void {
+    eventData.e.stopPropagation();
     this.showTaskOpen = true;
     this.activeTask = eventData.taskId;
+    this.cdr.detectChanges();
   }
 
   onCloseNewTask(): void {

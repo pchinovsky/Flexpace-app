@@ -19,7 +19,9 @@
 
 <div class="task-grid">
   <app-task
-    *ngFor="let task of tasks; trackBy: trackByTaskId"
+    *ngFor="let task of tasks; let i = index; trackBy: trackByTaskId"
+    [ngStyle]="{ 'z-index': activeTask === task.id ? 1000 : i + 3 }"
+    [ngClass]="{ 'active-task': activeTask === task.id }"
     [task]="task"
     [tasks]="tasks"
     [fixedLayout]="true"
@@ -28,6 +30,6 @@
     [owner]="owner"
     [style.width.px]="190"
     [style.height.px]="240"
-    (click)="onTaskClick($event)"
+    (taskClicked)="onTaskClick($event)"
   ></app-task>
 </div>

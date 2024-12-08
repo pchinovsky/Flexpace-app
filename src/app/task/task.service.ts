@@ -6,6 +6,8 @@ import { combineLatest } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { Comment } from '../types/task';
 import { arrayUnion } from '@angular/fire/firestore';
+import { switchMap } from 'rxjs/operators';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +16,10 @@ export class TaskService {
   // private lastEditedTask: any;
   private lastEditedTaskDoc: any = this.firestore.collection('lastEditedTask');
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(
+    private firestore: AngularFirestore,
+    private afAuth: AngularFireAuth
+  ) {}
 
   // real fn -
 
@@ -22,10 +27,29 @@ export class TaskService {
     return this.firestore.collection<Task>('tasks').valueChanges();
   }
 
-  getTasks(board: string | null): Observable<Task[]> {
+  getPublicTasks(): Observable<Task[]> {
     return this.firestore
-      .collection<Task>('tasks', (ref) => ref.where('board', '==', board))
+      .collection<Task>('tasks', (ref) => ref.where('public', '==', true))
       .valueChanges();
+  }
+
+  // getTasks(board: string | null): Observable<Task[]> {
+  //   return this.firestore
+  //     .collection<Task>('tasks', (ref) => ref.where('board', '==', board))
+  //     .valueChanges();
+  // }
+
+  getTasks(board: string): Observable<Task[]> {
+    return this.afAuth.user.pipe(
+      switchMap((user) => {
+        if (!user) return [];
+        return this.firestore
+          .collection<Task>('tasks', (ref) =>
+            ref.where('board', '==', board).where('owner', '==', user.uid)
+          )
+          .valueChanges();
+      })
+    );
   }
 
   getTaskById(taskId: string): Observable<Task> {

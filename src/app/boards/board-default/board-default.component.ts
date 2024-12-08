@@ -94,7 +94,6 @@ export class BoardDefaultComponent implements OnInit {
     });
   }
 
-  // FIX - see only own tasks for def board
   loadTasks(board: string | null) {
     if (!board) return;
     if (this.tasks && this.tasks.length > 0) return;

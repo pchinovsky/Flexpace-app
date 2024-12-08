@@ -4,6 +4,8 @@ import { Board } from '../types/board';
 import { Observable } from 'rxjs';
 import { from } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
+import { switchMap } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +19,10 @@ export class BoardService {
     { id: '2', title: 'Mock Board 2', color: 'Another mock board.' },
   ];
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(
+    private firestore: AngularFirestore,
+    private afAuth: AngularFireAuth
+  ) {}
 
   createBoard(board: Omit<Board, 'id'>): Promise<void> {
     console.log('create board in');
@@ -35,10 +40,23 @@ export class BoardService {
 
   // real fns -
 
-  getBoards() {
-    console.log('getting boards');
+  // getBoards() {
+  //   console.log('getting boards');
 
-    return this.firestore.collection<Board>('boards').valueChanges();
+  //   return this.firestore.collection<Board>('boards').valueChanges();
+  // }
+
+  getBoards(): Observable<Board[]> {
+    return this.afAuth.user.pipe(
+      switchMap((user) => {
+        if (!user) return [];
+        return this.firestore
+          .collection<Board>('boards', (ref) =>
+            ref.where('owner', '==', user.uid)
+          )
+          .valueChanges();
+      })
+    );
   }
 
   getBoardById(boardId: string) {
