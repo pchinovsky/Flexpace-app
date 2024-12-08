@@ -20,7 +20,7 @@ export class UserStatsService {
     const userId = this.authService.getCurrentUserId();
 
     return this.taskService
-      .getAllTasks()
+      .getAllTasks(userId as string)
       .pipe(map((tasks) => tasks.filter((task) => task.owner === userId)));
   }
 
@@ -34,7 +34,7 @@ export class UserStatsService {
     const userId = this.authService.getCurrentUserId();
 
     return this.taskService
-      .getAllTasks()
+      .getAllTasks(userId as string)
       .pipe(
         map((tasks) =>
           tasks.filter((task) => task.savedBy.includes(userId as string))
@@ -52,7 +52,7 @@ export class UserStatsService {
     const userId = this.authService.getCurrentUserId();
 
     return this.taskService
-      .getAllTasks()
+      .getAllTasks(userId as string)
       .pipe(
         map((tasks) =>
           tasks.filter(
@@ -76,7 +76,7 @@ export class UserStatsService {
     const userId = this.authService.getCurrentUserId();
 
     return this.taskService
-      .getAllTasks()
+      .getAllTasks(userId as string)
       .pipe(
         map((tasks) =>
           tasks.filter((task) => task.owner === userId && task.public === true)

@@ -11,6 +11,7 @@ import { FormGroup } from '@angular/forms';
 import { UserStatsService } from '../user-stats.service';
 import { TaskService } from 'src/app/task/task.service';
 import { Task } from 'src/app/types/task';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
@@ -39,7 +40,8 @@ export class ProfileComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private fb: FormBuilder,
     private userStatsService: UserStatsService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -99,6 +101,7 @@ export class ProfileComponent implements OnInit {
       this.lastEditedTask$.subscribe((task) => {
         console.log('--- Last edited task in profile:', task);
       });
+      this.cdr.detectChanges();
     });
 
     // patch form with user data -

@@ -78,21 +78,13 @@ export class BoardUniversalComponent implements OnInit {
   ngOnInit(): void {
     this.currentUserId = this.auth.getCurrentUserId();
 
-    this.taskService.getAllTasks().subscribe((tasks: Task[]) => {
-      this.tasks = tasks
-        .filter((task) => {
-          if (!this.currentUserId) {
-            return false;
-          }
-          return (
-            task.owner === this.currentUserId ||
-            (task.savedBy && task.savedBy.includes(this.currentUserId))
-          );
-        })
-        .map((task) => ({ ...task, draggable: false }));
-
-      this.filteredTasks = [...this.tasks];
-    });
+    this.taskService
+      .getAllTasks(this.currentUserId!)
+      .subscribe((tasks: Task[]) => {
+        this.tasks = tasks.map((task) => ({ ...task, draggable: false }));
+        this.filteredTasks = [...this.tasks];
+        console.log('Filtered tasks:', this.filteredTasks);
+      });
 
     this.searchControl.valueChanges
       .pipe(debounceTime(300))

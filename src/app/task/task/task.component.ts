@@ -87,8 +87,8 @@ export class TaskComponent implements AfterViewInit {
   private offsetY = 0;
   private initialLeft = 0;
   private initialTop = 0;
-  private openHeight = '400px';
-  private openWidth = '400px';
+  private openHeight = '550px';
+  private openWidth = '800px';
 
   private mouseDownX: number = 0;
   private mouseDownY: number = 0;

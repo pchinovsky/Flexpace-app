@@ -25,8 +25,24 @@ export class TaskService {
 
   // real fn -
 
-  getAllTasks(): Observable<Task[]> {
-    return this.firestore.collection<Task>('tasks').valueChanges();
+  // getAllTasks(): Observable<Task[]> {
+  //   return this.firestore.collection<Task>('tasks').valueChanges();
+  // }
+
+  getAllTasks(userId: string): Observable<Task[]> {
+    const ownerTasks$ = this.firestore
+      .collection<Task>('tasks', (ref) => ref.where('owner', '==', userId))
+      .valueChanges();
+
+    const savedByTasks$ = this.firestore
+      .collection<Task>('tasks', (ref) =>
+        ref.where('savedBy', 'array-contains', userId)
+      )
+      .valueChanges();
+
+    return combineLatest([ownerTasks$, savedByTasks$]).pipe(
+      map(([ownerTasks, savedByTasks]) => [...ownerTasks, ...savedByTasks])
+    );
   }
 
   getPublicTasks(): Observable<Task[]> {
