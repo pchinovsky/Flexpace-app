@@ -10,6 +10,11 @@ import { CommentsService } from '../comments.service';
 import { take } from 'rxjs';
 import { Comment } from 'src/app/types/task';
 import { ChangeDetectorRef } from '@angular/core';
+import { HostListener } from '@angular/core';
+import { Output } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { BoardService } from 'src/app/boards/board.service';
 
 @Component({
   selector: 'app-task-open',
@@ -18,6 +23,8 @@ import { ChangeDetectorRef } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskOpenComponent implements OnInit {
+  @Output() closeEvent = new EventEmitter<void>();
+
   task: Task;
   taskColor: string = '';
   own: boolean = false;
@@ -52,7 +59,9 @@ export class TaskOpenComponent implements OnInit {
     public taskService: TaskService,
     public auth: AuthService,
     private comment: CommentsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private boardService: BoardService,
+    public dialogRef: MatDialogRef<TaskOpenComponent>
   ) {
     this.task = data.task;
     this.taskColor = data.task.color;
@@ -70,6 +79,21 @@ export class TaskOpenComponent implements OnInit {
     }
 
     this.userId = this.auth.getCurrentUserId() as string;
+
+    this.dialogRef.beforeClosed().subscribe(() => {
+      console.log('TASK OPEN DIALOG REF');
+      // this.closeEvent.emit();
+      this.boardService.setTaskOpen(false);
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onBackgroundClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    if (target.classList.contains('task-open-background')) {
+      this.closeTask();
+    }
   }
 
   ngOnInit(): void {
@@ -149,6 +173,8 @@ export class TaskOpenComponent implements OnInit {
 
   // working without content change and with form control and ng on init -
   saveContent(): void {
+    // console.log('OPEN - SAVE CONTENT ON');
+    // this.closeEvent.emit();
     const updatedTask = {
       ...this.task,
       title: this.titleControl.value,
@@ -262,5 +288,11 @@ export class TaskOpenComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  //
+
+  closeTask(): void {
+    this.closeEvent.emit();
   }
 }

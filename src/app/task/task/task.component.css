@@ -17,7 +17,6 @@
     align-items: center;
     justify-content: space-between;
     font-family: Arial, sans-serif;
-    /* position: absolute; */
     cursor: move;   
     /* opacity below 1 shows flicker when drag -  */
     /* opacity: 0.8; */
@@ -25,7 +24,9 @@
     /* box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px; */
     box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
     transition: background-color 0.2s ease, opacity 0.2s ease;
-    backdrop-filter: blur(15px);
+    /* backdrop-filter: blur(15px); */
+    position: relative;
+    z-index: 10;
 
 }
 
@@ -426,7 +427,7 @@ p {
     padding: 10px;
     padding-left: 17px;
     padding-right: 11px;
-    z-index: 100; 
+    z-index: 1000; 
     /* min-height: 100px; */
     max-height: 200px; 
     width: 100%;
@@ -436,6 +437,8 @@ p {
     /* overflow: hidden; */
     clip-path: inset(0 round 1.5em); 
     mask-image: radial-gradient(circle, black 99%, transparent 100%);
+    z-index: 1000; 
+    transform: translateZ(0);
 }
 
   .hid {
@@ -448,10 +451,14 @@ p {
 
   .rev {
     opacity: 0.8;
+    position: absolute;
     animation: revealVertical 0.5s ease forwards; 
     visibility: visible;
     /* display: flex; */
     /* background-color: lightblue;  */
+    z-index: 1000; 
+    transform: translateZ(0);
+
     transition: opacity 0.5s ease, visibility 0.5s ease;
   }
 
@@ -514,7 +521,8 @@ p {
     overflow: visible;
     /* position: relative; */
     display: flex;
-    flex-direction: column;
+    flex-shrink: 0;
+    /* flex-direction: column; */
 }
 
 /* #sub-input {
@@ -528,9 +536,11 @@ p {
     /* position: relative; */
     /* z-index: 1000; */
     width: 100%;
+    /* flex-grow: 1; */
     outline: none;
+    border: none;
     border-radius: 0.5em;
-    background-color: rgb(247, 247, 247, 0.7);
+    background-color: inherit;
     padding: 0.5em 0.7em;
   }
   
@@ -540,6 +550,8 @@ p {
     top: 0; 
     left: 20%;
     display: flex;
+    flex-grow: 1;
+    /* width: 100%; */
     background-color: rgb(247, 247, 247, 0.4);
     /* border: 1px solid #ddd; */
     border-radius: 1.5em;
@@ -549,7 +561,6 @@ p {
     padding-right: 11px; */
     /* z-index: 2000;  */
     /* min-height: 100px; */
-    width: 100%;
     height: 20px;    
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

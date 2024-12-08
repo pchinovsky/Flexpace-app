@@ -17,21 +17,21 @@ export class DragDropService {
 
   setDragData(data: string) {
     this.dragData.next(data);
-    console.log('drag data set', data);
+    // console.log('drag data set', data);
   }
 
   clearDragData() {
     this.dragData.next(null);
-    console.log('drag data cleaned');
+    // console.log('drag data cleaned');
   }
 
   setHovered(state: boolean): void {
     this.hoveredState.next(state);
-    console.log('hovered set to', state);
+    // console.log('hovered set to', state);
   }
 
   setHoveredBoardId(boardId: string | null): void {
     this.hoveredBoardId.next(boardId);
-    console.log('hovered board id set to:', boardId);
+    // console.log('hovered board id set to:', boardId);
   }
 }

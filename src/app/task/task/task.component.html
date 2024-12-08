@@ -71,7 +71,8 @@
     </div>
   </div>
 
-  <div class="rev-btn" (click)="toggleSubContainer($event)">
+  <div class="rev-btn" (click)="toggleSubContainer($event, task.id)">
+    <!-- <div class="rev-btn" (click)="board.toggleSubContainer(task.id)"> -->
     <span
       id="rev"
       class="material-symbols-outlined"
@@ -141,7 +142,7 @@
     <button
       id="pin"
       (click)="taskService.togglePin(task, userId)"
-      [class.set]="task.draggable"
+      [class.set]="!task.draggable"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -246,7 +247,11 @@
 
   <div *ngIf="canResize" class="resize-handle" #resizeHandle></div>
 
-  <div class="sub-cont" [ngClass]="isSubContainerOpen ? 'rev' : 'hid'">
+  <div
+    #subContainer
+    class="sub-cont"
+    [ngClass]="isOpen(task.id) ? 'rev' : 'hid'"
+  >
     <div class="add-sub">
       <button
         id="sub-task-cre"
@@ -268,7 +273,7 @@
       <button
         id="sub-task-cre"
         *ngIf="isOwn && isSubtaskInputOpen"
-        (click)="toggleSubtaskInput()"
+        (click)="addSubtask($event)"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -291,8 +296,10 @@
         <input
           class="sub-input"
           type="text"
-          placeholder="subtask content"
+          placeholder="type subtask"
           [(ngModel)]="newSubtaskContent"
+          (mousedown)="$event.stopPropagation()"
+          (click)="$event.stopPropagation()"
         />
       </div>
     </div>
@@ -301,7 +308,11 @@
       <p>
         {{ subtask?.content }}
       </p>
-      <button id="sub-del" *ngIf="isOwn" (click)="deleteSubtask(subtask)">
+      <button
+        id="sub-del"
+        *ngIf="isOwn"
+        (click)="deleteSubtask(subtask, $event)"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="24px"

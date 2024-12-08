@@ -91,4 +91,8 @@ export class BoardPublicComponent implements OnInit {
   goWild() {
     console.log('WILD');
   }
+
+  trackByTaskId(index: number, task: Task): string {
+    return task.id;
+  }
 }

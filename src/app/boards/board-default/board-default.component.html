@@ -29,13 +29,16 @@
     [board]="boardName"
     (closeModalEvent)="onCloseNewTask()"
   ></app-new-task>
-  <app-task-open *ngIf="showTaskOpen" (closeModalEvent)="onCloseNewTask()">
+  <app-task-open *ngIf="showTaskOpen" (closeEvent)="onCloseNewTask()">
   </app-task-open>
   <app-task
-    *ngFor="let task of tasks"
+    *ngFor="let task of tasks; let i = index"
+    [ngStyle]="{ 'z-index': activeTask === task.id ? 1000 : i + 3 }"
+    [ngClass]="{ 'active-task': activeTask === task.id }"
     [task]="task"
     [tasks]="tasks"
     [boardElement]="boardElement"
+    (taskClicked)="onTaskClick($event)"
     (resizeEvent)="onTaskResized($event)"
     (dragEndEvent)="onTaskDragged($event)"
   ></app-task>

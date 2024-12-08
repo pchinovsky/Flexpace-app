@@ -171,4 +171,8 @@ export class BoardUniversalComponent implements OnInit {
       this.cdr.detectChanges();
     }, 0);
   }
+
+  trackByTaskId(index: number, task: Task): string {
+    return task.id;
+  }
 }

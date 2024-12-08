@@ -39,6 +39,7 @@ export class BoardDefaultComponent implements OnInit {
 
   backgroundImage: string | null = null;
   predefinedImages: string[] = [];
+  activeTask: string | null = null;
 
   defaultSize = { width: 185, height: 235 };
   // taskWidth = 185;
@@ -256,6 +257,7 @@ export class BoardDefaultComponent implements OnInit {
       };
 
       this.taskService.updateTask(task, this.currentUserId as string);
+      this.cdr.detectChanges();
     } else {
       console.warn(`Task with ID ${event.taskId} not found.`);
     }
@@ -281,6 +283,7 @@ export class BoardDefaultComponent implements OnInit {
     //   this.isDragging = false;
     // }, 50);
     this.isDragging = false;
+    // this.cdr.detectChanges();
   }
 
   // newTask() {
@@ -317,6 +320,8 @@ export class BoardDefaultComponent implements OnInit {
   }
 
   onCloseNewTask(): void {
+    console.log('DEFAULT - event received! ');
+
     setTimeout(() => {
       this.showNewTaskForm = false;
       this.showTaskOpen = false;
@@ -325,18 +330,27 @@ export class BoardDefaultComponent implements OnInit {
     }, 0);
   }
 
-  // onTaskClick(e: MouseEvent): void {
-  //   this.showTaskOpen = true;
+  onTaskClick(eventData: { taskId: string; e: MouseEvent }): void {
+    eventData.e.stopPropagation();
+    // eventData.e.preventDefault();
 
-  //   // const el = event.currentTarget as HTMLElement;
-  //   // console.log(el.id);
+    // console.log('BOARD TASK CL ON');
 
-  //   // console.log('task clicked in board');
-  //   // event.preventDefault();
-  //   // event.stopImmediatePropagation();
-  // }
+    // this.showTaskOpen = true;
+    // this.taskOpen = true;
+    this.activeTask = eventData.taskId;
+    this.cdr.detectChanges();
 
-  //
+    // console.log('ACTIVE -', this.activeTask);
+    // console.log('BOARD - taskOpen? - ', this.taskOpen);
+
+    // const el = event.currentTarget as HTMLElement;
+    // console.log(el.id);
+
+    // console.log('task clicked in board');
+    // event.preventDefault();
+    // event.stopImmediatePropagation();
+  }
 
   openBackgroundSelectionModal(): void {
     this.matDialog
@@ -470,5 +484,13 @@ export class BoardDefaultComponent implements OnInit {
           }
         });
     }
+  }
+
+  trackByTaskId(index: number, task: Task): string {
+    return task.id;
+  }
+
+  trackByTaskKey(index: number, task: Task): string {
+    return `${task.id}-${task.coordinates?.x}-${task.coordinates?.y}`;
   }
 }

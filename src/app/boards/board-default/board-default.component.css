@@ -66,3 +66,6 @@ app-task {
     z-index: 0;
   }
   
+  .active-task {
+    /* outline: 2px solid #4caf50;  */
+  }

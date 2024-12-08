@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Task } from 'src/app/types/task';
 import { TaskService } from 'src/app/task/task.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { Output } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-modal',

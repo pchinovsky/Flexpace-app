@@ -35,7 +35,7 @@
 
 <div class="task-grid">
   <app-task
-    *ngFor="let task of filteredTasks"
+    *ngFor="let task of filteredTasks; trackBy: trackByTaskId"
     [task]="task"
     [tasks]="filteredTasks"
     [board]="boardName"

@@ -5,6 +5,12 @@
 <!-- <div class="container" (click)="onBoardClick($event)"> -->
 
 <!-- <div>{{ boardName }}</div> -->
+<app-new-task
+  *ngIf="showNewTaskForm"
+  [board]="boardName"
+  (closeModalEvent)="onCloseNewTask()"
+></app-new-task>
+
 <div
   class="container"
   (pointerdown)="onBoardPointerDown($event)"
@@ -24,6 +30,9 @@
     "
   ></div>
 
+  <app-task-open *ngIf="showTaskOpen" (closeEvent)="onTaskClosed()">
+  </app-task-open>
+
   <!-- img btn -->
   <button id="bgr" class="add-bg-btn" (click)="openBackgroundSelectionModal()">
     Background
@@ -37,21 +46,17 @@
     Delete Background
   </button> -->
 
-  <app-new-task
-    *ngIf="showNewTaskForm"
-    [board]="boardName"
-    (closeModalEvent)="onCloseNewTask()"
-  ></app-new-task>
-  <app-task-open *ngIf="showTaskOpen" (closeModalEvent)="onCloseNewTask()">
-  </app-task-open>
   <app-task
-    *ngFor="let task of tasks"
+    *ngFor="let task of tasks; let i = index"
+    [ngStyle]="{ 'z-index': activeTask === task.id ? 1000 : i + 3 }"
+    [ngClass]="{ 'active-task': activeTask === task.id }"
+    (taskClicked)="onTaskClick($event)"
     [task]="task"
     [tasks]="tasks"
+    [taskOpen]="taskOpen"
     [boardElement]="boardElement"
     (resizeEvent)="onTaskResized($event)"
     (dragEndEvent)="onTaskDragged($event)"
-    (click)="onTaskClick($event)"
   ></app-task>
   <div id="grid-container">
     <div

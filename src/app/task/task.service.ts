@@ -5,6 +5,12 @@ import { Observable, of } from 'rxjs';
 import { combineLatest } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { Comment } from '../types/task';
+import firebase from 'firebase/compat/app';
+import { arrayUnion } from '@angular/fire/firestore';
+import { from } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -55,9 +61,24 @@ export class TaskService {
       .update(task)
       .then(() => {
         console.log('Task updated successfully');
-        this.setLastEditedTask(task as Task, userId); // Pass the user ID here
+        this.setLastEditedTask(task as Task, userId);
       })
       .catch((error) => console.error('Error updating task:', error));
+  }
+
+  updateTaskObs(task: Partial<Task>, userId: string): Promise<void> {
+    return this.firestore
+      .collection('tasks')
+      .doc(task.id)
+      .update(task)
+      .then(() => {
+        console.log('Task updated successfully');
+        this.setLastEditedTask(task as Task, userId);
+      })
+      .catch((error) => {
+        console.error('Error updating task:', error);
+        throw error;
+      });
   }
 
   deleteTask(taskId: string): Promise<void> {
@@ -155,5 +176,16 @@ export class TaskService {
     return combineLatest([task$, comments$]).pipe(
       map(([task, comments]) => ({ task, comments }))
     );
+  }
+
+  //
+
+  addSubtask(taskId: string, subtask: any): Promise<void> {
+    return this.firestore
+      .collection('tasks')
+      .doc(taskId)
+      .update({
+        subtasks: arrayUnion(subtask),
+      });
   }
 }

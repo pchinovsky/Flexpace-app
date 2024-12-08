@@ -4,11 +4,15 @@ import { Board } from '../types/board';
 import { of } from 'rxjs';
 import { Observable } from 'rxjs';
 import { from } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService {
+  private taskOpenSubject = new BehaviorSubject<boolean>(false);
+  taskOpen$ = this.taskOpenSubject.asObservable();
+
   private mockBoards = [
     { id: '1', title: 'Mock Board 1', color: 'This is a mock board.' },
     { id: '2', title: 'Mock Board 2', color: 'Another mock board.' },
@@ -111,5 +115,11 @@ export class BoardService {
       .catch((error) => {
         console.error('error updating tasks -', error);
       });
+  }
+
+  //
+
+  setTaskOpen(isOpen: boolean): void {
+    this.taskOpenSubject.next(isOpen);
   }
 }

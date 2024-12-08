@@ -93,7 +93,7 @@ app-task {
   
   app-task {
     position: absolute;
-    z-index: 2; 
+    z-index: 3; 
   }
 
   #img-modal {
@@ -127,5 +127,13 @@ app-task {
     font-size: inherit;
     padding: 0.2em;
     border-bottom: 1px solid #ccc;
+  }
+  
+  .active-task {
+    /* outline: 2px solid #4caf50;  */
+  }
+
+  app-new-task {
+    z-index: 2000;
   }
   

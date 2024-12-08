@@ -33,10 +33,13 @@ export class BoardComponent {
 
   @ViewChildren(TaskComponent) taskComponents!: QueryList<TaskComponent>;
 
+  openSubContainers: Map<string, boolean> = new Map();
+
   predefinedImages: string[] = [];
 
   boardName: string | null = '';
   tempBoardName: string = '';
+  activeTask: string | null = null;
 
   showNewTaskForm = false;
   showTaskOpen = false;
@@ -45,6 +48,7 @@ export class BoardComponent {
   // disableDrag = true;
   isResizing = false;
   editMode = false;
+  taskOpen = false;
   private dragStart = false;
   private startX = 0;
   private startY = 0;
@@ -111,11 +115,14 @@ export class BoardComponent {
         );
       });
     }
+
+    this.boardService.taskOpen$.subscribe((isOpen) => {
+      console.log('-- BOARD - taskOpen? - ', isOpen);
+      this.taskOpen = isOpen;
+    });
   }
 
   loadBoardData(boardId: string): void {
-    console.log('WAZAAA 0');
-
     this.boardService.getBoardById(boardId).subscribe((data) => {
       this.boardData = data;
 
@@ -153,9 +160,7 @@ export class BoardComponent {
   // }
 
   loadTasks(board: string | null): void {
-    console.log('WAZAAAA');
-
-    console.log('load tasks - ', board);
+    // console.log('load tasks - ', board);
 
     // fails to prevent reloading when board change -
     // if (!board || this.dragDrop.dragData.getValue()) {
@@ -170,15 +175,15 @@ export class BoardComponent {
 
     // works! moving board without reload ---
     this.taskService.getTasks(board).subscribe((tasks: Task[]) => {
-      console.log('load tasks - ', board);
-      console.log('load tasks - ', this.boardName);
+      // console.log('load tasks - ', board);
+      // console.log('load tasks - ', this.boardName);
 
       if (board !== this.boardName) {
-        console.log(`current board mismatch: ${board} vs ${this.boardName}`);
+        // console.log(`current board mismatch: ${board} vs ${this.boardName}`);
         return;
       }
       this.tasks = tasks;
-      console.log('Tasks loaded for board:', board, tasks);
+      // console.log('Tasks loaded for board:', board, tasks);
       this.cdr.markForCheck();
     });
   }
@@ -206,8 +211,8 @@ export class BoardComponent {
 
   onBoardClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    console.log('Event target:', event.target);
-    console.log('Event target:', target);
+    // console.log('Event target:', event.target);
+    // console.log('Event target:', target);
 
     if (target.id !== 'grid-container') {
       return;
@@ -538,7 +543,14 @@ export class BoardComponent {
   //   // this.cdr.markForCheck();
   // }
 
+  onTaskClosed() {
+    console.log('BOARD - CLOSED ev - taskOpen? - ', this.taskOpen);
+  }
+
   onCloseNewTask(): void {
+    // this.taskOpen = false;
+    console.log('BOARD - CLOSED ev - taskOpen? - ', this.taskOpen);
+
     setTimeout(() => {
       this.showNewTaskForm = false;
       this.showTaskOpen = false;
@@ -547,8 +559,20 @@ export class BoardComponent {
     }, 0);
   }
 
-  onTaskClick(e: MouseEvent): void {
-    this.showTaskOpen = true;
+  onTaskClick(eventData: { taskId: string; e: MouseEvent }): void {
+    eventData.e.stopPropagation();
+    // eventData.e.preventDefault();
+
+    // console.log('BOARD TASK CL ON');
+
+    // this.showTaskOpen = true;
+    // this.taskOpen = true;
+    this.activeTask = eventData.taskId;
+    this.cdr.detectChanges();
+
+    // console.log('ACTIVE -', this.activeTask);
+    // console.log('BOARD - taskOpen? - ', this.taskOpen);
+
     // const el = event.currentTarget as HTMLElement;
     // console.log(el.id);
 
@@ -759,5 +783,26 @@ export class BoardComponent {
   onInput(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.tempBoardName = target.value;
+  }
+
+  //
+
+  toggleSubContainer(taskId: string): void {
+    const currentState = this.openSubContainers.get(taskId) ?? false;
+    this.openSubContainers.set(taskId, !currentState);
+  }
+
+  isSubContainerOpen(taskId: string): boolean {
+    return this.openSubContainers.get(taskId) ?? false;
+  }
+
+  //
+
+  trackByTaskId(index: number, task: Task): string {
+    return task.id;
+  }
+
+  trackByTaskKey(index: number, task: Task): string {
+    return `${task.id}-${task.coordinates?.x}-${task.coordinates?.y}`;
   }
 }

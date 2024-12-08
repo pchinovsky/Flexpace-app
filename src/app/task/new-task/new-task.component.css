@@ -19,7 +19,7 @@
 form {
     position: absolute;
     left: calc(50% - 200px);
-    top: 5%;
+    top: 20%;
     max-width: 500px;
     max-height: auto;
     min-width: 400px;
