@@ -420,10 +420,11 @@ export class TaskComponent implements AfterViewInit {
 
     if (this.subContainerService.areAllClosed()) {
       console.log('all sub conts closed, updating subtasks.');
-      this.taskService.updateTask(
-        { id: this.task.id, subtasks: this.task.subtasks },
-        this.userId as string
-      );
+      // this.taskService.updateTask(
+      //   { id: this.task.id, subtasks: this.task.subtasks },
+      //   this.userId as string
+      // );
+      this.taskService.updateTask(this.task, this.userId as string);
     }
 
     this.taskClicked.emit({ taskId: this.task.id, e });
@@ -602,7 +603,7 @@ export class TaskComponent implements AfterViewInit {
 
   makeDraggable(box: HTMLElement): void {
     // if (this.isClicked) return;
-    if (!this.task.draggable) return;
+    if (!this.task.draggable || !this.draggable) return;
 
     box.addEventListener('mousedown', (e: MouseEvent) => {
       const target = e.target as HTMLElement;

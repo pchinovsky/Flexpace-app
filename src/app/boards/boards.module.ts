@@ -9,6 +9,7 @@ import { BoardComponent } from './board/board.component';
 import { BoardUniversalComponent } from './board-universal/board-universal.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BoardTodayComponent } from './board-today/board-today.component';
+import { AuthModule } from '../auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { BoardTodayComponent } from './board-today/board-today.component';
     ReactiveFormsModule,
     DragDropModule,
     FormsModule,
+    AuthModule,
   ],
   exports: [BoardNewComponent, BoardComponent],
 })

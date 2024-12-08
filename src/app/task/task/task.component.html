@@ -24,7 +24,10 @@
   <!-- <div>{{ isOwn }}</div> -->
   <!-- <div>{{ task.draggable }}</div> -->
   <div class="owner-name" *ngIf="!isOwn">{{ task.ownerName }}</div>
-  <div class="board-name" *ngIf="isOwn && board === 'filter'">
+  <div
+    class="board-name"
+    *ngIf="(isOwn && board === 'filter') || board === 'profile'"
+  >
     {{ task.board }}
   </div>
   <!-- debug display -->

@@ -23,6 +23,7 @@ export class ProfileComponent implements OnInit {
   data: object = {};
   isEditing = false;
   profileForm!: FormGroup;
+  section = 'profile';
 
   lastEditedTask$: Observable<Task | null> | null = null;
 
@@ -95,6 +96,9 @@ export class ProfileComponent implements OnInit {
       this.lastEditedTask$ = this.taskService.getLastEditedTask(
         userId as string
       );
+      this.lastEditedTask$.subscribe((task) => {
+        console.log('--- Last edited task in profile:', task);
+      });
     });
 
     // patch form with user data -

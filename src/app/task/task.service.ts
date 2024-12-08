@@ -8,6 +8,8 @@ import { Comment } from '../types/task';
 import { arrayUnion } from '@angular/fire/firestore';
 import { switchMap } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',

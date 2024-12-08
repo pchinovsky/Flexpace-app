@@ -6,6 +6,7 @@ import { from } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,8 @@ export class BoardService {
 
   constructor(
     private firestore: AngularFirestore,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private authService: AuthService
   ) {}
 
   createBoard(board: Omit<Board, 'id'>): Promise<void> {
@@ -79,6 +81,7 @@ export class BoardService {
 
   deleteBoard(boardId: string): Promise<void> {
     console.log('Deleting board with ID:', boardId);
+    const userId = this.authService.getCurrentUserId();
     return this.firestore
       .collection('boards')
       .doc(boardId)
@@ -108,16 +111,63 @@ export class BoardService {
 
   //
 
+  // updateTasksBoardName(
+  //   oldBoardName: string,
+  //   newBoardName: string
+  // ): Promise<void> {
+  //   return this.firestore
+  //     .collection('tasks', (ref) => ref.where('board', '==', oldBoardName))
+  //     .get()
+  //     .toPromise()
+  //     .then((snapshot) => {
+  //       const promises = snapshot!.docs.map((doc) => {
+  //         return this.firestore
+  //           .collection('tasks')
+  //           .doc(doc.id)
+  //           .update({ board: newBoardName });
+  //       });
+
+  //       return Promise.all(promises);
+  //     })
+  //     .then(() => {
+  //       console.log('all task board prop updated');
+  //     })
+  //     .catch((error) => {
+  //       console.error('error updating tasks -', error);
+  //     });
+  // }
+
   updateTasksBoardName(
     oldBoardName: string,
     newBoardName: string
   ): Promise<void> {
+    const currentUserId = this.authService.getCurrentUserId();
+
+    if (!currentUserId) {
+      console.error('user is not authenticated??');
+      return Promise.reject(new Error('user not authenticated'));
+    }
+
     return this.firestore
-      .collection('tasks', (ref) => ref.where('board', '==', oldBoardName))
+      .collection('tasks', (ref) =>
+        ref
+          .where('board', '==', oldBoardName)
+          .where('owner', '==', currentUserId)
+      )
       .get()
       .toPromise()
       .then((snapshot) => {
-        const promises = snapshot!.docs.map((doc) => {
+        if (!snapshot || snapshot.empty) {
+          console.warn(
+            `no tasks for board: ${oldBoardName} and user: ${currentUserId}`
+          );
+          return;
+        }
+
+        const promises = snapshot.docs.map((doc) => {
+          console.log(
+            `updating task id: ${doc.id} to new board: ${newBoardName}`
+          );
           return this.firestore
             .collection('tasks')
             .doc(doc.id)
@@ -127,7 +177,7 @@ export class BoardService {
         return Promise.all(promises);
       })
       .then(() => {
-        console.log('all task board prop updated');
+        console.log('all task board props updated');
       })
       .catch((error) => {
         console.error('error updating tasks -', error);
