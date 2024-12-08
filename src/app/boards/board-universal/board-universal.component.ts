@@ -21,6 +21,7 @@ export class BoardUniversalComponent implements OnInit {
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
   boardName = 'filter';
+  activeTask: string | null = null;
 
   toggleFilters: { [key: string]: boolean } = {
     public: false,
@@ -161,8 +162,9 @@ export class BoardUniversalComponent implements OnInit {
     });
   }
 
-  onTaskClick(e: MouseEvent): void {
+  onTaskClick(eventData: { taskId: string; e: MouseEvent }): void {
     this.showTaskOpen = true;
+    this.activeTask = eventData.taskId;
   }
 
   onCloseNewTask(): void {

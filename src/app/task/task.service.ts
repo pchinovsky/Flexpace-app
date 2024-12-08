@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Task } from '../types/task';
+import { Subtask, Task } from '../types/task';
 import { Observable } from 'rxjs';
 import { combineLatest } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
@@ -111,45 +111,21 @@ export class TaskService {
 
   //
 
-  // setLastEditedTask(task: Task): void {
-  //   this.lastEditedTaskDoc.doc('current').set(task);
-  // }
-
-  setLastEditedTask(task: Task, userId: string): void {
-    this.firestore
-      .doc('lastEditedTask/current')
+  setLastEditedTask(task: Task, userId: string): Promise<void> {
+    return this.firestore
+      .collection('lastEditedTasks')
+      .doc(userId)
       .set({ ...task, userId })
-      .then(() => console.log('last edited task set successfully.'))
-      .catch((error) =>
-        console.error('error setting last edited task:', error)
-      );
+      .then(() => console.log('last edited set'))
+      .catch((error) => console.error('error setting last edited:', error));
   }
 
-  getLastEditedTask(userId: string): Promise<Task | null> {
-    const docRef = this.firestore.doc('lastEditedTask/current');
-
-    return docRef
-      .get()
-      .toPromise()
-      .then((docSnapshot: any) => {
-        if (docSnapshot.exists) {
-          const task = docSnapshot.data();
-          if (task.userId === userId) {
-            console.log('last edited task retrieved for current user:', task);
-            return task as Task;
-          } else {
-            console.warn('no task edited by the current user.');
-            return null;
-          }
-        } else {
-          console.warn('no last edited task found in firestore');
-          return null;
-        }
-      })
-      .catch((error) => {
-        console.error('rrror retrieving last edited task:', error);
-        return null;
-      });
+  getLastEditedTask(userId: string): Observable<Task | null> {
+    return this.firestore
+      .collection<Task>('lastEditedTasks')
+      .doc(userId)
+      .valueChanges()
+      .pipe(filter((task): task is Task => !!task));
   }
 
   //
@@ -175,7 +151,7 @@ export class TaskService {
 
   //
 
-  addSubtask(taskId: string, subtask: any): Promise<void> {
+  addSubtask(taskId: string, subtask: Subtask): Promise<void> {
     return this.firestore
       .collection('tasks')
       .doc(taskId)

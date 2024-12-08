@@ -97,7 +97,7 @@
 
     <section class="two">
       <strong>Last Edited Task</strong>
-      <div *ngIf="lastEditedTask" class="task-box">
+      <div *ngIf="lastEditedTask$ | async as lastEditedTask" class="task-box">
         <app-task
           [task]="lastEditedTask"
           [fixedLayout]="true"
@@ -107,7 +107,7 @@
           [style.height.px]="200"
         ></app-task>
       </div>
-      <div *ngIf="!lastEditedTask">
+      <div *ngIf="!(lastEditedTask$ | async)">
         <p>No task has been edited recently.</p>
       </div>
     </section>

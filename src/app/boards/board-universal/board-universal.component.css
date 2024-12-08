@@ -46,7 +46,7 @@ app-task {
     display: flex;
     gap: 2em;
     justify-content: space-around;
-    padding: 10px 15px;
+    padding: 10px 10px 10px 15px;
     /* border-bottom: 1px solid #ccc; */
     border-radius: 1em;
     position: absolute;
@@ -152,7 +152,7 @@ app-task {
 
   .filter-menu input[type="text"] {
     padding: 5px;
-    border-radius: 4px;
+    border-radius: 0.7em;
     border: 1px solid #ccc;
   }
   

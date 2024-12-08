@@ -400,13 +400,16 @@ button#color {
   /* flex: 1; */
   padding: 1em;
   box-sizing: border-box;
+  /* background-color: inherit; */
   background-color: inherit;
   outline: none;
   border: none;
+  border-radius: 0.5em;
 }
 
 .add-comment input:hover {
-  opacity: 0.9;
+  background-color: rgb(255, 255, 255, 0.2);
+  transition: background-color 0.5s ease;
 }
 
 .add-comment button {

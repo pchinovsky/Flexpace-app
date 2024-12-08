@@ -23,7 +23,8 @@ export class ProfileComponent implements OnInit {
   data: object = {};
   isEditing = false;
   profileForm!: FormGroup;
-  lastEditedTask: Task | null = null;
+
+  lastEditedTask$: Observable<Task | null> | null = null;
 
   numOfTasks$!: Observable<number>;
   numOfTasksSaved$!: Observable<number>;
@@ -91,15 +92,9 @@ export class ProfileComponent implements OnInit {
         });
       }
 
-      this.taskService
-        .getLastEditedTask(userId as string)
-        .then((task) => {
-          this.lastEditedTask = task;
-          console.log('Last edited task:', this.lastEditedTask);
-        })
-        .catch((error) => {
-          console.error('Error fetching last edited task:', error);
-        });
+      this.lastEditedTask$ = this.taskService.getLastEditedTask(
+        userId as string
+      );
     });
 
     // patch form with user data -
