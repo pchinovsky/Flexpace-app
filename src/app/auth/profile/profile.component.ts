@@ -8,7 +8,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { Validators } from '@angular/forms';
 import { UserStatsService } from '../user-stats.service';
 import { TaskService } from 'src/app/task/task.service';
 import { Task } from 'src/app/types/task';

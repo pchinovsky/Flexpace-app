@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Task } from '../types/task';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { combineLatest } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { Comment } from '../types/task';
-import firebase from 'firebase/compat/app';
 import { arrayUnion } from '@angular/fire/firestore';
-import { from } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

@@ -22,7 +22,6 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DragDropService } from 'src/app/drag-drop.service';
 import { take } from 'rxjs';
 import { BoardService } from 'src/app/boards/board.service';
-import { HostListener } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SubContainerService } from '../sub-containers.service';
 

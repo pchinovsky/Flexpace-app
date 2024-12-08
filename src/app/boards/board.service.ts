@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Board } from '../types/board';
-import { of } from 'rxjs';
 import { Observable } from 'rxjs';
 import { from } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';

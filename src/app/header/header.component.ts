@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { Observable, of } from 'rxjs';
@@ -85,18 +85,4 @@ export class HeaderComponent implements OnInit {
   onLogout() {
     this.authService.logout();
   }
-
-  // closeModal(e: string = 'unknown') {
-  //   this.showLoginModal = false;
-  //   this.showRegModal = false;
-  //   console.log(`closeModal triggered by: ${e}`);
-
-  //   this.cdr.detectChanges();
-
-  //   // this.router.navigate(['/wall']);
-  // }
-
-  // goWild() {
-  //   console.log('WILD');
-  // }
 }

@@ -18,13 +18,12 @@ import { BoardsModule } from './boards/boards.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button'; // Optional, if you need buttons in your form
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from './shared/shared.module';
 import { HeaderBoardsNavComponent } from './header-boards-nav/header-boards-nav.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { TimestampPipe } from './shared/timestamp.pipe';
 
 @NgModule({
   declarations: [
@@ -32,7 +31,6 @@ import { TimestampPipe } from './shared/timestamp.pipe';
     HeaderComponent,
     BoardPublicComponent,
     HeaderBoardsNavComponent,
-    // TimestampPipe,
   ],
   imports: [
     BrowserModule,

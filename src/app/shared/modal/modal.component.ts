@@ -12,6 +12,8 @@ import { EventEmitter } from '@angular/core';
   styleUrls: ['./modal.component.css'],
 })
 export class ModalComponent {
+  @Output() closeEvent = new EventEmitter<void>();
+
   private initialTask: Task;
   userId: string | null = '';
 

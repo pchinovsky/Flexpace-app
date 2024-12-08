@@ -1,9 +1,7 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AbstractControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -12,13 +10,6 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  // @Output() close = new EventEmitter<void>();
-  // @Output() close: EventEmitter<void> = new EventEmitter();
-
-  // @Output() logged = new EventEmitter<void>();
-  // @Output() brake = new EventEmitter<void>();
-  // showLoginModal = false;
-
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     pass: ['', [Validators.required, Validators.minLength(6)]],
@@ -59,8 +50,7 @@ export class LoginComponent {
 
   closeModal() {
     // console.log('Emitting close event from LoginComponent');
-    // this.brake.emit();
-    // this.close.emit(); // This should trigger the event in the parent
+
     // console.log('emitting brake event from login');
     this.router.navigate(['/wall']);
   }

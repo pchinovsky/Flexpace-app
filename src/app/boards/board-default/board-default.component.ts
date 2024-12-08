@@ -7,13 +7,10 @@ import { PointService } from 'src/app/task/point.service';
 import { TaskService } from 'src/app/task/task.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
-import { CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { ViewChildren } from '@angular/core';
 import { TaskComponent } from 'src/app/task/task/task.component';
 import { QueryList } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { retry } from 'rxjs';
-import { TaskOpenComponent } from 'src/app/task/task-open/task-open.component';
 import { finalize } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 

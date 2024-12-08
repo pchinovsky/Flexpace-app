@@ -3,7 +3,7 @@ import { BoardService } from '../boards/board.service';
 import { Board } from '../types/board';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
-import { filter, retry } from 'rxjs';
+import { filter } from 'rxjs';
 import { NavigationEnd } from '@angular/router';
 import { DragDropService } from '../drag-drop.service';
 import { TaskService } from '../task/task.service';

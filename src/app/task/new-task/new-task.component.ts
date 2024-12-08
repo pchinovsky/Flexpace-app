@@ -1,10 +1,10 @@
 import { Component, ViewChild, ElementRef, Input, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Validators } from '@angular/forms';
-import { Task, Subtask } from 'src/app/types/task';
+import { Task } from 'src/app/types/task';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from 'src/app/auth/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { PointService } from '../point.service';
 import { EventEmitter } from '@angular/core';
 import { switchMap } from 'rxjs';

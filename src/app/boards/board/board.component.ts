@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Task } from 'src/app/types/task';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -7,17 +7,14 @@ import { PointService } from 'src/app/task/point.service';
 import { TaskService } from 'src/app/task/task.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
-import { CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { ViewChildren } from '@angular/core';
 import { TaskComponent } from 'src/app/task/task/task.component';
 import { QueryList } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { retry, finalize } from 'rxjs';
-import { TaskOpenComponent } from 'src/app/task/task-open/task-open.component';
+import { finalize } from 'rxjs';
 import { Board } from 'src/app/types/board';
 import { BoardService } from '../board.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { FieldValue } from '@angular/fire/firestore';
 import firebase from 'firebase/compat/app';
 import { DragDropService } from 'src/app/drag-drop.service';
 

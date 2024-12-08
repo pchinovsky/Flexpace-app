@@ -47,12 +47,6 @@ export class AuthService {
       password
     );
 
-    // if (userCredential.user) {
-    //   await userCredential.user.updateProfile({
-    //     displayName: username,
-    //   });
-    // }
-
     if (userCredential.user) {
       await userCredential.user.updateProfile({
         displayName: username,

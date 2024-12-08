@@ -1,7 +1,6 @@
-import { Component, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
@@ -12,8 +11,6 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
-  // @Output() close = new EventEmitter<void>();
-
   regForm = this.fb.group(
     {
       name: ['', [Validators.required, Validators.minLength(5)]],
@@ -68,7 +65,6 @@ export class RegisterComponent {
   closeModal() {
     // console.log('Emitting close event from RegComponent');
 
-    // this.close.emit(); // This should trigger the event in the parent
     this.router.navigate(['/wall']);
   }
 }
