@@ -22,7 +22,7 @@ export class DragDropService {
 
   clearDragData() {
     this.dragData.next(null);
-    // console.log('drag data cleaned');
+    console.log('drag data cleaned');
   }
 
   setHovered(state: boolean): void {

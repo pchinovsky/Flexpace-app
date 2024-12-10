@@ -83,6 +83,17 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout() {
-    this.authService.logout();
+    // this.authService.logout();
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigateByUrl('/wall').then(() => {
+          window.location.reload();
+        });
+        console.log('logged out successfully');
+      },
+      error: (err) => {
+        console.error('logout failed:', err);
+      },
+    });
   }
 }

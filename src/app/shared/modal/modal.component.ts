@@ -51,10 +51,13 @@ export class ModalComponent {
   }
 
   saveTask(): void {
-    console.log('modal save - ', this.data.task.coordinates);
+    if (!this.data.task || !this.data.task.coordinates) {
+      return;
+    }
 
+    console.log('modal save - ', this.data.task.coordinates);
     if (this.data.task) {
-      console.log('Saving task on modal close:', this.data.task);
+      console.log('saving task on modal close:', this.data.task);
       this.taskService.updateTask(this.data.task, this.userId as string);
     }
   }

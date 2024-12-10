@@ -8,6 +8,7 @@ import { BoardComponent } from './boards/board/board.component';
 import { BoardUniversalComponent } from './boards/board-universal/board-universal.component';
 import { BoardTodayComponent } from './boards/board-today/board-today.component';
 import { RegisterComponent } from './auth/register/register.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
   // {
@@ -40,8 +41,8 @@ const routes: Routes = [
     component: BoardComponent,
     canActivate: [authGuard],
   },
-  // { path: '**', redirectTo: '/404' },
-  // { path: '404', component: ErrorComponent }
+  { path: '404', component: NotFoundComponent },
+  { path: '**', redirectTo: '/404' },
 ];
 
 @NgModule({

@@ -100,12 +100,12 @@ export class HeaderBoardsNavComponent implements OnInit {
     return this.currentRoute === route;
   }
 
-  onDeleteBoard(boardId: string): void {
+  onDeleteBoard(boardId: string, boardName: string): void {
     console.log('onDeleteBoard id - ', boardId);
 
-    this.boardService.deleteBoard(boardId).then(() => {
-      console.log('Board deleted successfully');
-      this.router.navigate(['/wall']);
+    this.boardService.deleteBoard(boardId, boardName).then(() => {
+      console.log('Board and tasks deleted successfully');
+      this.router.navigate(['/default']);
     });
   }
 

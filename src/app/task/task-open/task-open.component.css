@@ -143,6 +143,7 @@
     width: 100%;
     height: 100%;
     padding-right: 1em;
+    padding-left: 2em;
   }
 
   .task-title {
@@ -432,6 +433,11 @@ button#color {
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+
+article {
+  width: 90%;
+  align-items: flex-start;
 }
 
 .comments-list article {

@@ -33,7 +33,7 @@
   <!-- debug display -->
 
   <div class="btns">
-    <button id="static" *ngIf="isOwn" (click)="onDelete()">
+    <button id="static" *ngIf="isOwn" (click)="onDelete(task.id)">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="48px"

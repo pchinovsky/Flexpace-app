@@ -78,7 +78,7 @@ export class BoardNewComponent {
               .then(() => (this.isCreatingBoard = false))
               .catch(() => (this.isCreatingBoard = false));
 
-            this.router.navigate(['board/board.id']);
+            // this.router.navigate(['/default']);
             this.closeBoardModal();
           } else {
             // this.isCreatingBoard = false;

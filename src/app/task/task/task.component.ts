@@ -140,13 +140,14 @@ export class TaskComponent implements AfterViewInit {
 
     if (this.userId) {
       this.isOwn = this.task.owner === this.userId;
-      this.auth.getUserDataById(this.userId).subscribe((data) => {
-        this.owner = data?.displayName;
-        // console.log(this.owner);
-      });
+      // this.auth.getUserDataById(this.userId).subscribe((data) => {
+      //   this.owner = data?.displayName;
+      //   // console.log(this.owner);
+      // });
     } else {
       this.isOwn = false;
     }
+    this.cdr.detectChanges();
 
     if (this.task.type === 'task') {
       this.openHeight = '300px';
@@ -424,7 +425,10 @@ export class TaskComponent implements AfterViewInit {
       //   { id: this.task.id, subtasks: this.task.subtasks },
       //   this.userId as string
       // );
-      this.taskService.updateTask(this.task, this.userId as string);
+      // check to prevent auth errors for guests on wall -
+      if (this.auth.isLogged && this.userId === this.task.owner) {
+        this.taskService.updateTask(this.task, this.userId as string);
+      }
     }
 
     this.taskClicked.emit({ taskId: this.task.id, e });
@@ -659,6 +663,11 @@ export class TaskComponent implements AfterViewInit {
 
     // added for box move to new board ---
 
+    if (this.task.done) {
+      console.log('task del, no task data.');
+      return;
+    }
+
     const movementX = Math.abs(e.clientX - this.startX);
     const movementY = Math.abs(e.clientY - this.startY);
 
@@ -854,10 +863,13 @@ export class TaskComponent implements AfterViewInit {
     return false;
   }
 
-  onDelete() {
+  onDelete(taskId: string): void {
     // console.log('task del on');
 
-    this.taskService.deleteTask(this.task.id);
+    this.taskService.deleteTask(this.task.id).then(() => {
+      this.task.done = true; // Clear the task reference
+      console.log('Task cleared from component after deletion.');
+    });
   }
 
   // sending toast to uni board

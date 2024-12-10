@@ -43,14 +43,14 @@ export class RegisterComponent {
       return;
     }
 
-    this.authService
-      .reg(username, email, password)
-      .then(() => {
-        this.router.navigate(['/wall']);
-      })
-      .catch((error) => {
-        console.error('Registration failed:', error);
-      });
+    this.authService.reg(username, email, password).subscribe({
+      next: () => {
+        this.router.navigate(['/default']);
+      },
+      error: (error) => {
+        console.error('Register failed', error);
+      },
+    });
   }
 
   passwordsMatch(control: AbstractControl) {

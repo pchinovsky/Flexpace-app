@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from '../auth/auth.service';
+import { ErrorService } from '../shared/error.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,8 @@ export class BoardService {
   constructor(
     private firestore: AngularFirestore,
     private afAuth: AngularFireAuth,
-    private authService: AuthService
+    private authService: AuthService,
+    private errorService: ErrorService
   ) {}
 
   createBoard(board: Omit<Board, 'id'>): Promise<void> {
@@ -57,7 +59,10 @@ export class BoardService {
             ref.where('owner', '==', user.uid)
           )
           .valueChanges();
-      })
+      }),
+      this.errorService.errorFeedback(
+        'Failed to load boards. Please try again.'
+      )
     );
   }
 
@@ -79,26 +84,64 @@ export class BoardService {
   //   return of(board);
   // }
 
-  deleteBoard(boardId: string): Promise<void> {
+  //
+
+  // deleteBoard(boardId: string, boardName: string): Promise<void> {
+  //   console.log('Deleting board with ID:', boardId);
+  //   const userId = this.authService.getCurrentUserId();
+  //   return this.firestore
+  //     .collection('boards')
+  //     .doc(boardId)
+  //     .delete()
+  //     .then(() => console.log('Board deleted successfully'))
+  //     .catch((error) => {
+  //       this.errorService.openErrorModal(
+  //         'Failed to delete the board. Please try again.'
+  //       );
+  //       throw error;
+  //     });
+  // }
+
+  deleteBoard(boardId: string, boardName: string): Promise<void> {
     console.log('Deleting board with ID:', boardId);
-    const userId = this.authService.getCurrentUserId();
-    return this.firestore
+
+    const deleteBoard = this.firestore
       .collection('boards')
       .doc(boardId)
-      .delete()
-      .then(() => console.log('Board deleted successfully'))
-      .catch((error) => console.error('Error deleting board:', error));
+      .delete();
+
+    const deleteTasks = this.firestore
+      .collection('tasks', (ref) => ref.where('board', '==', boardName))
+      .get()
+      .toPromise()
+      .then((snapshot) => {
+        const taskDeletions = snapshot!.docs.map((doc) =>
+          this.firestore.collection('tasks').doc(doc.id).delete()
+        );
+        return Promise.all(taskDeletions);
+      });
+
+    return Promise.all([deleteBoard, deleteTasks])
+      .then(() => console.log('board and related tasks deleted'))
+      .catch((error) => {
+        console.error('err during board / task deletion:', error);
+        this.errorService.openErrorModal(
+          'Board deletion failed. Please try again.'
+        );
+      });
   }
 
-  updateBoard(boardId: string, updatedFields: Partial<Board>): Promise<void> {
-    console.log('Updating board with ID:', boardId);
-    return this.firestore
-      .collection('boards')
-      .doc(boardId)
-      .update(updatedFields)
-      .then(() => console.log('Board updated successfully'))
-      .catch((error) => console.error('Error updating board:', error));
-  }
+  //
+
+  // updateBoard(boardId: string, updatedFields: Partial<Board>): Promise<void> {
+  //   console.log('Updating board with ID:', boardId);
+  //   return this.firestore
+  //     .collection('boards')
+  //     .doc(boardId)
+  //     .update(updatedFields)
+  //     .then(() => console.log('Board updated successfully'))
+  //     .catch((error) => console.error('Error updating board:', error));
+  // }
 
   updateBoardName(boardId: string, newName: string): Observable<void> {
     return from(
@@ -106,36 +149,14 @@ export class BoardService {
         .collection('boards')
         .doc(boardId)
         .update({ title: newName })
+    ).pipe(
+      this.errorService.errorFeedback(
+        'Failed to update board name. Please try again.'
+      )
     );
   }
 
   //
-
-  // updateTasksBoardName(
-  //   oldBoardName: string,
-  //   newBoardName: string
-  // ): Promise<void> {
-  //   return this.firestore
-  //     .collection('tasks', (ref) => ref.where('board', '==', oldBoardName))
-  //     .get()
-  //     .toPromise()
-  //     .then((snapshot) => {
-  //       const promises = snapshot!.docs.map((doc) => {
-  //         return this.firestore
-  //           .collection('tasks')
-  //           .doc(doc.id)
-  //           .update({ board: newBoardName });
-  //       });
-
-  //       return Promise.all(promises);
-  //     })
-  //     .then(() => {
-  //       console.log('all task board prop updated');
-  //     })
-  //     .catch((error) => {
-  //       console.error('error updating tasks -', error);
-  //     });
-  // }
 
   updateTasksBoardName(
     oldBoardName: string,
@@ -180,7 +201,10 @@ export class BoardService {
         console.log('all task board props updated');
       })
       .catch((error) => {
-        console.error('error updating tasks -', error);
+        this.errorService.openErrorModal(
+          'Failed to update tasks for the board. Please try again.'
+        );
+        throw error;
       });
   }
 

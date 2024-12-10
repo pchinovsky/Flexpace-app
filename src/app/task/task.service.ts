@@ -10,6 +10,9 @@ import { switchMap } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { tap } from 'rxjs/operators';
 import { catchError } from 'rxjs/operators';
+import { ErrorService } from '../shared/error.service';
+import { timeout } from 'rxjs/operators';
+import { DragDropService } from '../drag-drop.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +23,9 @@ export class TaskService {
 
   constructor(
     private firestore: AngularFirestore,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private errorService: ErrorService,
+    private dragDrop: DragDropService
   ) {}
 
   // real fn -
@@ -41,14 +46,18 @@ export class TaskService {
       .valueChanges();
 
     return combineLatest([ownerTasks$, savedByTasks$]).pipe(
-      map(([ownerTasks, savedByTasks]) => [...ownerTasks, ...savedByTasks])
+      map(([ownerTasks, savedByTasks]) => [...ownerTasks, ...savedByTasks]),
+      this.errorService.errorFeedback('Failed to load tasks. Please try again.')
     );
   }
 
   getPublicTasks(): Observable<Task[]> {
     return this.firestore
       .collection<Task>('tasks', (ref) => ref.where('public', '==', true))
-      .valueChanges();
+      .valueChanges()
+      .pipe(
+        this.errorService.errorFeedback('Failed to load tasks. Please refresh.')
+      );
   }
 
   // getTasks(board: string | null): Observable<Task[]> {
@@ -65,7 +74,12 @@ export class TaskService {
           .collection<Task>('tasks', (ref) =>
             ref.where('board', '==', board).where('owner', '==', user.uid)
           )
-          .valueChanges();
+          .valueChanges()
+          .pipe(
+            this.errorService.errorFeedback(
+              'Failed to load tasks for this board. Please refresh.'
+            )
+          );
       })
     );
   }
@@ -74,22 +88,14 @@ export class TaskService {
     return this.firestore
       .collection<Task>('tasks')
       .doc(taskId)
-      .valueChanges() as Observable<Task>;
+      .valueChanges()
+      .pipe(
+        filter((task): task is Task => !!task),
+        this.errorService.errorFeedback<Task>(
+          'Failed to load the task. Please try again.'
+        )
+      );
   }
-
-  // updateTask(task: Partial<Task>) {
-  //   this.firestore
-  //     .collection('tasks')
-  //     .doc(task.id)
-  //     // update only the modified -
-  //     // .set() with { merge: true } alternative - when you don't know what should be updated
-  //     .update(task)
-  //     .then(() => {
-  //       console.log('Task updated successfully');
-  //       this.setLastEditedTask(task as Task);
-  //     })
-  //     .catch((error) => console.error('Error updating task: ', error));
-  // }
 
   updateTask(task: Partial<Task>, userId: string) {
     this.firestore
@@ -100,7 +106,12 @@ export class TaskService {
         console.log('Task updated successfully');
         this.setLastEditedTask(task as Task, userId);
       })
-      .catch((error) => console.error('Error updating task:', error));
+      .catch((error) => {
+        this.errorService.openErrorModal(
+          `Failed to update task ${task.title}.`
+        );
+        throw error;
+      });
   }
 
   updateTaskObs(task: Partial<Task>, userId: string): Promise<void> {
@@ -125,9 +136,14 @@ export class TaskService {
       .delete()
       .then(() => {
         console.log('Task successfully deleted!');
+        this.dragDrop.clearDragData();
       })
       .catch((error) => {
         console.error('Error removing task: ', error);
+        this.errorService.openErrorModal(
+          'Failed to delete the task. Please try again.'
+        );
+        throw error;
       });
   }
 
@@ -187,7 +203,10 @@ export class TaskService {
       .valueChanges();
 
     return combineLatest([task$, comments$]).pipe(
-      map(([task, comments]) => ({ task, comments }))
+      map(([task, comments]) => ({ task, comments })),
+      this.errorService.errorFeedback(
+        'Failed to load task or comments. Please try again.'
+      )
     );
   }
 

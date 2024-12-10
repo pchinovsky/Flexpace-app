@@ -24,6 +24,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from './shared/shared.module';
 import { HeaderBoardsNavComponent } from './header-boards-nav/header-boards-nav.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     HeaderComponent,
     BoardPublicComponent,
     HeaderBoardsNavComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,

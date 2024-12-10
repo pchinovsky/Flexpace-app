@@ -7,6 +7,10 @@ import { map } from 'rxjs';
 import { EventEmitter } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { ErrorService } from '../shared/error.service';
+import { from } from 'rxjs';
+import { switchMap } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +33,8 @@ export class AuthService {
   constructor(
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
-    private router: Router
+    private router: Router,
+    private errorService: ErrorService
   ) {
     this.afAuth.authState.subscribe((user) => {
       this.isLogged$$.next(!!user);
@@ -41,55 +46,107 @@ export class AuthService {
     });
   }
 
-  async reg(username: string, email: string, password: string): Promise<any> {
-    const userCredential = await this.afAuth.createUserWithEmailAndPassword(
-      email,
-      password
+  // async reg(username: string, email: string, password: string): Promise<any> {
+  //   const userCredential = await this.afAuth.createUserWithEmailAndPassword(
+  //     email,
+  //     password
+  //   );
+
+  //   if (userCredential.user) {
+  //     await userCredential.user.updateProfile({
+  //       displayName: username,
+  //     });
+
+  //     const newUser = {
+  //       uid: userCredential.user.uid,
+  //       email: userCredential.user.email!,
+  //       displayName: username,
+  //       firstName: '',
+  //       lastName: '',
+  //       address: '',
+  //       profilePicture: '',
+  //       defBoardBckgr: '',
+  //     };
+
+  //     await this.firestore.collection('users').doc(newUser.uid).set(newUser);
+  //   }
+  // }
+
+  reg(username: string, email: string, password: string): Observable<void> {
+    return from(
+      this.afAuth.createUserWithEmailAndPassword(email, password)
+    ).pipe(
+      switchMap((userCredential) => {
+        if (!userCredential.user) {
+          throw new Error('User creation failed');
+        }
+
+        const newUser = {
+          uid: userCredential.user.uid,
+          email: userCredential.user.email!,
+          displayName: username,
+          firstName: '',
+          lastName: '',
+          address: '',
+          profilePicture: '',
+          defBoardBckgr: '',
+        };
+
+        return from(
+          this.firestore.collection('users').doc(newUser.uid).set(newUser)
+        );
+      }),
+      this.errorService.errorFeedback('Failed to register. Please try again.')
     );
-
-    if (userCredential.user) {
-      await userCredential.user.updateProfile({
-        displayName: username,
-      });
-
-      const newUser = {
-        uid: userCredential.user.uid,
-        email: userCredential.user.email!,
-        displayName: username,
-        firstName: '',
-        lastName: '',
-        address: '',
-        profilePicture: '',
-        defBoardBckgr: '',
-      };
-
-      await this.firestore.collection('users').doc(newUser.uid).set(newUser);
-    }
   }
 
   updateUserProfile(uid: string, userData: Partial<User>): Promise<void> {
     return this.firestore.collection('users').doc(uid).update(userData);
   }
 
-  log(email: string, password: string): Promise<any> {
-    return this.afAuth
-      .signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
+  // log(email: string, password: string): Promise<any> {
+  //   return this.afAuth
+  //     .signInWithEmailAndPassword(email, password)
+  //     .then((userCredential) => {
+  //       this.user = userCredential.user;
+
+  //       this.user$$.next(userCredential.user);
+
+  //       this.isLogged$$.next(true);
+  //       // this.logged.emit();
+  //     });
+  // }
+
+  log(email: string, password: string): Observable<void> {
+    return from(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
+      map((userCredential) => {
         this.user = userCredential.user;
-
         this.user$$.next(userCredential.user);
-
         this.isLogged$$.next(true);
-        // this.logged.emit();
-      });
+      }),
+      this.errorService.errorFeedback(
+        'Failed to log in. Please check your credentials and try again.'
+      )
+    );
   }
 
-  logout(): Promise<void> {
-    return this.afAuth.signOut().then(() => {
-      this.user = null;
-      this.isLogged$$.next(false);
-      this.router.navigate(['/wall']);
-    });
+  // logout(): Promise<void> {
+  //   return this.afAuth.signOut().then(() => {
+  //     this.user = null;
+  //     this.isLogged$$.next(false);
+  //     this.router.navigate(['/wall']);
+  //   });
+  // }
+
+  logout(): Observable<void> {
+    return from(this.afAuth.signOut()).pipe(
+      tap(() => {
+        // Clear user state
+        this.user = null;
+        this.isLogged$$.next(false);
+        this.user$$.next(null);
+      })
+    );
   }
 
   getUser(): Observable<User | null> {
@@ -105,7 +162,12 @@ export class AuthService {
     return this.firestore
       .collection('users')
       .doc<UserProfile>(userId)
-      .valueChanges();
+      .valueChanges()
+      .pipe(
+        this.errorService.errorFeedback(
+          'Failed to fetch user data. Please try again.'
+        )
+      );
   }
 
   getCurrentUserId(): string | null {
