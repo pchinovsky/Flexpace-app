@@ -32,7 +32,7 @@
   /* grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); */
   grid-template-columns: repeat(auto-fill, minmax(190px, max-content));
 
-  grid-template-rows: repeat(auto-fill, minmax(190px, max-content));
+  /* grid-template-rows: repeat(auto-fill, minmax(190px, max-content)); */
   gap: 30px;
   padding: 20px;
   position: relative; 

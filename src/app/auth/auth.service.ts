@@ -202,4 +202,14 @@ export class AuthService {
       .valueChanges()
       .pipe(map((userData: any) => userData?.defBoardBckgr || null));
   }
+
+  //
+
+  getUserProfilePic(userId: string): Observable<string | null> {
+    return this.firestore
+      .collection('users')
+      .doc<UserProfile>(userId)
+      .valueChanges()
+      .pipe(map((user) => user?.profilePicture || null));
+  }
 }

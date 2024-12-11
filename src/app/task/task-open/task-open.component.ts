@@ -16,6 +16,7 @@ import { EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { BoardService } from 'src/app/boards/board.service';
 import { Input } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-task-open',
@@ -27,6 +28,8 @@ export class TaskOpenComponent implements OnInit {
   // @Input() board: string = '';
 
   @Output() closeEvent = new EventEmitter<void>();
+
+  userProfilePicture$: Observable<string | null> | undefined;
 
   task: Task;
   taskColor: string = '';
@@ -102,8 +105,6 @@ export class TaskOpenComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('FILTER - BOARD INPUT - ', this.board);
-
     // updating global css var -
     document.documentElement.style.setProperty('--task-color', this.taskColor);
     console.log('ng on init - ', this.task.coordinates);
@@ -124,6 +125,12 @@ export class TaskOpenComponent implements OnInit {
 
     // this.loadComments();
     this.loadTaskAndComments();
+
+    if (this.task && this.task.owner) {
+      this.userProfilePicture$ = this.auth.getUserProfilePic(
+        this.task.owner as string
+      );
+    }
   }
 
   // text format -
