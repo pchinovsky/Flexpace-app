@@ -131,9 +131,9 @@ ng build --prod
 firebase deploy
 ```
 
-## Routes
+## Deployed Application via Firebase Hosting
 
-- **Access deployed application at:**: [FLEXPACE Deployed Application](https://flexpace-de2a5.web.app)
+- **Access deployed application at:** [FLEXPACE Deployed Application](https://flexpace-de2a5.web.app)
 
 ---
 
