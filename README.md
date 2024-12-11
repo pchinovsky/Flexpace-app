@@ -6,6 +6,8 @@ FLEXPACE is an interactive task/note management web application simulating a fle
 
 It allows users to create personal and shared boards, manage draggable and resizable note cards, and collaborate through shared notes.
 
+[FLEXPACE Deployed Application](https://flexpace-de2a5.web.app)
+
 ---
 
 ## **Used Frameworks and Libraries**
@@ -128,6 +130,10 @@ ng build --prod
 ```bash
 firebase deploy
 ```
+
+## Routes
+
+- **Access deployed application at:**: [FLEXPACE Deployed Application](https://flexpace-de2a5.web.app)
 
 ---
 
