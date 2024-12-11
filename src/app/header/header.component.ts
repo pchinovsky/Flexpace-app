@@ -5,6 +5,8 @@ import { AuthService } from '../auth/auth.service';
 import { Observable, of } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { UrlSegment } from '@angular/router';
+import { UserProfile } from '../types/user';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +16,9 @@ import { UrlSegment } from '@angular/router';
 export class HeaderComponent implements OnInit {
   // taking the obs var from auth, but still has to be obs -
   isLoggedIn$: Observable<boolean> = of(false);
+  userData$: Observable<UserProfile | undefined> | undefined;
+  currentUserId: string | null = '' as string;
+
   newBoardForm = false;
   showRegModal = false;
   showLoginModal = false;
@@ -29,6 +34,37 @@ export class HeaderComponent implements OnInit {
     // directly assigned, and isLoggedIn$ returns an obs as well; so templ needs async pipe;
     // otherwise need to subscr here to the auth var and isLoggedIn$ will be static -
     this.isLoggedIn$ = this.authService.isLogged$;
+
+    // this.currentUserId = this.authService.getCurrentUserId();
+    // console.log('user - ', this.currentUserId);
+
+    this.authService.getUserId().subscribe((userId) => {
+      this.currentUserId = userId;
+      console.log('Current User ID:', this.currentUserId);
+
+      if (this.currentUserId) {
+        this.userData$ = this.authService
+          .getUserDataById(this.currentUserId)
+          .pipe(
+            tap((data) => {
+              console.log('Data received from Firestore:', data);
+            })
+          );
+      } else {
+        console.warn('No user logged in');
+      }
+    });
+
+    this.userData$ = this.authService
+      .getUserDataById(this.currentUserId as string)
+      .pipe(
+        tap((data) => {
+          console.log('Data received from Firestore:', data);
+        }),
+        tap(() => {
+          console.log('Fetching user data for ID:', this.currentUserId);
+        })
+      );
 
     //
 

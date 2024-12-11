@@ -204,8 +204,10 @@ export class TaskComponent implements AfterViewInit {
     if (
       (e.target as HTMLElement).id === 'static' ||
       (e.target as HTMLElement).closest('#static')
-    )
+    ) {
+      console.log('NOW DEL BIG');
       return;
+    }
     if (
       (e.target as HTMLElement).id === 'sub-input' ||
       (e.target as HTMLElement).closest('.sub-task-cre-input')
@@ -864,11 +866,13 @@ export class TaskComponent implements AfterViewInit {
     return false;
   }
 
-  onDelete(taskId: string): void {
+  onDelete(e: Event, taskId: string): void {
     // console.log('task del on');
+    e.preventDefault();
+    e.stopPropagation();
 
-    this.taskService.deleteTask(this.task.id).then(() => {
-      this.task.done = true; // Clear the task reference
+    this.taskService.deleteTask(taskId).then(() => {
+      this.task.done = true;
       console.log('Task cleared from component after deletion.');
     });
   }

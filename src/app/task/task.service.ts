@@ -10,9 +10,10 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ErrorService } from '../shared/error.service';
 import { DragDropService } from '../drag-drop.service';
 import { arrayUnion, arrayRemove, updateDoc, doc } from 'firebase/firestore';
-import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { LastEditedTask } from '../types/task';
+import { tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -166,23 +167,61 @@ export class TaskService {
       });
   }
 
+  // deleteTask(taskId: string): Promise<void> {
+  //   return this.firestore
+  //     .collection('tasks')
+  //     .doc(taskId)
+  //     .delete()
+  //     .then(() => {
+  //       console.log('Task successfully deleted!');
+  //       this.dragDrop.clearDragData();
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error removing task: ', error);
+  //       this.errorService.openErrorModal(
+  //         'Failed to delete the task. Please try again.'
+  //       );
+  //       throw error;
+  //     });
+  // }
+
   deleteTask(taskId: string): Promise<void> {
-    return this.firestore
-      .collection('tasks')
-      .doc(taskId)
-      .delete()
+    const commentsRef = this.firestore.collection(`tasks/${taskId}/comments`);
+
+    return commentsRef
+      .get()
+      .toPromise()
+      .then((snapshot) => {
+        if (!snapshot!.empty) {
+          const batch = this.firestore.firestore.batch();
+          snapshot!.forEach((doc) => {
+            batch.delete(doc.ref);
+          });
+
+          console.log('Deleting all comments for task:', taskId);
+          return batch.commit();
+        }
+        console.log('No comments found for task:', taskId);
+        return Promise.resolve();
+      })
       .then(() => {
-        console.log('Task successfully deleted!');
+        console.log('Deleting task:', taskId);
+        return this.firestore.collection('tasks').doc(taskId).delete();
+      })
+      .then(() => {
+        console.log('Task and associated comments successfully deleted!');
         this.dragDrop.clearDragData();
       })
       .catch((error) => {
-        console.error('Error removing task: ', error);
+        console.error('Error deleting task and/or comments:', error);
         this.errorService.openErrorModal(
-          'Failed to delete the task. Please try again.'
+          'Failed to delete the task and its comments. Please try again.'
         );
         throw error;
       });
   }
+
+  //
 
   toggleFav(task: Task, userId: string): void {
     task.fav = !task.fav;
@@ -277,12 +316,43 @@ export class TaskService {
       .valueChanges();
 
     return combineLatest([task$, comments$]).pipe(
-      map(([task, comments]) => ({ task, comments })),
-      this.errorService.errorFeedback(
-        'Failed to load task or comments. Please try again.'
-      )
+      map(([task, comments]) => ({ task, comments }))
     );
   }
+
+  // getTaskWithComments(
+  //   taskId: string
+  // ): Observable<{ task: Task; comments: Comment[] }> {
+  //   const task$ = this.firestore
+  //     .doc<Task>(`tasks/${taskId}`)
+  //     .valueChanges()
+  //     .pipe(
+  //       filter((task) => !!task),
+  //       tap((task) => {
+  //         if (!task) {
+  //           console.warn(`Task with ID ${taskId} no longer exists`);
+  //         }
+  //       })
+  //     );
+
+  //   const comments$ = this.firestore
+  //     .collection<Comment>(`tasks/${taskId}/comments`, (ref) =>
+  //       ref.orderBy('timestamp', 'asc')
+  //     )
+  //     .valueChanges();
+
+  //   return combineLatest([task$, comments$]).pipe(
+  //     map(([task, comments]) => {
+  //       if (!task) {
+  //         throw new Error('Task no longer exists');
+  //       }
+  //       return { task, comments };
+  //     }),
+  //     this.errorService.errorFeedback(
+  //       'Failed to load task or comments. Please try again.'
+  //     )
+  //   );
+  // }
 
   //
 

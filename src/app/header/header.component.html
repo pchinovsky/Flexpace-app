@@ -10,7 +10,7 @@
 <div class="cont">
   <div class="logo" *ngIf="isLoggedIn$ | async">
     <a href="#" *ngIf="isLoggedIn$ | async" routerLink="/profile"
-      >{{ (authService.user$ | async)?.displayName }}'s Flexpace</a
+      >{{ (userData$ | async)?.displayName }}'s Flexpace</a
     >
   </div>
   <div class="logo" *ngIf="!(isLoggedIn$ | async)">

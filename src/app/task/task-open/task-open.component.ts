@@ -17,6 +17,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BoardService } from 'src/app/boards/board.service';
 import { Input } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ErrorService } from 'src/app/shared/error.service';
 
 @Component({
   selector: 'app-task-open',
@@ -68,6 +69,7 @@ export class TaskOpenComponent implements OnInit {
     private comment: CommentsService,
     private cdr: ChangeDetectorRef,
     private boardService: BoardService,
+    private errorService: ErrorService,
     public dialogRef: MatDialogRef<TaskOpenComponent>
   ) {
     this.task = data.task;
@@ -107,7 +109,7 @@ export class TaskOpenComponent implements OnInit {
   ngOnInit(): void {
     // updating global css var -
     document.documentElement.style.setProperty('--task-color', this.taskColor);
-    console.log('ng on init - ', this.task.coordinates);
+    console.log('TASK OPEN ON - ', this.task.coordinates);
 
     // subscr to content control changes -
     this.contentControl.valueChanges.subscribe((value: string) => {
@@ -259,30 +261,87 @@ export class TaskOpenComponent implements OnInit {
   //     .catch((error) => console.error('error adding comment:', error));
   // }
 
+  // addComment(): void {
+  //   if (!this.newComment.trim()) return;
+
+  //   this.auth
+  //     .getUser()
+  //     .pipe(take(1))
+  //     .subscribe((user) => {
+  //       if (!user?.displayName) return;
+
+  //       this.loading = true;
+  //       const comment: Comment = {
+  //         owner: this.userId,
+  //         ownerName: user.displayName,
+  //         content: this.newComment,
+  //         timestamp: Date.now(),
+  //       };
+
+  //       this.comment
+  //         .addComment(this.task.id, comment)
+  //         .then(() => {
+  //           this.newComment = '';
+  //           this.loading = false;
+  //         })
+  //         .catch((error) => console.error('error adding comment -', error));
+  //     });
+  // }
+
   addComment(): void {
-    if (!this.newComment.trim()) return;
+    console.log('Add Comment function triggered');
+
+    if (!this.newComment.trim()) {
+      console.warn('New comment is empty or only whitespace');
+      return;
+    }
+
+    console.log('New comment content:', this.newComment);
+    if (!this.userId) {
+      console.error('User ID is missing, unable to fetch user data');
+      return;
+    }
 
     this.auth
-      .getUser()
+      .getUserDataById(this.userId)
       .pipe(take(1))
-      .subscribe((user) => {
-        if (!user?.displayName) return;
+      .subscribe({
+        next: (userData) => {
+          console.log('User data retrieved:', userData);
 
-        this.loading = true;
-        const comment: Comment = {
-          owner: this.userId,
-          ownerName: user.displayName,
-          content: this.newComment,
-          timestamp: Date.now(),
-        };
+          if (!userData?.displayName) {
+            console.warn(
+              'User displayName is missing, aborting comment submission'
+            );
+            return;
+          }
 
-        this.comment
-          .addComment(this.task.id, comment)
-          .then(() => {
-            this.newComment = '';
-            this.loading = false;
-          })
-          .catch((error) => console.error('error adding comment -', error));
+          this.loading = true;
+          const comment: Comment = {
+            owner: this.userId,
+            ownerName: userData.displayName,
+            content: this.newComment,
+            timestamp: Date.now(),
+          };
+
+          console.log('Comment object prepared:', comment);
+
+          this.comment
+            .addComment(this.task.id, comment)
+            .then(() => {
+              console.log('Comment successfully added to Firestore');
+
+              this.newComment = '';
+              this.loading = false;
+            })
+            .catch((error) => {
+              console.error('Error adding comment to Firestore:', error);
+              this.loading = false;
+            });
+        },
+        error: (error) => {
+          console.error('Error fetching user data:', error);
+        },
       });
   }
 
@@ -303,6 +362,31 @@ export class TaskOpenComponent implements OnInit {
       },
     });
   }
+
+  // loadTaskAndComments(): void {
+  //   this.taskService.getTaskWithComments(this.task.id).subscribe({
+  //     next: ({ task, comments }) => {
+  //       if (!task) {
+  //         console.warn(`Task with ID ${this.task.id} has been deleted`);
+  //         this.errorService.openErrorModal(
+  //           'The task you are trying to access no longer exists.'
+  //         );
+  //         this.loading = false;
+  //         return;
+  //       }
+
+  //       this.task = task;
+  //       this.comments = comments;
+  //       console.log('Task and comments loaded:', task, this.comments);
+  //       this.cdr.detectChanges();
+  //       this.loading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error loading task and comments:', error);
+  //       this.loading = false;
+  //     },
+  //   });
+  // }
 
   //
 

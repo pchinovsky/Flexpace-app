@@ -146,4 +146,4 @@ firebase deploy
 
 ## Credits
 
-- **Developement and design**: Peter Chinovsky
+- **Developement and design**: Peter Chinovsky 2024
