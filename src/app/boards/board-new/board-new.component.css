@@ -34,7 +34,7 @@
     /* align-items: stretch; */
     gap: 1em;
     background-color: white;
-    z-index: 1000;
+    z-index: 1001;
     color: grey;
     font-size: 0.8em;
   }

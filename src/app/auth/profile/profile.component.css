@@ -19,7 +19,7 @@
     padding: 2em;
     display: flex;
     flex-direction: column;
-    gap: 2em;
+    gap: 1em;
     box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
     position: relative;
 }
@@ -48,8 +48,16 @@
     color: grey;
 }
 
+.two strong {
+    color: blue;
+}
+
 .one label {
     color: grey;
+}
+
+.user label {
+    z-index: 1;
 }
 
 .num {
@@ -63,6 +71,7 @@
     margin: 0 auto;
     top: -50px;
     left: calc(50% - 50px);
+    z-index: 1;
 }
 
 .profile-placeholder {
@@ -74,6 +83,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 1;
 }
 
 img {
@@ -85,6 +95,7 @@ img {
     left: 0;
     top: 0;
     object-fit: cover;
+    z-index: 1;
 }
 
 .stat-row {
@@ -101,6 +112,7 @@ img {
 h1 {
     margin-top: 3em;
     color: blue;
+    z-index: 1;
 }
 
 .actions {
@@ -131,6 +143,7 @@ input {
     outline: none;
     border-radius: 1.5em;
     background-color: rgb(231, 228, 228);
+    z-index: 1;
 }
 
 input:hover {
@@ -143,5 +156,4 @@ hr {
     width: 100%;
     background-color: rgb(197, 193, 193, 0.5);
 }
-
 

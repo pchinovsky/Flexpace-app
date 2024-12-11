@@ -263,6 +263,7 @@ export class TaskComponent implements AfterViewInit {
         id: taskId,
         task: structuredClone(this.task),
         own: this.isOwn,
+        board: this.board,
       },
       minWidth: this.openWidth,
       height: this.openHeight,
@@ -873,21 +874,35 @@ export class TaskComponent implements AfterViewInit {
   }
 
   // sending toast to uni board
+  // onSave() {
+  //   if (this.userId) {
+  //     if (!this.task.savedBy.includes(this.userId)) {
+  //       this.task.savedBy.push(this.userId);
+  //       this.taskService.updateTask(this.task, this.userId as string);
+  //       this.toastService.show('Task saved!');
+  //     } else {
+  //       this.task.savedBy = this.task.savedBy.filter(
+  //         (id) => id !== this.userId
+  //       );
+  //       this.taskService.updateTask(this.task, this.userId as string);
+  //       this.toastService.show('Task unsaved!');
+  //     }
+  //   }
+  // }
+
   onSave() {
     if (this.userId) {
       if (!this.task.savedBy.includes(this.userId)) {
-        this.task.savedBy.push(this.userId);
-        this.taskService.updateTask(this.task, this.userId as string);
+        this.taskService.updateSavedBy(this.task.id, this.userId, 'add');
         this.toastService.show('Task saved!');
       } else {
-        this.task.savedBy = this.task.savedBy.filter(
-          (id) => id !== this.userId
-        );
-        this.taskService.updateTask(this.task, this.userId as string);
+        this.taskService.updateSavedBy(this.task.id, this.userId, 'remove');
         this.toastService.show('Task unsaved!');
       }
     }
   }
+
+  //
 
   onDueDateChange(event: MatDatepickerInputEvent<Date>): void {
     // const input = event.target as HTMLInputElement;

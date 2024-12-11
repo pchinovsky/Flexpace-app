@@ -15,6 +15,7 @@ import { Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { BoardService } from 'src/app/boards/board.service';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-task-open',
@@ -23,6 +24,8 @@ import { BoardService } from 'src/app/boards/board.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskOpenComponent implements OnInit {
+  // @Input() board: string = '';
+
   @Output() closeEvent = new EventEmitter<void>();
 
   task: Task;
@@ -30,6 +33,7 @@ export class TaskOpenComponent implements OnInit {
   own: boolean = false;
   userId: string = '';
   // userId: string | null = '';
+  board: string = '';
 
   loading: boolean = false;
 
@@ -55,7 +59,7 @@ export class TaskOpenComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { id: string; task: Task; own: boolean },
+    public data: { id: string; task: Task; own: boolean; board: string },
     public taskService: TaskService,
     public auth: AuthService,
     private comment: CommentsService,
@@ -66,6 +70,7 @@ export class TaskOpenComponent implements OnInit {
     this.task = data.task;
     this.taskColor = data.task.color;
     this.own = data.own;
+    this.board = data.board;
     console.log('Task Details:', data);
     // this.contentControl = new FormControl(this.task.content);
 
@@ -97,6 +102,8 @@ export class TaskOpenComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('FILTER - BOARD INPUT - ', this.board);
+
     // updating global css var -
     document.documentElement.style.setProperty('--task-color', this.taskColor);
     console.log('ng on init - ', this.task.coordinates);

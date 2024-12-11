@@ -59,6 +59,7 @@
 
     <button
       id="pin"
+      *ngIf="board !== 'filter' && board !== 'wall'"
       (click)="taskService.togglePin(task, userId)"
       [class.set]="task.draggable"
     >

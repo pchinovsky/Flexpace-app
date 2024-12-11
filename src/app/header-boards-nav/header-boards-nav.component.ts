@@ -135,10 +135,10 @@ export class HeaderBoardsNavComponent implements OnInit {
 
   //
 
-  // initial, flickers -
+  // initial, fixed -
   updateTaskBoard(taskId: string, board: string): void {
     if (!this.currentUserId) {
-      console.warn('User ID is not available for task update.');
+      console.warn('user ID is not available for task update.');
       return;
     }
     this.point.findAvailableSnapPointForBoard(board).then((newCoordinates) => {
@@ -147,12 +147,8 @@ export class HeaderBoardsNavComponent implements OnInit {
           { id: taskId, board: board, coordinates: newCoordinates },
           this.currentUserId as string
         );
-        console.log(
-          `task ${taskId} moved to board ${board} at coordinates`,
-          newCoordinates
-        );
       } else {
-        console.warn(`No available position in board ${board}`);
+        console.warn(`no available position in board ${board}`);
       }
     });
   }

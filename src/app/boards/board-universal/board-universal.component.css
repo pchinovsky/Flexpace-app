@@ -84,6 +84,10 @@ app-task {
     opacity: 1; 
 }
 
+.filter-menu input[type="text"] {
+  outline: none;
+}
+
 
 /*  */
   

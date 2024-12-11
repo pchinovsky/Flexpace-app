@@ -11,7 +11,7 @@
     height: 100%;
     background: rgba(182, 180, 180, 0.5);
     opacity: 0.9;
-    z-index: 1000;
+    z-index: 1001;
     backdrop-filter: blur(15px);
 
   }
@@ -19,7 +19,7 @@
 form {
     position: absolute;
     left: calc(50% - 200px);
-    top: 20%;
+    top: 10%;
     max-width: 500px;
     max-height: auto;
     min-width: 400px;
@@ -31,7 +31,7 @@ form {
     /* align-items: stretch; */
     gap: 1em;
     background-color: white;
-    z-index: 1000;
+    z-index: 1001;
     color: grey;
     font-size: 0.8em;
   }

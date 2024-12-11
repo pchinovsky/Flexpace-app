@@ -103,31 +103,43 @@ export class BoardService {
   // }
 
   deleteBoard(boardId: string, boardName: string): Promise<void> {
-    console.log('Deleting board with ID:', boardId);
+    console.log('deleting board with ID:', boardId);
 
-    const deleteBoard = this.firestore
+    const userId = this.authService.getCurrentUserId();
+
+    if (!userId) {
+      console.error('user not authenticated.');
+      return Promise.reject(new Error('user not authenticated'));
+    }
+
+    return this.firestore
       .collection('boards')
       .doc(boardId)
-      .delete();
+      .delete()
+      .then(() => {
+        console.log('board deleted successfully');
 
-    const deleteTasks = this.firestore
-      .collection('tasks', (ref) => ref.where('board', '==', boardName))
-      .get()
-      .toPromise()
-      .then((snapshot) => {
-        const taskDeletions = snapshot!.docs.map((doc) =>
-          this.firestore.collection('tasks').doc(doc.id).delete()
-        );
-        return Promise.all(taskDeletions);
-      });
+        return this.firestore
+          .collection('tasks', (ref) =>
+            ref.where('board', '==', boardName).where('owner', '==', userId)
+          )
+          .get()
+          .toPromise()
+          .then((snapshot) => {
+            const deleteTasksPromises = snapshot!.docs.map((doc) =>
+              this.firestore.collection('tasks').doc(doc.id).delete()
+            );
 
-    return Promise.all([deleteBoard, deleteTasks])
-      .then(() => console.log('board and related tasks deleted'))
+            return Promise.all(deleteTasksPromises);
+          });
+      })
+      .then(() => console.log('all tasks associated with the board deleted'))
       .catch((error) => {
-        console.error('err during board / task deletion:', error);
+        console.error('failed to delete board or tasks:', error);
         this.errorService.openErrorModal(
-          'Board deletion failed. Please try again.'
+          'Failed to delete the board and its tasks. Please try again.'
         );
+        throw error;
       });
   }
 

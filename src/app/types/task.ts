@@ -41,3 +41,8 @@ export interface Comment {
   content: string;
   timestamp: number;
 }
+
+export interface LastEditedTask {
+  taskId: string;
+  userId: string;
+}

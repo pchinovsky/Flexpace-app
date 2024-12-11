@@ -9,6 +9,7 @@ import { BoardUniversalComponent } from './boards/board-universal/board-universa
 import { BoardTodayComponent } from './boards/board-today/board-today.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ProfileComponent } from './auth/profile/profile.component';
 
 const routes: Routes = [
   // {
@@ -19,8 +20,12 @@ const routes: Routes = [
   { path: 'auth/register', component: BoardPublicComponent },
   // { path: 'auth/login', component: LoginComponent },
   // { path: 'auth/register', component: RegisterComponent },
-  { path: '', pathMatch: 'full', redirectTo: '/wall' },
   { path: 'wall', component: BoardPublicComponent },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [authGuard],
+  },
   {
     path: 'default',
     component: BoardDefaultComponent,
@@ -41,6 +46,7 @@ const routes: Routes = [
     component: BoardComponent,
     canActivate: [authGuard],
   },
+  { path: '', pathMatch: 'full', redirectTo: '/wall' },
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '/404' },
 ];

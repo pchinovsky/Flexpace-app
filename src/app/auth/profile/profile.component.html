@@ -14,6 +14,9 @@
       />
     </div>
 
+    <label *ngIf="isEditing" for="firstName"
+      ><strong>Profile picture</strong></label
+    >
     <input
       *ngIf="isEditing"
       id="profilePicture"
