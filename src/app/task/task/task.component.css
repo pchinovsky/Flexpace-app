@@ -127,6 +127,7 @@ button#static {
   position: absolute;
   right: 5px;
   top: 5px;
+  cursor: pointer;
 }
 
 button#static:hover {

@@ -25,6 +25,7 @@ import { SharedModule } from './shared/shared.module';
 import { HeaderBoardsNavComponent } from './header-boards-nav/header-boards-nav.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ToastComponent } from './toast/toast.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     BoardPublicComponent,
     HeaderBoardsNavComponent,
     NotFoundComponent,
+    ToastComponent,
   ],
   imports: [
     BrowserModule,

@@ -4,14 +4,15 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ToastService {
-  showToast = false;
   toastMessage = '';
+  toastClass = '';
 
   show(message: string) {
     this.toastMessage = message;
-    this.showToast = true;
+    this.toastClass = 'slide-in';
+
     setTimeout(() => {
-      this.showToast = false;
+      this.toastClass = 'slide-out';
     }, 3000);
   }
 }

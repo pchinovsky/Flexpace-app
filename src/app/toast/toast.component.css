@@ -1,0 +1,25 @@
+.toast {
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background-color: #595858;
+  color: #fff;
+  padding: 0.7em 1.2em;
+  border-radius: 1.5em;
+  opacity: 0;
+  z-index: 1000;
+  font-size: 0.8em;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.slide-in {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.slide-out {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+}
