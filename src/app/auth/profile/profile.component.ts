@@ -107,7 +107,6 @@ export class ProfileComponent implements OnInit {
     // patch form with user data -
     this.userData$ = this.auth.getUserId().pipe(
       switchMap((userId) => {
-        // console.log('SwitchMap triggered with userId:', userId);
         if (userId) {
           return this.firestore
             .collection('users')
@@ -115,12 +114,10 @@ export class ProfileComponent implements OnInit {
             .valueChanges()
             .pipe(
               map((userData) => {
-                // console.log('Fetched User Data from Firestore:', userData);
                 return userData ?? null;
               }),
               tap((userData) => {
                 if (userData) {
-                  // console.log('Patching form with user data:', userData);
                   this.profileForm.patchValue({
                     displayName: userData.displayName,
                     firstName: userData.firstName,

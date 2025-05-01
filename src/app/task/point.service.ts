@@ -68,7 +68,6 @@ export class PointService {
     const boxX = box.left;
     const boxY = box.top;
 
-    // let closestPoint = null;
     let closestPoint: { x: number; y: number } | null = null;
 
     let minDistance = this.snapThreshold;
@@ -93,11 +92,8 @@ export class PointService {
     taskHeight: number,
     tasks: Task[]
   ): { x: number; y: number } | null {
-    // let closestPoint = this.findClosestSnapPoint({ left: clickX, top: clickY });
     let closestPoint: { x: number; y: number } | null =
       this.findClosestSnapPointNew({ left: clickX, top: clickY });
-
-    console.log('board closest point returned', closestPoint);
 
     if (!closestPoint) {
       console.log('No available snap point found.');
@@ -110,8 +106,6 @@ export class PointService {
       taskHeight,
       tasks
     );
-
-    // this.openModal('not enough space for a new task');
 
     if (!isPositionAvailable) {
       return null;
@@ -129,7 +123,6 @@ export class PointService {
   ): boolean {
     for (const task of tasks) {
       if (task.id === draggedTaskId) {
-        // console.log(`Skipping dragged task with id: ${task.id}`);
         continue;
       }
 
@@ -146,7 +139,6 @@ export class PointService {
       }
     }
 
-    // console.log(`no overlap`);
     return true;
   }
 
@@ -179,9 +171,6 @@ export class PointService {
       const overlapsX = newTaskRight > taskLeft && newTaskLeft < taskRight;
       const overlapsY = newTaskBottom > taskTop && newTaskTop < taskBottom;
 
-      // console.log(`checking overlap on X: ${overlapsX}`);
-      // console.log(`checking overlap on Y: ${overlapsY}`);
-
       if (overlapsX && overlapsY) {
         console.log(
           `overlap detected with task titled "${task.title}" at (${task.coordinates.x}, ${task.coordinates.y})`
@@ -190,14 +179,12 @@ export class PointService {
       }
     }
 
-    // console.log(`No overlap detected, position is available.`);
     return true;
   }
 
   // // -------------
 
   // for moving task to new board -
-
   findAvailableSnapPointForBoard(
     board: string
   ): Promise<{ x: number; y: number } | null> {

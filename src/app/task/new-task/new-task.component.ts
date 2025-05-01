@@ -16,13 +16,11 @@ import { switchMap } from 'rxjs';
 })
 export class NewTaskComponent {
   @ViewChild('draggable') draggable!: ElementRef;
-  // @Input() defaultSize: { x: number; y: number } | null = null;
   coordinates: { x: number; y: number } | null = null;
   @Input() board: string | null = '';
   @Output() closeModalEvent = new EventEmitter<void>();
 
   userId: string | null = '';
-  // boardName: string | null = '';
   ownerName: string | null | undefined = '';
 
   type = '';
@@ -59,11 +57,6 @@ export class NewTaskComponent {
   ) {}
 
   ngOnInit() {
-    // const fullPath = this.router.url;
-    // const segments = fullPath.split('/');
-    // this.board = segments.pop() || null;
-    // console.log('Board Name:', this.board);
-
     this.type = this.newTask.get('note')?.value ? 'task' : 'note';
 
     this.newTask.get('note')?.valueChanges.subscribe((value) => {
@@ -77,12 +70,7 @@ export class NewTaskComponent {
       }
     });
 
-    // if (!this.coordinates) {
-    //   this.coordinates = this.point.getCoordinates();
-    // }
     this.coordinates = this.point.getCoordinates();
-
-    console.log('Task initialized at coordinates:', this.coordinates);
 
     this.point.clearCoordinates();
   }
@@ -163,8 +151,6 @@ export class NewTaskComponent {
   }
 
   closeModal(): void {
-    // console.log('close modal triggered');
-
     this.closeModalEvent.emit();
   }
 }

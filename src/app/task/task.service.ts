@@ -19,21 +19,12 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class TaskService {
-  // private lastEditedTask: any;
-  private lastEditedTaskDoc: any = this.firestore.collection('lastEditedTask');
-
   constructor(
     private firestore: AngularFirestore,
     private afAuth: AngularFireAuth,
     private errorService: ErrorService,
     private dragDrop: DragDropService
   ) {}
-
-  // real fn -
-
-  // getAllTasks(): Observable<Task[]> {
-  //   return this.firestore.collection<Task>('tasks').valueChanges();
-  // }
 
   getAllTasks(userId: string): Observable<Task[]> {
     const ownerTasks$ = this.firestore
@@ -60,12 +51,6 @@ export class TaskService {
         this.errorService.errorFeedback('Failed to load tasks. Please refresh.')
       );
   }
-
-  // getTasks(board: string | null): Observable<Task[]> {
-  //   return this.firestore
-  //     .collection<Task>('tasks', (ref) => ref.where('board', '==', board))
-  //     .valueChanges();
-  // }
 
   getTasks(board: string): Observable<Task[]> {
     return this.afAuth.user.pipe(
@@ -105,7 +90,6 @@ export class TaskService {
       .update(task)
       .then(() => {
         console.log('Task updated');
-        // this.setLastEditedTask(task as Task, userId);
         this.setLastEditedTask(task.id as string, userId);
       })
       .catch((error) => {
@@ -116,7 +100,7 @@ export class TaskService {
       });
   }
 
-  updateTaskObs(task: Partial<Task>, userId: string): Promise<void> {
+  async updateTaskObs(task: Partial<Task>, userId: string): Promise<void> {
     return this.firestore
       .collection('tasks')
       .doc(task.id)
@@ -131,7 +115,7 @@ export class TaskService {
       });
   }
 
-  updateSavedBy(
+  async updateSavedBy(
     taskId: string,
     userId: string,
     action: 'add' | 'remove'
@@ -167,25 +151,7 @@ export class TaskService {
       });
   }
 
-  // deleteTask(taskId: string): Promise<void> {
-  //   return this.firestore
-  //     .collection('tasks')
-  //     .doc(taskId)
-  //     .delete()
-  //     .then(() => {
-  //       console.log('Task successfully deleted!');
-  //       this.dragDrop.clearDragData();
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error removing task: ', error);
-  //       this.errorService.openErrorModal(
-  //         'Failed to delete the task. Please try again.'
-  //       );
-  //       throw error;
-  //     });
-  // }
-
-  deleteTask(taskId: string): Promise<void> {
+  async deleteTask(taskId: string): Promise<void> {
     const commentsRef = this.firestore.collection(`tasks/${taskId}/comments`);
 
     return commentsRef
@@ -245,26 +211,9 @@ export class TaskService {
 
   //
 
-  // setLastEditedTask(task: Task, userId: string): Promise<void> {
-  //   return this.firestore
-  //     .collection('lastEditedTasks')
-  //     .doc(userId)
-  //     .set({ ...task, userId })
-  //     .then(() => console.log('last edited set'))
-  //     .catch((error) => console.error('error setting last edited:', error));
-  // }
-
-  // getLastEditedTask(userId: string): Observable<Task | null> {
-  //   return this.firestore
-  //   .collection<Task>('lastEditedTasks')
-  //   .doc(userId)
-  //   .valueChanges()
-  //   .pipe(filter((task): task is Task => !!task));
-  // }
-
   // last edited fn versions without keeping full task in db -
 
-  setLastEditedTask(taskId: string, userId: string): Promise<void> {
+  async setLastEditedTask(taskId: string, userId: string): Promise<void> {
     return this.firestore
       .collection('lastEditedTasks')
       .doc(userId)
@@ -319,40 +268,6 @@ export class TaskService {
       map(([task, comments]) => ({ task, comments }))
     );
   }
-
-  // getTaskWithComments(
-  //   taskId: string
-  // ): Observable<{ task: Task; comments: Comment[] }> {
-  //   const task$ = this.firestore
-  //     .doc<Task>(`tasks/${taskId}`)
-  //     .valueChanges()
-  //     .pipe(
-  //       filter((task) => !!task),
-  //       tap((task) => {
-  //         if (!task) {
-  //           console.warn(`Task with ID ${taskId} no longer exists`);
-  //         }
-  //       })
-  //     );
-
-  //   const comments$ = this.firestore
-  //     .collection<Comment>(`tasks/${taskId}/comments`, (ref) =>
-  //       ref.orderBy('timestamp', 'asc')
-  //     )
-  //     .valueChanges();
-
-  //   return combineLatest([task$, comments$]).pipe(
-  //     map(([task, comments]) => {
-  //       if (!task) {
-  //         throw new Error('Task no longer exists');
-  //       }
-  //       return { task, comments };
-  //     }),
-  //     this.errorService.errorFeedback(
-  //       'Failed to load task or comments. Please try again.'
-  //     )
-  //   );
-  // }
 
   //
 

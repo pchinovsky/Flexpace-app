@@ -176,7 +176,6 @@ export class AuthService {
 
   // auto unsubscr - without making new obs with .subscr -
   isAuthenticated(): Observable<boolean> {
-    // return this.afAuth.authState.pipe(map((user) => !!user));
     return this.isLogged$;
   }
 

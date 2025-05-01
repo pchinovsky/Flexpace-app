@@ -1,25 +1,3 @@
-<!-- <h2 mat-dialog-title>Error</h2>
-<div mat-dialog-content>
-  <p>{{ data.message }}</p>
-</div>
-<div mat-dialog-actions>
-  <button class="btn" (click)="close()">Close</button>
-</div>
-
-
-<h2 mat-dialog-title>Select Background</h2>
-<div mat-dialog-content class="background-options-container">
-  <div
-    *ngFor="let background of data.predefinedImages"
-    class="background-option"
-    [ngStyle]="{ 'background-image': 'url(' + background + ')' }"
-    (click)="selectBackground(background)"
-  ></div>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="close()">Cancel</button>
-</div> -->
-
 <!-- error modal -->
 <div class="error" *ngIf="data.type === 'error'">
   <h2 id="text" mat-dialog-title>Error</h2>

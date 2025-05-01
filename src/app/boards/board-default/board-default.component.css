@@ -1,71 +1,65 @@
 .background {
-    background-color: rgb(224, 156, 156);
-    width: 100vh;
-    height: 100vh;
+  background-color: rgb(224, 156, 156);
+  width: 100vh;
+  height: 100vh;
 }
 
 .container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(248, 243, 243, 0.5);
-    overflow: hidden;
-    /* z-index: 2001; */
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(248, 243, 243, 0.5);
+  overflow: hidden;
 }
 
-
 #grid-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-  }
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
 
 .grid-point {
-    width: 2px;
-    height: 2px;
-    background-color: rgb(191, 33, 33);
-    border-radius: 50%;
-    position: absolute;
-    z-index: 1;
-    opacity: 0;
+  width: 2px;
+  height: 2px;
+  background-color: rgb(191, 33, 33);
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
 }
 
 app-task {
-    position: absolute;
-    z-index: 2; 
-  }
+  position: absolute;
+  z-index: 2;
+}
 
-  .add-bg-btn {
-    position: absolute;
-    top: 1em;
-    right: 2em;
-    z-index: 3; 
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgb(185, 179, 179);
-    border-radius: 2em;
-    padding: 0.5em 1em;
-    cursor: pointer;
-    opacity: 0.3;
-    color: rgb(135, 134, 134);
+.add-bg-btn {
+  position: absolute;
+  top: 1em;
+  right: 2em;
+  z-index: 3;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgb(185, 179, 179);
+  border-radius: 2em;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  opacity: 0.3;
+  color: rgb(135, 134, 134);
+}
 
-  }
+.add-bg-btn:hover,
+.delete-bg-btn:hover {
+  opacity: 0.8;
+}
 
-  .add-bg-btn:hover, .delete-bg-btn:hover {
-    opacity: 0.8;
-  }
-
-  .background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    z-index: 0;
-  }
-  
-  .active-task {
-    /* outline: 2px solid #4caf50;  */
-  }
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}

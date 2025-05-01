@@ -33,20 +33,15 @@ import { SubContainerService } from '../sub-containers.service';
 })
 export class TaskComponent implements AfterViewInit {
   newSubtaskContent: string = '';
-  // userId: string | null = '';
   userId: string = '';
-  // owner: string | null | undefined = '';
-  // userId: string = '';
   activeTaskId: string = '';
 
   @Input() task!: Task;
   @Input() tasks!: Task[];
   @Input() owner!: string | null | undefined;
 
-  // @Input() gridPoints: { x: number; y: number }[] = [];
   @Input() boardElement!: HTMLElement;
   @Input() draggable: boolean = true;
-  // @Input() resizable: boolean = true;
   @Input() fixedLayout: boolean = false;
   @Input() readonly: boolean = false;
   @Input() board: string = '';
@@ -54,15 +49,12 @@ export class TaskComponent implements AfterViewInit {
 
   @Output() resizeEvent = new EventEmitter<any>();
   @Output() dragEndEvent = new EventEmitter<any>();
-  // @Output() taskClicked = new EventEmitter<string>();
-  // @Output() taskClicked = new EventEmitter<object>();
   @Output() taskClicked = new EventEmitter<{
     taskId: string;
     e: MouseEvent;
   }>();
 
   @ViewChild('taskBox', { static: false }) taskBox!: ElementRef;
-  // @ViewChild('dateInput') dateInput!: ElementRef;
   @ViewChild('picker') datePicker!: any;
 
   colors: string[] = [
@@ -77,11 +69,8 @@ export class TaskComponent implements AfterViewInit {
 
   private isResizing = false;
   private isDragging = false;
-  private isClicked = false;
   private startX = 0;
   private startY = 0;
-  private startWidth = 0;
-  private startHeight = 0;
   private stepSize = 50;
   private offsetX = 0;
   private offsetY = 0;
@@ -89,10 +78,6 @@ export class TaskComponent implements AfterViewInit {
   private initialTop = 0;
   private openHeight = '550px';
   private openWidth = '800px';
-
-  private mouseDownX: number = 0;
-  private mouseDownY: number = 0;
-  private movementThreshold: number = 5;
 
   openSubContainers: Set<string> = new Set();
   openSubContainers$ = new BehaviorSubject<Set<string>>(new Set<string>());
@@ -109,7 +94,6 @@ export class TaskComponent implements AfterViewInit {
   isDatePickerOpen = false;
   canResize = true;
   taskOpenTemp: boolean = false;
-  // taskOpen = false;
 
   constructor(
     private renderer: Renderer2,
@@ -140,10 +124,6 @@ export class TaskComponent implements AfterViewInit {
 
     if (this.userId) {
       this.isOwn = this.task.owner === this.userId;
-      // this.auth.getUserDataById(this.userId).subscribe((data) => {
-      //   this.owner = data?.displayName;
-      //   // console.log(this.owner);
-      // });
     } else {
       this.isOwn = false;
     }
@@ -157,46 +137,13 @@ export class TaskComponent implements AfterViewInit {
     if (this.board === 'filter' || this.board === 'wall')
       this.canResize = false;
 
-    // this.isOwn = this.task.owner === this.userId ? true : false;
-    // console.log(this.isOwn);
     this.cdr.detectChanges();
-
-    // this.auth.getUserId().subscribe((userId) => {
-    //   console.log(userId);
-    //   console.log(this.task.owner);
-
-    //   this.userId = userId;
-    //   console.log(this.userId);
-    //   this.isOwn = this.task.owner === this.userId ? true : false;
-    //   console.log(this.isOwn);
-    // });
-
-    // this.updateDraggable();
-
-    // document.addEventListener('click', (event) => {
-    //   console.log('Clicked element:', event.target);
-    // });
-
-    // document.addEventListener('pointerdown', (event) => {
-    //   console.log('Pointer event target:', event.target);
-    // });
-
-    // document.addEventListener('focusin', (event) => {
-    //   console.log('Global focus event:', event.target);
-    // });
-
-    // console.log(this.isOwn);
-    // console.log(this.userId);
-    // console.log(this.task.owner);
   }
-
-  // private updateDraggable(): void {}
 
   onTaskClick(e: MouseEvent): void {
     e.preventDefault();
     e.stopPropagation();
 
-    // this.isClicked = true;
     if ((e.target as HTMLElement).id === 'rev') return;
     if ((e.target as HTMLElement).id === 'hid') return;
     if ((e.target as HTMLElement).id === 'static') return;
@@ -231,9 +178,6 @@ export class TaskComponent implements AfterViewInit {
     }
     if ((e.target as HTMLElement).classList.contains('resizeHandle')) return;
     if (this.isDragging || this.isResizing || this.isControlsOpen) return;
-    // console.log('target - ', e.target as HTMLElement);
-
-    // console.log(this.isDragging, this.isResizing);
 
     this.boardService.setTaskOpen(true);
     this.taskOpenTemp = true;
@@ -243,7 +187,6 @@ export class TaskComponent implements AfterViewInit {
       this.taskOpenTemp = false;
     }, 1000);
 
-    // console.log('TASK taskOpen? - ', this.taskOpen);
     this.taskClicked.emit({ taskId: this.task.id, e });
 
     const target = e.currentTarget as HTMLElement;
@@ -251,15 +194,11 @@ export class TaskComponent implements AfterViewInit {
 
     console.log('task clicked now! ', taskId);
     if (target) {
-      // this.taskClicked.emit(taskId);
-      // this.taskClicked.emit({ taskId, event: e });
       this.openTaskDetails(taskId);
     }
   }
 
   openTaskDetails(taskId: string): void {
-    // console.log('open task details', this.task.coordinates); // fine here
-
     this.dialog.open(TaskOpenComponent, {
       data: {
         id: taskId,
@@ -271,8 +210,6 @@ export class TaskComponent implements AfterViewInit {
       height: this.openHeight,
       panelClass: 'modal',
     });
-
-    // this.taskOpen = true;
   }
 
   focusInput(e: FocusEvent): void {
@@ -284,21 +221,6 @@ export class TaskComponent implements AfterViewInit {
   // initial -
   addSubtask(e: Event): void {
     e.stopPropagation();
-    // const target = event.target as HTMLElement;
-
-    // if (target.id === 'sub-input' || target.closest('.sub-task-cre-input')) {
-    //   console.log('Ignoring click from sub-task input');
-    //   return;
-    // }
-
-    // if (event) {
-    //   // console.log('evebt there');
-
-    //   event.stopPropagation();
-    //   event.preventDefault();
-    // }
-
-    // event.stopPropagation();
     e.preventDefault();
 
     if (!this.newSubtaskContent.trim()) {
@@ -315,50 +237,10 @@ export class TaskComponent implements AfterViewInit {
     this.task.subtasks = this.task.subtasks || [];
     this.task.subtasks.push(newSubtask);
 
-    // this.taskService.updateTask(this.task, this.userId as string);
-    // this.taskService
-    //   .updateTaskObs(this.task, this.userId as string)
-    //   .then(() => {
-    //     this.isSubtaskInputOpen = true;
-    //     console.log('SUB - ', this.isSubContainerOpen);
-    //   });
-
     this.newSubtaskContent = '';
-
-    // this.toggleSubtaskInput();
-
-    // this.task.subtasks = [...this.task.subtasks];
-
-    // this.cdr.detectChanges();
   }
 
   //
-
-  // toggleSubtaskEditable(subtask: Subtask): void {
-  //   subtask.editable = !subtask.editable;
-  // }
-
-  // with forced task reload -
-  // addSubtask(): void {
-  //   // const newSubtask = { content };
-  //   console.log('task adding on');
-
-  //   const newSubtask: Subtask = {
-  //     id: Date.now().toString(),
-  //     content: this.newSubtaskContent.trim(),
-  //     editable: false,
-  //     done: false,
-  //   };
-
-  //   this.taskService
-  //     .addSubtask(this.task.id, newSubtask)
-  //     .then(() => {
-  //       console.log('sub added');
-  //       this.reloadTaskData();
-  //       this.cdr.detectChanges();
-  //     })
-  //     .catch((error) => console.error('error adding sub:', error));
-  // }
 
   reloadTaskData(): void {
     this.taskService.getTaskById(this.task.id).subscribe((task) => {
@@ -380,18 +262,9 @@ export class TaskComponent implements AfterViewInit {
     this.task.subtasks = (this.task.subtasks ?? []).filter(
       (t) => t.id !== subtask.id
     );
-
-    // this.taskService.updateTask(this.task, this.userId as string);
   }
 
   //
-
-  // toggleSubtaskInput(): void {
-  //   // console.log('input before -', this.isSubtaskInputOpen);
-
-  //   this.isSubtaskInputOpen = !this.isSubtaskInputOpen;
-  //   console.log('input after -', this.isSubtaskInputOpen);
-  // }
 
   toggleSubtaskInput() {
     this.isSubtaskInputOpen = !this.isSubtaskInputOpen;
@@ -423,11 +296,6 @@ export class TaskComponent implements AfterViewInit {
     this.logOpenSubContainers();
 
     if (this.subContainerService.areAllClosed()) {
-      console.log('all sub conts closed, updating subtasks.');
-      // this.taskService.updateTask(
-      //   { id: this.task.id, subtasks: this.task.subtasks },
-      //   this.userId as string
-      // );
       // check to prevent auth errors for guests on wall -
       if (this.auth.isLogged && this.userId === this.task.owner) {
         this.taskService.updateTask(this.task, this.userId as string);
@@ -449,42 +317,22 @@ export class TaskComponent implements AfterViewInit {
   }
 
   toggleControls(e: MouseEvent): void {
-    console.log('toggle controls');
-
     e.stopPropagation();
     this.isControlsOpen = !this.isControlsOpen;
-    // console.log('controls - ', this.isControlsOpen);
   }
-
-  // toggleDatePicker(): void {
-  //   this.isDatePickerOpen = !this.isDatePickerOpen;
-  // }
-
-  // openDatePicker(): void {
-  //   this.dateInput.nativeElement.showPicker();
-  // }
 
   openDatePicker(): void {
     setTimeout(() => {
       const btn = document.querySelector('.due-date-button') as HTMLElement;
-      // const board = document.querySelector('#grid-container') as HTMLElement;
 
       if (btn) {
         const btnPos = btn.getBoundingClientRect().top;
-        // const boardPos = board.getBoundingClientRect();
-
-        // const relativeTop = btnPos.top - boardPos.top;
         const relativeTop = this.task.coordinates.y + btnPos;
-
-        // console.log(btnPos.top);
-        // console.log(boardPos.top);
-        console.log(relativeTop);
 
         const calendarElement = document.querySelector(
           '.mat-calendar'
         ) as HTMLElement;
         if (calendarElement) {
-          console.log('task is down?', relativeTop);
           calendarElement.classList.add(
             relativeTop > 700 ? 'mat-calendar-up' : 'mat-calendar'
           );
@@ -568,7 +416,6 @@ export class TaskComponent implements AfterViewInit {
           finalHeight,
         });
       }
-      // this.isResizing = true;
       this.isResizing = true;
       document.removeEventListener('mousemove', onResizeMove);
       document.removeEventListener('mouseup', onResizeEnd);
@@ -599,17 +446,14 @@ export class TaskComponent implements AfterViewInit {
         newTop < taskBottom &&
         newBottom > taskTop
       ) {
-        // console.log(`overlap detected with task titled "${task.title}"`);
         return true;
       }
     }
 
-    // console.log('no overlap detected.');
     return false;
   }
 
   makeDraggable(box: HTMLElement): void {
-    // if (this.isClicked) return;
     if (!this.task.draggable || !this.draggable) return;
 
     box.addEventListener('mousedown', (e: MouseEvent) => {
@@ -620,12 +464,7 @@ export class TaskComponent implements AfterViewInit {
       if (this.taskOpen || this.taskOpenTemp) return;
 
       if ((e.target as HTMLElement).classList.contains('resize-handle')) return;
-      // if (target.classList.contains('text')) return;
-      // console.log(target.classList.contains('text'));
-
-      // if ((e.target as HTMLElement).id === 'hid') return;
       e.preventDefault();
-      // to prevent triggering task details -
       e.stopPropagation();
 
       this.isDragging = false;
@@ -636,10 +475,6 @@ export class TaskComponent implements AfterViewInit {
       this.initialLeft = box.offsetLeft;
       this.initialTop = box.offsetTop;
 
-      // const target = e.target as HTMLElement;
-
-      // key conditions to prevent dragging from single click
-      // so dragging isn't triggering a click, but a click is still triggering dragging
       if (target.id === 'rev') return;
       if (target.id === 'hid') return;
       if (target.id === 'sub-task-cre' || target.closest('#sub-task-cre')) {
@@ -653,17 +488,12 @@ export class TaskComponent implements AfterViewInit {
         return;
       }
       if (this.isControlsOpen) return;
-      // if (target.id === 'grid-container') {
-      //   return;
-      // }
       document.addEventListener('mousemove', this.onDragMove.bind(this, box));
       document.addEventListener('mouseup', this.onDragEnd.bind(this, box));
     });
   }
 
   onDragMove(box: HTMLElement, e: MouseEvent): void {
-    // this.isDragging = true;
-
     // added for box move to new board ---
 
     if (this.task.done) {
@@ -680,8 +510,6 @@ export class TaskComponent implements AfterViewInit {
       console.log('drag initiated for task:', this.task.id);
     }
 
-    // this.dragDrop.setDragData(this.task.id);
-
     // ---
 
     const newLeft = e.clientX - this.offsetX;
@@ -691,25 +519,6 @@ export class TaskComponent implements AfterViewInit {
     box.style.top = `${newTop}px`;
 
     //
-
-    // const deltaX = Math.abs(e.clientX - this.mouseDownX);
-    // const deltaY = Math.abs(e.clientY - this.mouseDownY);
-
-    // if (
-    //   !this.isDragging &&
-    //   (deltaX > this.movementThreshold || deltaY > this.movementThreshold)
-    // ) {
-    //   this.isDragging = true;
-    //   console.log('Drag started for task:', this.task.id);
-    // }
-
-    // if (this.isDragging) {
-    //   const newLeft = e.clientX - this.offsetX;
-    //   const newTop = e.clientY - this.offsetY;
-
-    //   box.style.left = `${newLeft}px`;
-    //   box.style.top = `${newTop}px`;
-    // }
   }
 
   // 3 - adaptation without detecting drop on nav, if it's dropped on a diff board -
@@ -765,19 +574,7 @@ export class TaskComponent implements AfterViewInit {
               newLeft,
               newTop
             );
-            // not detecting overlap -
-            // if (closestPoint) {
-            //   box.style.left = `${closestPoint.x}px`;
-            //   box.style.top = `${closestPoint.y}px`;
-            //   this.task.coordinates = closestPoint;
-            // } else {
-            //   box.style.left = `${this.initialLeft}px`;
-            //   box.style.top = `${this.initialTop}px`;
-            //   this.task.coordinates = {
-            //     x: this.initialLeft,
-            //     y: this.initialTop,
-            //   };
-            // }
+
             if (closestPoint) {
               const isPositionAvailable =
                 this.point.checkIfPositionIsAvailableDrag(
@@ -867,7 +664,6 @@ export class TaskComponent implements AfterViewInit {
   }
 
   onDelete(e: Event, taskId: string): void {
-    // console.log('task del on');
     e.preventDefault();
     e.stopPropagation();
 
@@ -876,23 +672,6 @@ export class TaskComponent implements AfterViewInit {
       console.log('Task cleared from component after deletion.');
     });
   }
-
-  // sending toast to uni board
-  // onSave() {
-  //   if (this.userId) {
-  //     if (!this.task.savedBy.includes(this.userId)) {
-  //       this.task.savedBy.push(this.userId);
-  //       this.taskService.updateTask(this.task, this.userId as string);
-  //       this.toastService.show('Task saved!');
-  //     } else {
-  //       this.task.savedBy = this.task.savedBy.filter(
-  //         (id) => id !== this.userId
-  //       );
-  //       this.taskService.updateTask(this.task, this.userId as string);
-  //       this.toastService.show('Task unsaved!');
-  //     }
-  //   }
-  // }
 
   onSave() {
     if (this.userId) {
@@ -909,28 +688,6 @@ export class TaskComponent implements AfterViewInit {
   //
 
   onDueDateChange(event: MatDatepickerInputEvent<Date>): void {
-    // const input = event.target as HTMLInputElement;
-    // const selectedDate = new Date(input.value);
-    // this.task.dueDate = selectedDate;
-
-    // const currentDate = new Date();
-    // const isToday =
-    //   selectedDate.getFullYear() === currentDate.getFullYear() &&
-    //   selectedDate.getMonth() === currentDate.getMonth() &&
-    //   selectedDate.getDate() === currentDate.getDate();
-
-    // this.task.today = isToday;
-
-    // console.log(
-    //   'due date updated -',
-    //   this.task.dueDate,
-    //   'is today -',
-    //   this.task.today
-    // );
-
-    // this.taskService.updateTask(this.task);
-    // this.isDatePickerOpen = false;
-
     const selectedDate = event.value;
 
     if (selectedDate) {
@@ -955,8 +712,4 @@ export class TaskComponent implements AfterViewInit {
       this.isDatePickerOpen = false;
     }
   }
-
-  // stopPropagation(event: Event): void {
-  //   event.stopPropagation();
-  // }
 }

@@ -37,23 +37,6 @@ export class HeaderBoardsNavComponent implements OnInit {
     this.currentUserId = this.auth.getCurrentUserId();
 
     if (this.currentUserId) {
-      // this.boardService.getBoards().subscribe((data) => {
-      //   this.boards = data.filter((board) => {
-      //     // console.log('Board Owner:', board.owner);
-      //     // console.log('Current User ID:', this.currentUserId);
-
-      //     return board.owner === this.currentUserId;
-      //   });
-
-      //   console.log('Filtered boards - ', this.boards);
-      // });
-
-      // this.boardService.getBoards().subscribe((data) => {
-      //   this.boards = data;
-
-      //   console.log('Filtered boards - ', this.boards);
-      // });
-
       this.boardService.getBoards().subscribe((data) => {
         this.boards = data.filter(
           (board) => board.owner === this.currentUserId
@@ -67,10 +50,6 @@ export class HeaderBoardsNavComponent implements OnInit {
       );
     }
 
-    // this.router.events.subscribe(() => {
-    //   this.currentRoute = this.router.url;
-    // });
-    //
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -81,20 +60,7 @@ export class HeaderBoardsNavComponent implements OnInit {
 
   onSelectBoard(boardId: string): void {
     this.selectedBoardId = boardId;
-
-    // if (this.selectedBoardId === boardId) {
-    //   this.selectedBoardId = null;
-    // } else {
-    //   this.selectedBoardId = boardId;
-    // }
   }
-
-  // isSelected(boardId: string): boolean {
-  //   console.log(this.selectedBoardId);
-  //   console.log(boardId);
-
-  //   return this.selectedBoardId === boardId;
-  // }
 
   isStaticRouteSelected(route: string): boolean {
     return this.currentRoute === route;
@@ -108,30 +74,6 @@ export class HeaderBoardsNavComponent implements OnInit {
       this.router.navigate(['/default']);
     });
   }
-
-  // // -------------
-
-  // onDrop(event: DragEvent, boardTitle: string): void {
-  //   event.preventDefault();
-  //   console.log('onDrop on');
-
-  //   const target = event.target as HTMLElement;
-  //   if (target && target.classList.contains('hovered')) {
-  //     target.classList.remove('hovered');
-  //   }
-
-  //   this.dragDrop.dragData$.subscribe((taskId) => {
-  //     if (taskId) {
-  //       this.updateTaskBoard(taskId, boardTitle);
-  //       this.dragDrop.clearDragData();
-  //     }
-  //   });
-  // }
-
-  // onDragOver(event: DragEvent): void {
-  //   event.preventDefault();
-  //   console.log('onDragOver triggered');
-  // }
 
   //
 
@@ -153,41 +95,6 @@ export class HeaderBoardsNavComponent implements OnInit {
     });
   }
 
-  // not solving the flicker -
-  // updateTaskBoard(taskId: string, board: string): void {
-  //   if (!this.currentUserId || this.isUpdating) {
-  //     console.warn(
-  //       'Update skipped: User ID missing or update already in progress.'
-  //     );
-  //     return;
-  //   }
-
-  //   this.isUpdating = true;
-
-  //   this.point
-  //     .findAvailableSnapPointForBoard(board)
-  //     .then((newCoordinates) => {
-  //       if (newCoordinates) {
-  //         this.taskService.updateTask(
-  //           { id: taskId, board: board, coordinates: newCoordinates },
-  //           this.currentUserId as string
-  //         );
-  //         console.log(
-  //           `Task ${taskId} moved to board ${board} at`,
-  //           newCoordinates
-  //         );
-  //       } else {
-  //         console.warn(`No available position in board ${board}`);
-  //       }
-
-  //       this.isUpdating = false;
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error updating task board:', error);
-  //       this.isUpdating = false;
-  //     });
-  // }
-
   //
 
   onMouseOver(event: MouseEvent, boardTitle: string, boardId: string): void {
@@ -195,17 +102,11 @@ export class HeaderBoardsNavComponent implements OnInit {
 
     const target = event.target as HTMLElement;
 
-    // needs dragData to not be private
-    // if (!this.dragDrop.dragData.getValue()) {
-    //   return;
-    // }
-
     this.dragDrop.dragData$.pipe(take(1)).subscribe((taskId) => {
       console.log('task data?', taskId);
 
       if (taskId) {
         console.log(`hover on board: ${boardTitle} with task: ${taskId}`);
-        // this.isHovered = true;
         this.dragDrop.setHovered(true);
         this.dragDrop.setHoveredBoardId(boardId);
       }
@@ -222,52 +123,6 @@ export class HeaderBoardsNavComponent implements OnInit {
       }
     });
   }
-
-  // onMouseUp(event: MouseEvent, boardTitle: string, boardId?: string): void {
-  // const target = event.target as HTMLElement;
-
-  //   this.dragDrop.dragData$.pipe(take(1)).subscribe((taskId) => {
-  //     if (taskId) {
-  //       const task = this.taskService.getTaskById(taskId).subscribe((task) => {
-  //         if (task.board !== boardTitle) {
-  //           console.log(
-  //             `mouse up for board: ${boardTitle} with task: ${taskId}`
-  //           );
-  //           this.updateTaskBoard(taskId, boardTitle);
-  //           this.dragDrop.clearDragData();
-  //         } else {
-  //           return;
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
-
-  // onMouseUp(event: MouseEvent, boardTitle: string, boardId: string): void {
-  //   const target = event.target as HTMLElement;
-  //   this.dragDrop.dragData$.pipe(take(1)).subscribe((taskId) => {
-  //     if (taskId) {
-  //       // if  current board is the hovered one -
-  //       this.dragDrop.hoveredBoardId$.pipe(take(1)).subscribe((id) => {
-  //         if (id === boardId) {
-  //           this.taskService.getTaskById(taskId).subscribe((task) => {
-  //             if (task.board !== boardTitle) {
-  //               console.log(
-  //                 `mouse up on board: ${boardTitle} with task: ${taskId}`
-  //               );
-  //               this.updateTaskBoard(taskId, boardTitle);
-  //               this.dragDrop.clearDragData();
-  //             } else {
-  //               console.log('task already on this board, no update needed.');
-  //             }
-  //           });
-  //         } else {
-  //           console.log('mouse up not on hovered board, ignoring.');
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
 
   // fixed flicker, but rerouts, and doesn't revert to initial, if same board -
   onMouseUp(event: MouseEvent, boardTitle: string, boardId?: string): void {

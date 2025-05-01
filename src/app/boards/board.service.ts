@@ -42,14 +42,6 @@ export class BoardService {
       });
   }
 
-  // real fns -
-
-  // getBoards() {
-  //   console.log('getting boards');
-
-  //   return this.firestore.collection<Board>('boards').valueChanges();
-  // }
-
   getBoards(): Observable<Board[]> {
     return this.afAuth.user.pipe(
       switchMap((user) => {
@@ -73,36 +65,7 @@ export class BoardService {
       .valueChanges();
   }
 
-  // mock fns -
-
-  // getBoards() {
-  //   return of(this.mockBoards);
-  // }
-
-  // getBoardById(boardId: string) {
-  //   const board = this.mockBoards.find((b) => b.id === boardId);
-  //   return of(board);
-  // }
-
-  //
-
-  // deleteBoard(boardId: string, boardName: string): Promise<void> {
-  //   console.log('Deleting board with ID:', boardId);
-  //   const userId = this.authService.getCurrentUserId();
-  //   return this.firestore
-  //     .collection('boards')
-  //     .doc(boardId)
-  //     .delete()
-  //     .then(() => console.log('Board deleted successfully'))
-  //     .catch((error) => {
-  //       this.errorService.openErrorModal(
-  //         'Failed to delete the board. Please try again.'
-  //       );
-  //       throw error;
-  //     });
-  // }
-
-  deleteBoard(boardId: string, boardName: string): Promise<void> {
+  async deleteBoard(boardId: string, boardName: string): Promise<void> {
     console.log('deleting board with ID:', boardId);
 
     const userId = this.authService.getCurrentUserId();
@@ -145,16 +108,6 @@ export class BoardService {
 
   //
 
-  // updateBoard(boardId: string, updatedFields: Partial<Board>): Promise<void> {
-  //   console.log('Updating board with ID:', boardId);
-  //   return this.firestore
-  //     .collection('boards')
-  //     .doc(boardId)
-  //     .update(updatedFields)
-  //     .then(() => console.log('Board updated successfully'))
-  //     .catch((error) => console.error('Error updating board:', error));
-  // }
-
   updateBoardName(boardId: string, newName: string): Observable<void> {
     return from(
       this.firestore
@@ -170,7 +123,7 @@ export class BoardService {
 
   //
 
-  updateTasksBoardName(
+  async updateTasksBoardName(
     oldBoardName: string,
     newBoardName: string
   ): Promise<void> {

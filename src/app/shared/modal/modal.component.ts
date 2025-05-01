@@ -39,13 +39,6 @@ export class ModalComponent {
     this.userId = this.auth.getCurrentUserId();
   }
 
-  // private saveTaskIfChanged(): void {
-  //   if (JSON.stringify(this.initialTask) !== JSON.stringify(this.data.task)) {
-  //     console.log('Changes detected. Saving task...');
-  //     this.taskService.updateTask(this.data.task);
-  //   }
-  // }
-
   close(): void {
     this.dialogRef.close();
   }

@@ -33,7 +33,6 @@ export class RegisterComponent {
       return;
     }
 
-    // const username = this.regForm.get('name')?.value || '';
     const username = this.regForm.get('name')?.value as string;
     const email = this.regForm.get('email')?.value;
     const password = this.regForm.get('pass')?.value;
@@ -56,15 +55,10 @@ export class RegisterComponent {
   passwordsMatch(control: AbstractControl) {
     const pass = control.get('pass')?.value;
     const repass = control.get('repass')?.value;
-
-    // console.log('Password:', pass, 'Repassword:', repass); // Debugging passwords
-
     return pass === repass ? null : { passwordsNotMatching: true };
   }
 
   closeModal() {
-    // console.log('Emitting close event from RegComponent');
-
     this.router.navigate(['/wall']);
   }
 }

@@ -35,9 +35,6 @@ export class HeaderComponent implements OnInit {
     // otherwise need to subscr here to the auth var and isLoggedIn$ will be static -
     this.isLoggedIn$ = this.authService.isLogged$;
 
-    // this.currentUserId = this.authService.getCurrentUserId();
-    // console.log('user - ', this.currentUserId);
-
     this.authService.getUserId().subscribe((userId) => {
       this.currentUserId = userId;
       console.log('Current User ID:', this.currentUserId);
@@ -70,32 +67,18 @@ export class HeaderComponent implements OnInit {
 
     this.route.url.subscribe((segments: UrlSegment[]) => {
       const fullPath = segments.map((segment) => segment.path).join('/');
-      // console.log(`Current path: ${fullPath}`);
 
       // checking the path -
       this.showLoginModal = fullPath === 'auth/login';
       this.showRegModal = fullPath === 'auth/register';
-      console.log(`modal to be shown - ${this.showLoginModal}`);
-
-      // this.authService.logged.subscribe(() => {
-      //   this.closeModal('logged');
-      // });
 
       this.cdr.detectChanges();
     });
   }
   openLoginModal() {
-    // this.router.navigate(['/auth/login'], { skipLocationChange: true });
     console.log('open triggered');
 
     this.router.navigate(['/auth/login']);
-    // this.showLoginModal = true;
-
-    // this.router.navigate([], {
-    //   relativeTo: this.route,
-    //   queryParams: { modal: 'login' },
-    //   queryParamsHandling: 'merge',
-    // });
   }
 
   openRegModal() {
@@ -109,23 +92,18 @@ export class HeaderComponent implements OnInit {
   }
 
   onCloseNewBoard() {
-    console.log('onCloseNewBoard');
-
     setTimeout(() => {
       this.newBoardForm = false;
-      // console.log('showNewTaskForm:', this.showNewTaskForm);
       this.cdr.detectChanges();
     }, 0);
   }
 
   onLogout() {
-    // this.authService.logout();
     this.authService.logout().subscribe({
       next: () => {
         this.router.navigateByUrl('/wall').then(() => {
           window.location.reload();
         });
-        console.log('logged out successfully');
       },
       error: (err) => {
         console.error('logout failed:', err);

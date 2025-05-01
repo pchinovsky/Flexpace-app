@@ -40,11 +40,8 @@ export class BoardNewComponent {
 
   constructor(
     private fb: FormBuilder,
-    private firestore: AngularFirestore,
     private authService: AuthService,
-    private boardService: BoardService,
-    private router: Router,
-    private point: PointService
+    private boardService: BoardService
   ) {
     console.log('Board NEW Instance created');
   }
@@ -54,11 +51,6 @@ export class BoardNewComponent {
   }
 
   newBoardSubmit() {
-    // prevent multi submissions -
-    // if (this.isCreatingBoard) return;
-
-    // this.isCreatingBoard = true;
-
     // using take to ensure subscr is done once and fn is not triggered again on login -
     if (this.newBoard.valid) {
       this.authService
@@ -78,22 +70,17 @@ export class BoardNewComponent {
               .then(() => (this.isCreatingBoard = false))
               .catch(() => (this.isCreatingBoard = false));
 
-            // this.router.navigate(['/default']);
             this.closeBoardModal();
           } else {
-            // this.isCreatingBoard = false;
             console.log('No user is logged in.');
           }
         });
     } else {
-      // this.isCreatingBoard = false;
       console.log('Form is invalid!');
     }
   }
 
   closeBoardModal(): void {
-    console.log('closeBoardModal');
-
     this.closeBoardModalEvent.emit();
   }
 }

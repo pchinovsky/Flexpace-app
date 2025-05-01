@@ -1,12 +1,3 @@
-<!-- <a href="#" routerLink="/wall">Wall</a>
-<a href="#" routerLink="/login">Log</a> -->
-
-<!-- <button (click)="openLoginModal()">LoginModal</button> -->
-<!-- <a [routerLink]="[{ outlets: { modal: ['login'] } }]">LoginModal2</a> -->
-
-<!-- <a href="#" routerLink="/register">Reg</a> -->
-
-<!-- <hr /> -->
 <div class="cont">
   <div class="logo" *ngIf="isLoggedIn$ | async">
     <a href="#" *ngIf="isLoggedIn$ | async" routerLink="/profile"
@@ -50,26 +41,8 @@
   </div>
 </div>
 
-<!-- 
-<a href="#" routerLink="/default">Default Board</a>
-<a href="#" routerLink="/wall">Public Board</a> -->
-<!-- <a href="#" *ngIf="isLoggedIn$ | async" routerLink="/profile">PROFILE</a> -->
-
 <app-board-new
   *ngIf="newBoardForm"
   (closeBoardModalEvent)="onCloseNewBoard()"
 ></app-board-new>
 <app-header-boards-nav *ngIf="isLoggedIn$ | async"></app-header-boards-nav>
-
-<!-- Login Modal Overlay -->
-<!-- <app-login *ngIf="showLoginModal" (close)="closeModal()"></app-login> -->
-
-<!-- <app-login
-  *ngIf="showLoginModal"
-  (logged)="closeModal()"
-  (close)="closeModal()"
->
-  <p>login modal should be visible</p></app-login
->
-
-<app-register *ngIf="showRegModal" (close)="closeModal()"></app-register> -->

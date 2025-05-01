@@ -12,14 +12,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { ProfileComponent } from './auth/profile/profile.component';
 
 const routes: Routes = [
-  // {
-  //   path: 'auth',
-  //   loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
-  // },
   { path: 'auth/login', component: BoardPublicComponent },
   { path: 'auth/register', component: BoardPublicComponent },
-  // { path: 'auth/login', component: LoginComponent },
-  // { path: 'auth/register', component: RegisterComponent },
   { path: 'wall', component: BoardPublicComponent },
   {
     path: 'profile',

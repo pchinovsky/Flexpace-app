@@ -22,9 +22,7 @@ export class BoardPublicComponent implements OnInit {
   gridPoints: { x: number; y: number }[] = [];
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
-    private auth: AuthService,
     private cdr: ChangeDetectorRef,
     private taskService: TaskService,
     public toastService: ToastService
@@ -64,13 +62,6 @@ export class BoardPublicComponent implements OnInit {
   }
 
   closeModal(): void {
-    console.log('close event received in board public');
-
-    // setTimeout(() => {
-    //   console.log('close event received in board public');
-    //   this.showLoginModal = false;
-    //   this.showRegModal = false;
-    // }, 0);
     this.showLoginModal = false;
     this.showRegModal = false;
     this.cdr.markForCheck();

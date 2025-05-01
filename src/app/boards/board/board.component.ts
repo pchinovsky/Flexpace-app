@@ -42,7 +42,6 @@ export class BoardComponent {
   showTaskOpen = false;
   showModal = false;
   isDragging = false;
-  // disableDrag = true;
   isResizing = false;
   editMode = false;
   taskOpen = false;
@@ -51,12 +50,8 @@ export class BoardComponent {
   private startY = 0;
 
   defaultSize = { width: 185, height: 235 };
-  // taskWidth = 185;
-  // taskHeight = 235;
-  // snapThreshold = 100;
 
   clickCoordinates: { x: number; y: number } | null = null;
-  // gridPoints: { x: number; y: number }[] = []; // To hold grid points
   gridPoints = this.point.generateGridPoints(12, 25, 50, 50, 50, 50);
   tasks: Task[] = [];
 
@@ -66,15 +61,12 @@ export class BoardComponent {
     private route: ActivatedRoute,
     private boardService: BoardService,
     private point: PointService,
-    private router: Router,
-    private authService: AuthService,
     private cdr: ChangeDetectorRef,
     private taskService: TaskService,
     private matDialog: MatDialog,
     private firestore: AngularFirestore,
     private storage: AngularFireStorage,
-    private auth: AuthService,
-    private dragDrop: DragDropService
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -143,44 +135,12 @@ export class BoardComponent {
 
   //
 
-  // loadTasks(board: string | null) {
-  //   // console.log('load tasks on');
-  //   console.log('load tasks - ', board);
-
-  //   if (!board) return;
-  //   // if (this.tasks && this.tasks.length > 0) return;
-  //   this.taskService.getTasks(board).subscribe((tasks: Task[]) => {
-  //     this.tasks = tasks;
-  //     // console.log(tasks);
-  //     this.cdr.markForCheck();
-  //   });
-  // }
-
   loadTasks(board: string | null): void {
-    // console.log('load tasks - ', board);
-
-    // fails to prevent reloading when board change -
-    // if (!board || this.dragDrop.dragData.getValue()) {
-    //   console.log('Skipping load tasks due to drag operation');
-    //   return;
-    // }
-
-    // if (!board || board === this.boardName) {
-    //   console.log('no changes in board, skipping task reload.');
-    //   return;
-    // }
-
-    // works! moving board without reload ---
     this.taskService.getTasks(board as string).subscribe((tasks: Task[]) => {
-      // console.log('load tasks - ', board);
-      // console.log('load tasks - ', this.boardName);
-
       if (board !== this.boardName) {
-        // console.log(`current board mismatch: ${board} vs ${this.boardName}`);
         return;
       }
       this.tasks = tasks;
-      // console.log('Tasks loaded for board:', board, tasks);
       this.cdr.markForCheck();
     });
   }
@@ -198,7 +158,6 @@ export class BoardComponent {
     );
 
     if (distanceMoved < 5) {
-      // this.newTask();
       this.onBoardClick(event);
     }
 
@@ -208,29 +167,9 @@ export class BoardComponent {
 
   onBoardClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    // console.log('Event target:', event.target);
-    // console.log('Event target:', target);
-
     if (target.id !== 'grid-container') {
       return;
     }
-
-    //
-    // if (
-    //   target.id === 'sub-input' ||
-    //   target.closest('.sub-task-cre-input')
-    // ) {
-    //   console.log('if cond true');
-
-    //   return;
-    // }
-
-    // if (target.id === 'img-modal') {
-    //   return;
-    // }
-    // if (target.id === 'bgr') {
-    //   return;
-    // }
 
     const boardElement = (
       event.currentTarget as HTMLElement
@@ -241,17 +180,9 @@ export class BoardComponent {
 
     console.log('Click position relative to board:', { x: clickX, y: clickY });
 
-    // closest looks for an ancestor, not parent.
     if ((event.target as HTMLElement).closest('.box')) {
-      // console.log('Click originated from a task, preventing new task form.');
       return;
     }
-    // const clickX = event.clientX;
-    // const clickY = event.clientY - window.scrollY;
-
-    // console.log(window.scrollY);
-
-    // console.log('board def click coords', clickX, clickY);
 
     const available = this.point.findAvailableSnapPoint(
       clickX,
@@ -262,126 +193,15 @@ export class BoardComponent {
     );
 
     if (available) {
-      // console.log('board def avail coords', available);
-
       if (!this.showNewTaskForm) {
         this.point.setCoordinates(available);
       }
       this.showNewTaskForm = true;
-      // console.log('Coordinates set for new task:', available);
     } else {
-      // console.log('Not enough space to add a new task at this location.');
       if (!this.showNewTaskForm)
         this.openModal('Not enough space for a new task');
     }
   }
-
-  // findAvailableSnapPoint(
-  //   clickX: number,
-  //   clickY: number,
-  //   taskWidth: number,
-  //   taskHeight: number,
-  //   tasks: Task[]
-  // ) {
-  //   // let closestPoint = this.findClosestSnapPoint({ left: clickX, top: clickY });
-  //   let closestPoint: { x: number; y: number } | null =
-  //     this.point.findClosestSnapPointNew({ left: clickX, top: clickY });
-
-  //   console.log('board closest point returned', closestPoint);
-
-  //   if (!closestPoint) {
-  //     console.log('No available snap point found.');
-  //     return null;
-  //   }
-
-  //   let isPositionAvailable = this.checkIfPositionIsAvailable(
-  //     closestPoint,
-  //     taskWidth,
-  //     taskHeight,
-  //     tasks
-  //   );
-
-  //   // this.openModal('not enough space for a new task');
-
-  //   if (!isPositionAvailable) {
-  //     return null;
-  //   } else {
-  //     return closestPoint;
-  //   }
-
-  //   // If the closest point is occupied, keep searching nearby points
-  //   // if (!isPositionAvailable) {
-  //   //   for (const point of this.gridPoints) {
-  //   //     isPositionAvailable = this.checkIfPositionIsAvailable(
-  //   //       point,
-  //   //       taskWidth,
-  //   //       taskHeight,
-  //   //       tasks
-  //   //     );
-  //   //     if (isPositionAvailable) {
-  //   //       closestPoint = point;
-  //   //       break;
-  //   //     } else {
-  //   //       this.openModal('not enough space for a new task');
-  //   //     }
-  //   //   }
-  //   // }
-
-  //   // return closestPoint;
-  // }
-
-  // checkIfPositionIsAvailable(
-  //   point: { x: number; y: number },
-  //   taskWidth: number,
-  //   taskHeight: number,
-  //   tasks: Task[]
-  // ) {
-  //   const newLeft = point.x;
-  //   const newTop = point.y;
-  //   const newRight = newLeft + taskWidth;
-  //   const newBottom = newTop + taskHeight;
-
-  //   // FIX REDS -
-  //   for (const task of tasks) {
-  //     const taskLeft = task.coordinates.x;
-  //     const taskTop = task.coordinates.y;
-  //     const taskRight = taskLeft + task.size.width;
-  //     const taskBottom = taskTop + task.size.height;
-
-  //     if (
-  //       newLeft < taskRight &&
-  //       newRight > taskLeft &&
-  //       newTop < taskBottom &&
-  //       newBottom > taskTop
-  //     ) {
-  //       return false;
-  //     }
-  //   }
-
-  //   return true;
-  // }
-
-  // findClosestSnapPoint(box: { left: number; top: number }) {
-  //   const boxX = box.left;
-  //   const boxY = box.top;
-
-  //   // let closestPoint = null;
-  //   let closestPoint: { x: number; y: number } | null = null;
-
-  //   let minDistance = this.snapThreshold;
-
-  //   this.gridPoints.forEach((point) => {
-  //     const distance = Math.sqrt(
-  //       Math.pow(point.x - boxX, 2) + Math.pow(point.y - boxY, 2)
-  //     );
-  //     if (distance < minDistance) {
-  //       minDistance = distance;
-  //       closestPoint = point;
-  //     }
-  //   });
-
-  //   return closestPoint;
-  // }
 
   isOverlapping(
     newLeft: number,
@@ -414,21 +234,7 @@ export class BoardComponent {
   }
 
   onTaskResized(event: any) {
-    // console.log('resize event received');
-
     const { taskId, finalWidth, finalHeight } = event;
-    // console.log(id, idd, iddd);
-
-    // if (this.isOverlapping(newLeft, newTop, newWidth, newHeight, taskId)) {
-    //   console.log('Overlap detected for task:', taskId);
-    // } else {
-    //   const task = this.tasks.find((task) => task.id === taskId);
-    //   if (task) {
-    //     task.size.width = newWidth;
-    //     task.size.height = newHeight;
-    //     task.coordinates = newCoordinates;
-    //   }
-    // }
 
     const task = this.tasks.find((t) => t.id === taskId);
     if (task) {
@@ -459,54 +265,16 @@ export class BoardComponent {
     }
   }
 
-  // onDragStarted() {
-  //   this.isDragging = true;
-  // }
-
-  // onDragStarted(event: CdkDragStart): void {
-  //   const targetElement = event.source.element.nativeElement as HTMLElement;
-
-  //   const isResizeHandle = targetElement.querySelector('.resize-handle')?.contains(event.source._dragRef._pointerDownEvent.target as HTMLElement);
-
-  //   if (isResizeHandle) {
-  //     return;
-  //   }
-
-  //   this.isDragging = true;
-  // }
-
   onDragStarted(): void {
     if (this.isResizing) {
       return;
     }
-    // this.isDragging = false;
     this.isDragging = true;
   }
 
-  // onDragMoved(event: CdkDragMove, taskId: string) {
-  //   const task = this.tasks.find(t => t.id === taskId);
-  //   if (task) {
-  //     task.coordinates = event.pointerPosition;
-  //   }
-  // }
-
   onDragEnded() {
-    // setTimeout(() => {
-    //   this.isDragging = false;
-    // }, 50);
     this.isDragging = false;
   }
-
-  // newTask() {
-  //   console.log('1', this.isDragging);
-  //   setTimeout(() => {
-  //     console.log('2', this.isDragging);
-
-  //     if (!this.isDragging) {
-  //       this.showNewTaskForm = true;
-  //     }
-  //   }, 0);
-  // }
 
   newTask() {
     if (!this.isDragging) {
@@ -530,52 +298,24 @@ export class BoardComponent {
     });
   }
 
-  // fails to close form -
-
-  // onCloseNewTask(): void {
-  //   // console.log('close event received');
-  //   this.showNewTaskForm = false;
-  //   console.log('showNewTaskForm:', this.showNewTaskForm);
-  //   this.cdr.detectChanges();
-  //   // this.cdr.markForCheck();
-  // }
-
   onTaskClosed() {
     console.log('BOARD - CLOSED ev - taskOpen? - ', this.taskOpen);
   }
 
   onCloseNewTask(): void {
-    // this.taskOpen = false;
     console.log('BOARD - CLOSED ev - taskOpen? - ', this.taskOpen);
 
     setTimeout(() => {
       this.showNewTaskForm = false;
       this.showTaskOpen = false;
-      // console.log('showNewTaskForm:', this.showNewTaskForm);
       this.cdr.detectChanges();
     }, 0);
   }
 
   onTaskClick(eventData: { taskId: string; e: MouseEvent }): void {
     eventData.e.stopPropagation();
-    // eventData.e.preventDefault();
-
-    // console.log('BOARD TASK CL ON');
-
-    // this.showTaskOpen = true;
-    // this.taskOpen = true;
     this.activeTask = eventData.taskId;
     this.cdr.detectChanges();
-
-    // console.log('ACTIVE -', this.activeTask);
-    // console.log('BOARD - taskOpen? - ', this.taskOpen);
-
-    // const el = event.currentTarget as HTMLElement;
-    // console.log(el.id);
-
-    // console.log('task clicked in board');
-    // event.preventDefault();
-    // event.stopImmediatePropagation();
   }
 
   openBackgroundSelectionModal(): void {
@@ -738,16 +478,6 @@ export class BoardComponent {
   enableEdit(): void {
     this.editMode = true;
   }
-
-  // updateBoardName(): void {
-  //   this.editMode = false;
-
-  //   this.boardService
-  //     .updateBoardName(this.boardId as string, this.boardName as string)
-  //     .subscribe(() => {
-  //       console.log('board name updated');
-  //     });
-  // }
 
   updateBoardName(): void {
     this.editMode = false;

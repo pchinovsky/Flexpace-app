@@ -23,16 +23,6 @@ export class ErrorService {
     });
   }
 
-  // errorFeedback<T>(message: string): (source: Observable<T>) => Observable<T> {
-  //   return (source: Observable<T>) =>
-  //     source.pipe(
-  //       catchError((error) => {
-  //         this.openErrorModal(message);
-  //         return throwError(() => error);
-  //       })
-  //     );
-  // }
-
   errorFeedback<T>(message: string): (source: Observable<T>) => Observable<T> {
     return (source: Observable<T>) =>
       source.pipe(

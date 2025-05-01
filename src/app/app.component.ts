@@ -22,10 +22,6 @@ export class AppComponent implements OnInit {
         )
       )
       .subscribe((event: NavigationEnd) => {
-        // this.isAuthModalVisible = ['/auth/login', '/auth/register'].includes(
-        //   event.urlAfterRedirects
-        // );
-
         if (event.urlAfterRedirects === '/auth/login') {
           this.isAuthModalVisible = true;
           this.authModalType = 'login';

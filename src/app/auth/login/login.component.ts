@@ -35,17 +35,6 @@ export class LoginComponent {
       return;
     }
 
-    // this.authService
-    //   .log(email, password)
-    //   .then((userCredential) => {
-    //     // console.log('Logged in as', userCredential.user);
-    //     // redirection?? -
-    //     // this.logged.emit();
-    //     this.router.navigate(['/default']);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Login failed', error);
-    //   });
     this.authService.log(email, password).subscribe({
       next: () => {
         this.router.navigate(['/default']);
@@ -57,9 +46,6 @@ export class LoginComponent {
   }
 
   closeModal() {
-    // console.log('Emitting close event from LoginComponent');
-
-    // console.log('emitting brake event from login');
     this.router.navigate(['/wall']);
   }
 }

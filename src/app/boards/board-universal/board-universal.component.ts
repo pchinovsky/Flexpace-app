@@ -49,32 +49,6 @@ export class BoardUniversalComponent implements OnInit {
     public toastService: ToastService
   ) {}
 
-  // ngOnInit(): void {
-  //   // this.taskService.getAllTasks().subscribe((tasks: Task[]) => {
-  //   //   // draggable to false for tasks in uni board -
-  //   //   this.tasks = tasks.map((task) => ({ ...task, draggable: false }));
-  //   //   this.filteredTasks = [...this.tasks];
-  //   // });
-
-  //   this.currentUserId = this.auth.getCurrentUserId();
-
-  //   this.taskService.getAllTasks().subscribe((tasks: Task[]) => {
-  //     this.tasks = tasks
-  //       .filter((task) => {
-  //         if (!this.currentUserId) {
-  //           return false;
-  //         }
-  //         return (
-  //           task.owner === this.currentUserId ||
-  //           (task.savedBy && task.savedBy.includes(this.currentUserId))
-  //         );
-  //       })
-  //       .map((task) => ({ ...task, draggable: false }));
-
-  //     this.filteredTasks = [...this.tasks];
-  //   });
-  // }
-
   ngOnInit(): void {
     this.currentUserId = this.auth.getCurrentUserId();
 

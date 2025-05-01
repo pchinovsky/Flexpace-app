@@ -1,10 +1,3 @@
-<!-- <p>board-default works!</p> -->
-<!-- [coordinates]="clickCoordinates" -->
-
-<!-- <div class="container" (click)="newTask()"> -->
-<!-- <div class="container" (click)="onBoardClick($event)"> -->
-
-<!-- <div>{{ boardName }}</div> -->
 <app-new-task
   *ngIf="showNewTaskForm"
   [board]="boardName"
@@ -17,11 +10,6 @@
   (pointerup)="onBoardPointerUp($event)"
   #boardElement
 >
-  <!-- btn img ops -  -->
-  <!-- <button id="img-modal" (click)="openBackgroundSelectionModal()">
-    Select Background
-  </button> -->
-
   <!-- img -->
   <div
     class="background-image"
@@ -37,14 +25,6 @@
   <button id="bgr" class="add-bg-btn" (click)="openBackgroundSelectionModal()">
     Background
   </button>
-
-  <!-- <button
-    *ngIf="backgroundImage"
-    class="delete-bg-btn"
-    (click)="deleteBackgroundImage()"
-  >
-    Delete Background
-  </button> -->
 
   <app-task
     *ngFor="let task of tasks; let i = index"
@@ -68,22 +48,12 @@
   </div>
   <button id="rev">REV</button>
 
-  <!-- <p class="board-name">
-    Board <strong>{{ boardName }}</strong>
-  </p> -->
-
   <p class="board-name">
     Board
     <strong *ngIf="!editMode; else editTemplate" (click)="enableEdit()">{{
       boardName
     }}</strong>
     <ng-template #editTemplate>
-      <!-- <input
-        type="text"
-        [(ngModel)]="boardName"
-        (blur)="updateBoardName()"
-        (keyup.enter)="updateBoardName()"
-      /> -->
       <input
         type="text"
         [value]="boardName"

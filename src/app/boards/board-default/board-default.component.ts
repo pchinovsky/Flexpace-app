@@ -28,9 +28,7 @@ export class BoardDefaultComponent implements OnInit {
   showTaskOpen = false;
   showModal = false;
   isDragging = false;
-  // disableDrag = true;
   isResizing = false;
-  private dragStart = false;
   private startX = 0;
   private startY = 0;
 
@@ -39,12 +37,8 @@ export class BoardDefaultComponent implements OnInit {
   activeTask: string | null = null;
 
   defaultSize = { width: 185, height: 235 };
-  // taskWidth = 185;
-  // taskHeight = 235;
-  // snapThreshold = 100;
 
   clickCoordinates: { x: number; y: number } | null = null;
-  // gridPoints: { x: number; y: number }[] = []; // To hold grid points
   gridPoints = this.point.generateGridPoints(12, 25, 50, 50, 50, 50);
   tasks: Task[] = [];
 
@@ -52,7 +46,6 @@ export class BoardDefaultComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
     private point: PointService,
@@ -73,7 +66,6 @@ export class BoardDefaultComponent implements OnInit {
 
     this.currentUserId = this.auth.getCurrentUserId();
     this.loadBackgroundImage();
-    // this.gridPoints = this.generateGridPoints(27, 27, 50, 50, 50, 50);
     this.loadTasks(this.boardName);
 
     const resizeHandle = document.querySelector(
@@ -111,7 +103,6 @@ export class BoardDefaultComponent implements OnInit {
   onBoardPointerDown(event: PointerEvent) {
     this.startX = event.clientX;
     this.startY = event.clientY;
-    this.dragStart = false;
   }
 
   onBoardPointerUp(event: PointerEvent) {
@@ -121,7 +112,6 @@ export class BoardDefaultComponent implements OnInit {
     );
 
     if (distanceMoved < 5) {
-      // this.newTask();
       this.onBoardClick(event);
     }
 
@@ -133,18 +123,11 @@ export class BoardDefaultComponent implements OnInit {
     console.log('board CLICKED - default');
 
     const target = event.target as HTMLElement;
-    // console.log('Event target:', event.target);
     console.log('Event target:', target);
 
     if (target.id !== 'grid-container') {
       return;
     }
-
-    // if (target.id === 'sub-input' || target.closest('.sub-task-cre-input')) {
-    //   // console.log('if cond true');
-
-    //   return;
-    // }
 
     const boardElement = (
       event.currentTarget as HTMLElement
@@ -155,17 +138,9 @@ export class BoardDefaultComponent implements OnInit {
 
     console.log('Click position relative to board:', { x: clickX, y: clickY });
 
-    // closest looks for an ancestor, not parent.
     if ((event.target as HTMLElement).closest('.box')) {
-      // console.log('Click originated from a task, preventing new task form.');
       return;
     }
-    // const clickX = event.clientX;
-    // const clickY = event.clientY - window.scrollY;
-
-    // console.log(window.scrollY);
-
-    // console.log('board def click coords', clickX, clickY);
 
     const available = this.point.findAvailableSnapPoint(
       clickX,
@@ -176,15 +151,11 @@ export class BoardDefaultComponent implements OnInit {
     );
 
     if (available) {
-      // console.log('board def avail coords', available);
-
       if (!this.showNewTaskForm) {
         this.point.setCoordinates(available);
       }
       this.showNewTaskForm = true;
-      // console.log('Coordinates set for new task:', available);
     } else {
-      // console.log('Not enough space to add a new task at this location.');
       if (!this.showNewTaskForm)
         this.openModal('Not enough space for a new task');
     }
@@ -201,7 +172,7 @@ export class BoardDefaultComponent implements OnInit {
     const newBottom = newTop + newHeight;
 
     for (const task of this.tasks) {
-      if (task.id === currentTaskId) continue; // Skip the current task
+      if (task.id === currentTaskId) continue;
 
       const taskLeft = task.coordinates.x;
       const taskTop = task.coordinates.y;
@@ -221,10 +192,7 @@ export class BoardDefaultComponent implements OnInit {
   }
 
   onTaskResized(event: any) {
-    // console.log('resize event received');
-
     const { taskId, finalWidth, finalHeight } = event;
-    // console.log(id, idd, iddd);
 
     const task = this.tasks.find((t) => t.id === taskId);
     if (task) {
@@ -237,11 +205,6 @@ export class BoardDefaultComponent implements OnInit {
     taskId: string;
     newCoordinates: { x: number; y: number };
   }) {
-    // if (this.showTaskOpen) return;
-
-    console.log('task dragged - default board');
-    // console.log(event.newCoordinates);
-
     const task: Task | undefined = this.tasks.find(
       (task) => task.id === event.taskId
     );
@@ -263,35 +226,12 @@ export class BoardDefaultComponent implements OnInit {
     if (this.isResizing) {
       return;
     }
-    // this.isDragging = false;
     this.isDragging = true;
   }
 
-  // onDragMoved(event: CdkDragMove, taskId: string) {
-  //   const task = this.tasks.find(t => t.id === taskId);
-  //   if (task) {
-  //     task.coordinates = event.pointerPosition;
-  //   }
-  // }
-
   onDragEnded() {
-    // setTimeout(() => {
-    //   this.isDragging = false;
-    // }, 50);
     this.isDragging = false;
-    // this.cdr.detectChanges();
   }
-
-  // newTask() {
-  //   console.log('1', this.isDragging);
-  //   setTimeout(() => {
-  //     console.log('2', this.isDragging);
-
-  //     if (!this.isDragging) {
-  //       this.showNewTaskForm = true;
-  //     }
-  //   }, 0);
-  // }
 
   newTask() {
     if (!this.isDragging) {
@@ -321,31 +261,15 @@ export class BoardDefaultComponent implements OnInit {
     setTimeout(() => {
       this.showNewTaskForm = false;
       this.showTaskOpen = false;
-      // console.log('showNewTaskForm:', this.showNewTaskForm);
       this.cdr.detectChanges();
     }, 0);
   }
 
   onTaskClick(eventData: { taskId: string; e: MouseEvent }): void {
     eventData.e.stopPropagation();
-    // eventData.e.preventDefault();
 
-    // console.log('BOARD TASK CL ON');
-
-    // this.showTaskOpen = true;
-    // this.taskOpen = true;
     this.activeTask = eventData.taskId;
     this.cdr.detectChanges();
-
-    // console.log('ACTIVE -', this.activeTask);
-    // console.log('BOARD - taskOpen? - ', this.taskOpen);
-
-    // const el = event.currentTarget as HTMLElement;
-    // console.log(el.id);
-
-    // console.log('task clicked in board');
-    // event.preventDefault();
-    // event.stopImmediatePropagation();
   }
 
   openBackgroundSelectionModal(): void {

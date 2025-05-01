@@ -5,13 +5,6 @@ export interface User {
   displayName?: string | null;
 }
 
-// // src/app/types/user.ts
-// import firebase from 'firebase/app';
-
-// export interface AppUser extends firebase.User {
-//   username?: string;
-// }
-
 export interface UserProfile {
   uid: string;
   email: string | null;
